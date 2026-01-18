@@ -1,3 +1,3 @@
 <template>
-    <h1>Hello View</h1>
+    <h1>Hello View Main</h1>
 </template>
