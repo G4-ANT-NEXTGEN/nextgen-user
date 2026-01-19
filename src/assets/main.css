@@ -5,3 +5,13 @@ body {
   font-family: "Noto Sans Khmer", " Roboto", sans-serif;
   overflow-x: hidden;
 }
+
+:root {
+  --color-text: #030307;
+  --color-background: #f5f5f5;
+  --color-primary: #0a0a0a;
+  --color-secondary: #f1f4f8;
+  --color-accent: #fdfaff;
+  --color-dark: #1f2937;
+  --color-gray: #6b7280;
+}

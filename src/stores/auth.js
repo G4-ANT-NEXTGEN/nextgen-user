@@ -6,6 +6,9 @@ import router from '@/router'
 export const useAuthStore = defineStore('auth', () => {
     const token = ref(localStorage.getItem('token'))
     const user = ref(null)
+    const emailForget = ref('')
+    const otpForget = ref('')
+
 
     const isAuthenticated = computed(() => !!token.value && !!user.value);
 
@@ -44,5 +47,42 @@ export const useAuthStore = defineStore('auth', () => {
         }
     };
 
-    return { token, login, logout, fetchProfile, isAuthenticated, user, clearAuth }
+    const forgetPassword = async (payload) => {
+        const response = await api.post('/api/forgot/pass', payload);
+        console.log(response);
+
+    }
+
+    const otpPassword = async (payload) => {
+        const response = await api.post('/api/forgot/verify-otp', payload);
+        console.log(response);
+    }
+
+    const resetPassword = async (payload) => {
+        const response = await api.post('/api/reset/pass', payload);
+        console.log(response);
+    }
+
+    const register = async (payload) => {
+        const response = await api.post('/api/register', payload);
+        token.value = response.data.data.token;
+        localStorage.setItem('token', token.value);
+        await fetchProfile();
+    }
+
+    return {
+        token,
+        login,
+        logout,
+        fetchProfile,
+        isAuthenticated,
+        user,
+        clearAuth,
+        forgetPassword,
+        otpPassword,
+        emailForget,
+        resetPassword,
+        otpForget,
+        register
+    }
 })

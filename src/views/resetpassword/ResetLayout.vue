@@ -6,23 +6,21 @@
                 <div class="col-lg-4">
                     <div class="sidebar">
                         <div class="sidebar-content">
-                            <div>
-                                <div class="logo">
-                                    <div class="logo-icon">
-                                        <img class="img-fluid" src="/public/logo.jpg" alt="">
-                                    </div>
-                                    <div class="logo-text">NextGen</div>
+                            <div class="logo">
+                                <div class="logo-icon">
+                                    <img class="img-fluid" src="/public/logo.jpg" alt="">
                                 </div>
-                                <div class="subtitle">Complete your registration in 4 easy steps</div>
+                                <div class="logo-text">NextGen</div>
                             </div>
+                            <div class="subtitle">Complete password reset in 4 easy steps</div>
 
                             <div class="steps">
                                 <div :class="['step', { active: isStepActive(1), completed: isStepCompleted(1) }]"
                                     data-step="1">
                                     <div class="step-number">1</div>
                                     <div class="step-info">
-                                        <div class="step-title">Create Account</div>
-                                        <div class="step-desc">Provide your basic information</div>
+                                        <div class="step-title">Reset Password</div>
+                                        <div class="step-desc">Enter your email or phone</div>
                                     </div>
                                 </div>
 
@@ -30,8 +28,8 @@
                                     data-step="2">
                                     <div class="step-number">2</div>
                                     <div class="step-info">
-                                        <div class="step-title">User Type</div>
-                                        <div class="step-desc">Select your user type</div>
+                                        <div class="step-title">OTP Verification</div>
+                                        <div class="step-desc">Verify your identity</div>
                                     </div>
                                 </div>
 
@@ -39,8 +37,8 @@
                                     data-step="3">
                                     <div class="step-number">3</div>
                                     <div class="step-info">
-                                        <div class="step-title">Position</div>
-                                        <div class="step-desc">Choose your position</div>
+                                        <div class="step-title">New Password</div>
+                                        <div class="step-desc">Create new password</div>
                                     </div>
                                 </div>
 
@@ -109,7 +107,6 @@ body {
     border-radius: 20px;
     box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
     width: 100%;
-
     overflow: hidden;
 }
 
@@ -181,7 +178,6 @@ body {
     position: relative;
     z-index: 1;
     display: flex;
-    gap: 30px;
     flex-direction: column;
     height: 100%;
     justify-content: space-evenly;
@@ -195,8 +191,8 @@ body {
 }
 
 .logo-icon {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     background: white;
     border-radius: 8px;
     display: flex;
@@ -222,7 +218,7 @@ body {
 .steps {
     display: flex;
     flex-direction: column;
-    gap: 70px;
+    gap: 50px;
 }
 
 .step {
@@ -249,7 +245,7 @@ body {
     left: 21px;
     top: 58px;
     width: 2px;
-    height: 60px;
+    height: 32px;
     background: rgba(255, 255, 255, 0.2);
     z-index: 1;
 }

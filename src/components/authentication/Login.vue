@@ -56,13 +56,14 @@
                                             Remember Me
                                         </label>
                                     </div>
-                                    <router-link to="" class="forgot-password">Forgot Password?</router-link>
+                                    <span @click="goToEmail" class="forgot-password" style="cursor: pointer;">
+                                        Forgot Password?
+                                    </span>
                                 </div>
 
                                 <BaseButton @click="loginForm()" :isLoading="Isloading" type="button" variant="primary"
                                     class="btn-login">
                                     <span>{{ Isloading ? 'Loading...' : 'Login' }}</span>
-                                    <i class="bi bi-door-open"></i>
                                 </BaseButton>
 
                             </form>
@@ -104,7 +105,10 @@
                             </div>
 
                             <div class="signup-link">
-                                Don't have an account? <router-link to="">Sign up here</router-link>
+                                Don't have an account?
+                                <span class="forgot-password" @click="gotoRegister" style="cursor: pointer;">
+                                    Sign up here
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -119,6 +123,7 @@ import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useRequiredValidator } from '@/composables/useRequiredValidator';
 import BaseInput from '../ui/base/BaseInput.vue';
+import router from '@/router';
 
 const authStore = useAuthStore()
 const email = ref('')
@@ -155,13 +160,21 @@ const loginForm = async () => {
                 password: password.value
             }
         )
-        
-        alert("Login Success")
+
     } catch (err) {
         console.log(err);
     } finally {
         Isloading.value = false
     }
+}
+
+
+function goToEmail() {
+    router.push({ name: 'email' })
+}
+
+function gotoRegister() {
+    router.push({ name: 'createuser' })
 }
 
 </script>
@@ -170,7 +183,7 @@ const loginForm = async () => {
 
 <style scoped>
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; */
     min-height: 100vh;
     display: flex;
     overflow-x: hidden;
