@@ -1,4 +1,7 @@
 <template>
+
+    <BaseToast v-if="toast.show" :message="toast.message" :type="toast.type" @close="toast.show = false" />
+
     <!-- Step 1: Create Account -->
     <div class="form-section active">
         <div class="step-indicator">STEP 1 OF 4</div>
@@ -53,12 +56,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import { useRequiredValidator } from '@/composables/useRequiredValidator';
+import { usePasswordValidator } from '@/composables/usePasswordValidator';
 import { useAuthStore } from '@/stores/auth';
+import { useToastStore } from '@/stores/toast';
 import router from '@/router';
 
 const { errors, validateField } = useRequiredValidator()
+const { validatePassword: checkPassword, validatePasswordMatch } = usePasswordValidator()
+const toast = useToastStore()
 const email = ref('')
 const password = ref('')
 const comfirmpassword = ref('')
@@ -68,11 +75,23 @@ const authStore = useAuthStore()
 const isLoading = ref(false)
 
 
+
 const validateEmail = () => validateField('email', email.value, 'Email is required')
 const validateFullName = () => validateField('fullname', fullname.value, 'Full Name is required')
 const validatePhone = () => validateField('phone', phone.value, 'Phone Number is required')
-const validatePassword = () => validateField('password', password.value, 'Password is required')
-const validateComfirmPassword = () => validateField('comfirmpassword', comfirmpassword.value, 'ComfirmPassword is required')
+const validatePassword = () => {
+    const result = checkPassword(password.value)
+    errors.password = result.message
+    return result.isValid
+}
+const validateComfirmPassword = () => {
+    if (!comfirmpassword.value) {
+        errors.comfirmpassword = 'Confirm Password is required'
+        return false
+    }
+    errors.comfirmpassword = ''
+    return true
+}
 
 const validateForm = () => {
     const fullNameValid = validateFullName()
@@ -81,7 +100,15 @@ const validateForm = () => {
     const passwordValid = validatePassword()
     const comfirmPasswordValid = validateComfirmPassword()
 
-    return fullNameValid && emailValid && phoneValid && passwordValid && comfirmPasswordValid
+    let isValid = fullNameValid && emailValid && phoneValid && passwordValid && comfirmPasswordValid
+
+    if (isValid && password.value !== comfirmpassword.value) {
+        const matchResult = validatePasswordMatch(password.value, comfirmpassword.value)
+        errors.comfirmpassword = matchResult.message
+        isValid = false
+    }
+
+    return isValid
 }
 
 
@@ -103,13 +130,22 @@ const nextStep = async () => {
                 password_confirmation: comfirmpassword.value
             }
         )
+
+        if (authStore.userResult) {
+            router.push({ name: 'typeuser' })
+        }else{
+            toast.error('Registration failed. Please try again.')
+        }
+
     }
     catch (err) {
-        console.log(err);
+        console.log('Registration error:', err)
     } finally {
         isLoading.value = false
     }
 }
+
+
 
 </script>
 

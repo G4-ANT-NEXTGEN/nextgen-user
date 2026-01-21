@@ -1,4 +1,5 @@
 <template>
+    <BaseToast :show="toast.show" :message="toast.message" :type="toast.type" @close="toast.show = false" />
     <div class="container d-flex align-items-center justify-content-center">
         <div class="main-container">
             <div class="row g-0 h-100">
@@ -122,20 +123,28 @@
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useRequiredValidator } from '@/composables/useRequiredValidator';
+import { usePasswordValidator } from '@/composables/usePasswordValidator';
+import { useToastStore } from '@/stores/toast';
 import BaseInput from '../ui/base/BaseInput.vue';
 import router from '@/router';
 
 const authStore = useAuthStore()
+const toast = useToastStore()
 const email = ref('')
 const password = ref('')
 const showPass = ref(false)
 const Isloading = ref(false)
 const { errors, validateField } = useRequiredValidator()
+const { validatePassword: checkPassword } = usePasswordValidator()
 
 
 const validateEmail = () => validateField('email', email.value, 'Email is required')
 
-const validatePassword = () => validateField('password', password.value, 'Password is required')
+const validatePassword = () => {
+    const result = checkPassword(password.value)
+    errors.password = result.message
+    return result.isValid
+}
 
 
 const validateForm = () => {
@@ -183,7 +192,6 @@ function gotoRegister() {
 
 <style scoped>
 body {
-    /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; */
     min-height: 100vh;
     display: flex;
     overflow-x: hidden;

@@ -1,4 +1,6 @@
 <template>
+    <!-- <router-view /> -->
+    <BaseToast :show="toast.show" :message="toast.message" :type="toast.type" title="Error" @close="toast.close" />
     <!-- Step 3: New Password -->
     <div class="form-section" id="step3">
         <div class="step-indicator">STEP 3 OF 4</div>
@@ -34,23 +36,48 @@
 
 <script setup>
 import { useRequiredValidator } from "@/composables/useRequiredValidator";
+import { usePasswordValidator } from "@/composables/usePasswordValidator";
 import { useAuthStore } from "@/stores/auth"
+import { useToastStore } from "@/stores/toast"
 import { ref } from "vue"
 import router from "@/router";
+
 
 const password = ref("")
 const comfirmPassword = ref("")
 const authStore = useAuthStore()
+const toast = useToastStore()
 const isLoading = ref(false)
 
 const { errors, validateField } = useRequiredValidator()
+const { validatePassword: checkPassword, validatePasswordMatch } = usePasswordValidator()
 
-const validatePassword = () => validateField('password', password.value, 'Password is required')
-const validateComfirmPassword = () => validateField('comfirmPassword', comfirmPassword.value, 'ComfirmPassword is required')
+const validatePassword = () => {
+    const result = checkPassword(password.value)
+    errors.password = result.message
+    return result.isValid
+}
+
+const validateComfirmPassword = () => {
+    if (!comfirmPassword.value) {
+        errors.comfirmPassword = 'Confirm Password is required'
+        return false
+    }
+    errors.comfirmPassword = ''
+    return true
+}
 
 const validateForm = () => {
     let isValid = true
-    if (!validatePassword() || !validateComfirmPassword()) {
+    if (!validatePassword()) {
+        isValid = false
+    }
+    if (!validateComfirmPassword()) {
+        isValid = false
+    }
+    const matchResult = validatePasswordMatch(password.value, comfirmPassword.value)
+    if (!matchResult.isValid) {
+        errors.comfirmPassword = matchResult.message
         isValid = false
     }
     return isValid
@@ -59,6 +86,7 @@ const validateForm = () => {
 const submitPassword = async () => {
     isLoading.value = true
     if (!validateForm()) {
+        isLoading.value = false
         return
     }
 
@@ -69,11 +97,15 @@ const submitPassword = async () => {
             new_pass: password.value,
             new_pass_confirmation: comfirmPassword.value
         })
+        if (authStore.user?.result) {
+            router.push({ name: 'login' })
+        } else {
+            toast.error(authStore.user?.data?.new_pass[0] || 'Failed to send OTP')
+        }
     } catch (error) {
         console.log(error)
     } finally {
         isLoading.value = false
-        router.push({ name: "login" })
     }
 
 }

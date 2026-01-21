@@ -128,13 +128,18 @@ router.beforeEach(async (to) => {
     }
   }
 
-  // redirect to login if not authenticated and route requires auth
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    return { name: 'login' }
+  // If user is authenticated (has token), redirect from login only
+  if (authStore.isAuthenticated) {
+    if (to.name === 'login') {
+      return { name: 'home' }
+    }
+    // Authenticated users can access all other routes including register
+    return true
   }
 
-  if (to.name === 'login' && authStore.isAuthenticated) {
-    return { name: 'home' }
+  // If not authenticated, redirect to login for protected routes
+  if (to.meta.requiresAuth) {
+    return { name: 'login' }
   }
 
   return true

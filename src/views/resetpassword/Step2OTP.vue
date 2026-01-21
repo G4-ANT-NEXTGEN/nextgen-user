@@ -1,4 +1,6 @@
 <template>
+    <router-view />
+    <BaseToast :show="toast.show" :message="toast.message" :type="toast.type" title="Error" @close="toast.close" />
     <!-- Step 2: OTP Verification -->
     <div class="form-section">
         <div class="step-indicator">STEP 2 OF 4</div>
@@ -20,7 +22,8 @@
             <div class="d-flex justify-content-end mt-5">
                 <div class="button-group">
                     <button type="button" class="btn btn-back" @click="router.go(-1)">Back</button>
-                    <BaseButton type="button" variant="primary" :disabled="otp.length !== 6" @click="submitOtp" :isLoading="isLoading">
+                    <BaseButton type="button" variant="primary" :disabled="otp.length !== 6" @click="submitOtp"
+                        :isLoading="isLoading">
                         Verify OTP
                     </BaseButton>
                 </div>
@@ -35,10 +38,12 @@
 import BaseButton from "@/components/ui/base/BaseButton.vue"
 import router from "@/router"
 import { useAuthStore } from "@/stores/auth"
+import { useToastStore } from "@/stores/toast"
 import { ref, onMounted, nextTick } from "vue"
 
 const otp = ref("")
 const authStore = useAuthStore()
+const toast = useToastStore()
 const inputs = ref([])
 const email = ref(authStore.emailForget)
 const isLoading = ref(false)
@@ -82,11 +87,15 @@ const submitOtp = async () => {
                 otp: otp.value
             }
         )
+        if (authStore.user?.result) {
+            router.push("/reset-password/new-password")
+        } else {
+            toast.error(authStore.user?.message || 'Failed to send OTP')
+        }
     } catch (error) {
         console.log(error);
     } finally {
         isLoading.value = false
-        router.push("/reset-password/new-password")
     }
 
 }

@@ -1,4 +1,5 @@
 <template>
+    <!-- <BaseToast :show="toast.show" :message="toast.message" :type="toast.type" @close="toast.show = false" /> -->
     <div class="container d-flex align-items-center justify-content-center" style="height: 100vh;">
         <div class="container-custom">
             <div class="row g-0">
@@ -52,7 +53,12 @@
                                         <div class="step-desc">Review and confirm</div>
                                     </div>
                                 </div>
+
                             </div>
+                            <!-- <div @click="gotoLogin()" class="back-link">
+                                <span>←</span>
+                                <span>Back to Login</span>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -73,9 +79,17 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
+import { useToastStore } from '@/stores/toast'
 
 const route = useRoute()
+const router = useRouter()
 const activeStep = ref(1)
+const toast = useToastStore()
+
+const gotoLogin = () => {
+    router.push({ name: 'login' })
+}
 
 const stepMap = {
     'email': 1,
@@ -294,6 +308,17 @@ body {
 .step-desc {
     font-size: 12px;
     color: #9ca3af;
+}
+
+.back-link {
+    color: #cececf;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    justify-content: start;
+    gap: 10px;
+    transition: all 500ms ease;
 }
 
 /* Main Content */
