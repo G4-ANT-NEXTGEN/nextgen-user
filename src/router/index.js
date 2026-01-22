@@ -15,6 +15,8 @@ import Step2TypeUserView from '@/views/register/Step2TypeUserView.vue'
 import Step3PositionUserView from '@/views/register/Step3PositionUserView.vue'
 import Step4PreviewUserView from '@/views/register/Step4PreviewUserView.vue'
 
+import ChatListView from '@/views/chat/ChatListView.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -62,6 +64,12 @@ const router = createRouter({
           meta: { title: 'Preview User' }
         }
       ]
+    },
+    {
+
+      path:'/chat',
+      name:'chatlist',
+      component:ChatListView
     },
     {
       path: '/home',
