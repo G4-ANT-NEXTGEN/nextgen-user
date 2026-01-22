@@ -1,16 +1,25 @@
 <template>
-    <div class="container">
+    <div class="chat-section container-fluid">
         <div class="row">
-            <div class="col-3 ">
-                <div class="chat " v-for="chat in chatStore.chats" :key="chat.id">
-                   
+            <div class="col-3">
+                <div class="chat-list">
+                    <div class="chat" v-for="chat in chatStore.chats" :key="chat.id">    
+                            <base-button class=" text-start" type="button" variant="white">
+                            <div class="d-flex">
+    
+                                <img :src="chat.receiver.avatar" class="rounded-5" width="60" height="60" alt="">
+                                <div>
+                                    <p class="mb-0 fw-bold">{{ chat.receiver.full_name }}</p>
+                                    <span class="message">You : {{ chat.message }}</span>
+                                </div>
+                            </div></base-button>
                         
-                        <base-button class="m-1 border text-start" type="button" variant="white">
-                        <img src="https://i.abcnewsfe.com/a/0a1c6627-6fdd-4cc3-8edf-d80790509c5a/emoji-1-abc-221220_1671573538915_hpEmbed_1x1.jpg" class="pe-2" width="50" alt="">{{ chat.receiver.full_name }}</base-button>
-                    
+                    </div>
                 </div>
             </div>
-            <div class="col-9"></div>
+            <div class="col-9 bg-warning" style="height: 100vh;">
+                <div class="d-flex justify-content-center align-items-center" style="height: 100vh;"><h3>Start message now...</h3></div>
+            </div>
         </div>
     </div>
     <div>
@@ -31,5 +40,17 @@
     });
 </script>
 <style scoped>
-   
+    .chat-section{
+        background: #f5f5f5;
+    }
+    .chat-list{
+        background: white;
+        height: 100vh;
+        /* margin: 16px; */
+        
+    }
+   .message{
+    color:gray;
+    font-size: 14px;
+   }
 </style>
