@@ -1,6 +1,5 @@
 <template>
     <!-- <router-view /> -->
-    <BaseToast :show="toast.show" :message="toast.message" :type="toast.type" title="Error" @close="toast.close" />
     <!-- Step 3: New Password -->
     <div class="form-section" id="step3">
         <div class="step-indicator">STEP 3 OF 4</div>
@@ -38,7 +37,7 @@
 import { useRequiredValidator } from "@/composables/useRequiredValidator";
 import { usePasswordValidator } from "@/composables/usePasswordValidator";
 import { useAuthStore } from "@/stores/auth"
-import { useToastStore } from "@/stores/toast"
+import { showError } from "@/utils/toast"
 import { ref } from "vue"
 import router from "@/router";
 
@@ -46,7 +45,6 @@ import router from "@/router";
 const password = ref("")
 const comfirmPassword = ref("")
 const authStore = useAuthStore()
-const toast = useToastStore()
 const isLoading = ref(false)
 
 const { errors, validateField } = useRequiredValidator()
@@ -100,7 +98,7 @@ const submitPassword = async () => {
         if (authStore.user?.result) {
             router.push({ name: 'login' })
         } else {
-            toast.error(authStore.user?.data?.new_pass[0] || 'Failed to send OTP')
+            showError(authStore.user?.data?.new_pass[0] || 'Failed to reset password')
         }
     } catch (error) {
         console.log(error)
