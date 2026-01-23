@@ -27,27 +27,13 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-4">
-            <li class="nav-item">
-              <a class="nav-link" href="#features">Features</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#community">Community</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#customers">Customers</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#questions">Questions</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#team">Team</a>
+            <li v-for="link in navLinks" :key="link.href" class="nav-item">
+              <a class="nav-link" :href="link.href">{{ link.label }}</a>
             </li>
           </ul>
           <div class="d-flex align-items-center gap-3">
-            <RouterLink to="/login" class="btn px-4 py-2 rounded-3 fw-semibold">Log In</RouterLink>
-            <RouterLink to="/register" class="btn px-4 py-2 rounded-3 fw-semibold"
-              >Sign Up Free</RouterLink
-            >
+            <RouterLink to="/login" class="btn btn-primary-custom">Log In</RouterLink>
+            <RouterLink to="/register" class="btn btn-primary-custom">Sign Up Free</RouterLink>
           </div>
         </div>
       </div>
@@ -67,16 +53,11 @@
                 makes our platform special.
               </p>
               <div class="d-flex flex-wrap gap-3 reveal-entrance" style="--delay: 0.3s">
-                <RouterLink
-                  to="/login"
-                  class="btn btn-dark px-5 py-3 rounded-3 fw-semibold d-flex align-items-center gap-2"
-                >
+                <RouterLink to="/login" class="btn btn-dark-custom btn-lg-custom">
                   Get Started Free
                   <i class="bi bi-arrow-right"></i>
                 </RouterLink>
-                <button
-                  class="btn btn-outline-secondary px-5 py-3 rounded-3 fw-semibold d-flex align-items-center gap-2"
-                >
+                <button class="btn btn-dark-custom btn-lg-custom opacity-75">
                   <i class="bi bi-play-circle fs-5"></i>
                   Watch Demo
                 </button>
@@ -88,22 +69,14 @@
               <div class="hero-image-shadow"></div>
               <!-- Original Image -->
               <img
-                src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                src="/AboutVie/hero-section.jpg"
                 alt="Community members"
                 class="img-fluid rounded-5 hero-image"
               />
               <!-- MPTC Logo -->
-              <img
-                src="https://asset.cambodia.gov.kh/mptc/media/MPTC-MRD-2023_Logo-MPTC-MRD-2023.png"
-                alt="MPTC Logo"
-                class="hero-logo"
-              />
+              <img src="/AboutVie/p.t.c.jpg" alt="MPTC Logo" class="hero-logo" />
               <!-- YouTube Logo -->
-              <img
-                src="https://yt3.googleusercontent.com/8Zeo5xOHpFFDlYJUSNf_wIVjUmIOb2lHP-SIl3RkpQB5nwHErx2voHbXH_zxEKT-bk00L9aAVgU=s900-c-k-c0x00ffffff-no-rj"
-                alt="YouTube Logo"
-                class="hero-youtube-logo"
-              />
+              <img src="/AboutVie/AntLogo.jpg" alt="YouTube Logo" class="hero-youtube-logo" />
               <!-- Lottie Animation Overlay -->
               <div ref="heroAnimation" class="hero-lottie-overlay"></div>
             </div>
@@ -124,58 +97,18 @@
         </p>
 
         <div class="row g-4 text-start">
-          <div class="col-md-4 reveal-scroll reveal-up" style="transition-delay: 0.1s">
+          <div
+            v-for="(feature, index) in features"
+            :key="index"
+            class="col-md-4 reveal-scroll reveal-up"
+            :style="{ transitionDelay: ((index % 3) + 1) * 0.1 + 's' }"
+          >
             <div class="feature-card h-100">
               <div class="feature-icon-box mb-3 transition-transform">
-                <i class="bi bi-people"></i>
+                <i :class="['bi', feature.icon]"></i>
               </div>
-              <h5 class="fw-bold mb-3">Create & Join Communities</h5>
-              <p class="text-muted small">Build and discover communities around your interests.</p>
-            </div>
-          </div>
-          <div class="col-md-4 reveal-scroll reveal-up" style="transition-delay: 0.2s">
-            <div class="feature-card h-100">
-              <div class="feature-icon-box mb-3 transition-transform">
-                <i class="bi bi-chat-dots"></i>
-              </div>
-              <h5 class="fw-bold mb-3">Real-time Chat & Comments</h5>
-              <p class="text-muted small">Connect instantly with live messaging and discussions.</p>
-            </div>
-          </div>
-          <div class="col-md-4 reveal-scroll reveal-up" style="transition-delay: 0.3s">
-            <div class="feature-card h-100">
-              <div class="feature-icon-box mb-3 transition-transform">
-                <i class="bi bi-image"></i>
-              </div>
-              <h5 class="fw-bold mb-3">Share Photos & Stories</h5>
-              <p class="text-muted small">Capture and share your moments with the world.</p>
-            </div>
-          </div>
-          <div class="col-md-4 reveal-scroll reveal-up" style="transition-delay: 0.1s">
-            <div class="feature-card h-100">
-              <div class="feature-icon-box mb-3 transition-transform">
-                <i class="bi bi-bell"></i>
-              </div>
-              <h5 class="fw-bold mb-3">Smart Notifications</h5>
-              <p class="text-muted small">Stay updated with personalized, intelligent alerts.</p>
-            </div>
-          </div>
-          <div class="col-md-4 reveal-scroll reveal-up" style="transition-delay: 0.2s">
-            <div class="feature-card h-100">
-              <div class="feature-icon-box mb-3 transition-transform">
-                <i class="bi bi-shield-lock"></i>
-              </div>
-              <h5 class="fw-bold mb-3">Privacy & Control</h5>
-              <p class="text-muted small">Your data, your rules with advanced privacy settings.</p>
-            </div>
-          </div>
-          <div class="col-md-4 reveal-scroll reveal-up" style="transition-delay: 0.3s">
-            <div class="feature-card h-100">
-              <div class="feature-icon-box mb-3 transition-transform">
-                <i class="bi bi-hand-thumbs-up"></i>
-              </div>
-              <h5 class="fw-bold mb-3">Like, Follow & React</h5>
-              <p class="text-muted small">Engage with content and connect with others easily.</p>
+              <h5 class="fw-bold mb-3">{{ feature.title }}</h5>
+              <p class="text-muted small">{{ feature.desc }}</p>
             </div>
           </div>
         </div>
@@ -194,44 +127,19 @@
         </p>
 
         <div class="row g-4 pt-4">
-          <div class="col-6 col-md-3 reveal-scroll reveal-up" style="transition-delay: 0.1s">
+          <div
+            v-for="(stat, index) in stats"
+            :key="index"
+            class="col-6 col-md-3 reveal-scroll reveal-up"
+            :style="{ transitionDelay: (index + 1) * 0.1 + 's' }"
+          >
             <div class="stat-card">
               <div class="stat-icon-bg mb-3 transition-transform">
-                <i class="bi bi-people-fill"></i>
+                <i :class="['bi', stat.icon]"></i>
               </div>
-              <h3 class="fw-bold mb-1">5M+</h3>
-              <p class="text-muted small mb-1">Active Users</p>
-              <p class="text-secondary x-small">Designers worldwide</p>
-            </div>
-          </div>
-          <div class="col-6 col-md-3 reveal-scroll reveal-up" style="transition-delay: 0.2s">
-            <div class="stat-card">
-              <div class="stat-icon-bg mb-3 transition-transform">
-                <i class="bi bi-star-fill"></i>
-              </div>
-              <h3 class="fw-bold mb-1">4.9/5</h3>
-              <p class="text-muted small mb-1">User Rating</p>
-              <p class="text-secondary x-small">From 50K+ reviews</p>
-            </div>
-          </div>
-          <div class="col-6 col-md-3 reveal-scroll reveal-up" style="transition-delay: 0.3s">
-            <div class="stat-card">
-              <div class="stat-icon-bg mb-3 transition-transform">
-                <i class="bi bi-download"></i>
-              </div>
-              <h3 class="fw-bold mb-1">10M+</h3>
-              <p class="text-muted small mb-1">Downloads</p>
-              <p class="text-secondary x-small">Across all platforms</p>
-            </div>
-          </div>
-          <div class="col-6 col-md-3 reveal-scroll reveal-up" style="transition-delay: 0.4s">
-            <div class="stat-card">
-              <div class="stat-icon-bg mb-3 transition-transform">
-                <i class="bi bi-globe"></i>
-              </div>
-              <h3 class="fw-bold mb-1">150+</h3>
-              <p class="text-muted small mb-1">Countries</p>
-              <p class="text-secondary x-small">Global community</p>
+              <h3 class="fw-bold mb-1">{{ stat.value }}</h3>
+              <p class="text-muted small mb-1">{{ stat.label }}</p>
+              <p class="text-secondary x-small">{{ stat.sub }}</p>
             </div>
           </div>
         </div>
@@ -243,146 +151,20 @@
       <div class="container px-4 text-center">
         <h2 class="display-5 fw-bold mb-5 reveal-scroll reveal-up">Our Customers Love Us</h2>
         <div class="row g-4">
-          <div class="col-md-4 reveal-scroll reveal-up" style="transition-delay: 0.1s">
+          <div
+            v-for="(t, index) in testimonials"
+            :key="index"
+            class="col-md-4 reveal-scroll reveal-up"
+            :style="{ transitionDelay: (index + 1) * 0.1 + 's' }"
+          >
             <div class="testimonial-card">
-              <p class="mb-4">
-                "The best platform we've ever used. The community features are game-changing for our
-                team's productivity."
-              </p>
+              <p class="mb-4">{{ t.text }}</p>
               <div class="d-flex align-items-center justify-content-center">
-                <div class="avatar-sm me-3">JD</div>
+                <div class="avatar-sm me-3">{{ t.initials }}</div>
                 <div class="text-start">
-                  <h6 class="mb-0 fw-bold">John Doe</h6>
-                  <p class="text-muted small mb-0">CEO at TechFlow</p>
+                  <h6 class="mb-0 fw-bold">{{ t.author }}</h6>
+                  <p class="text-muted small mb-0">{{ t.role }}</p>
                 </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 reveal-scroll reveal-up" style="transition-delay: 0.2s">
-            <div class="testimonial-card">
-              <p class="mb-4">
-                "I've found so many amazing collaborators here. It's more than just a tool, it's a
-                creative ecosystem."
-              </p>
-              <div class="d-flex align-items-center justify-content-center">
-                <div class="avatar-sm me-3">AS</div>
-                <div class="text-start">
-                  <h6 class="mb-0 fw-bold">Anna Smith</h6>
-                  <p class="text-muted small mb-0">Independent Artist</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 reveal-scroll reveal-up" style="transition-delay: 0.3s">
-            <div class="testimonial-card">
-              <p class="mb-4">
-                "Security and privacy were our top concerns, and Next Gen delivered beyond our
-                expectations."
-              </p>
-              <div class="d-flex align-items-center justify-content-center">
-                <div class="avatar-sm me-3">MK</div>
-                <div class="text-start">
-                  <h6 class="mb-0 fw-bold">Mike King</h6>
-                  <p class="text-muted small mb-0">CTO at SecureData</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Team Section -->
-    <section id="team" class="team-section py-5">
-      <div class="container px-4 text-center">
-        <div class="badge-pill mb-3 reveal-scroll reveal-up">Our Team</div>
-        <h2 class="display-5 fw-bold mb-3 reveal-scroll reveal-up" style="transition-delay: 0.1s">
-          Meet the People Behind Next Gen
-        </h2>
-        <p class="text-muted mb-5 reveal-scroll reveal-up" style="transition-delay: 0.2s">
-          Passionate individuals dedicated to building the future of community platforms
-        </p>
-
-        <div class="row g-4 justify-content-center">
-          <div class="col-md-4 col-lg-2 reveal-scroll reveal-scale" style="transition-delay: 0.1s">
-            <div class="team-card h-100">
-              <div class="team-avatar mb-3">
-                <img
-                  src="../../public/Ponloeur.jpg"
-                  alt="Sarah Chen"
-                  class="img-fluid rounded-circle"
-                />
-              </div>
-              <h6 class="fw-bold mb-1">Chan Ponloeur</h6>
-              <p class="text-muted small mb-0">CTO & Co-Founder</p>
-              <div class="team-social mt-3">
-                <a href="#" class="text-muted me-2"><i class="bi bi-facebook"></i></a>
-                <a href="#" class="text-muted me-2"><i class="bi bi-telegram"></i></a>
-                <a href="#" class="text-muted"><i class="bi bi-github"></i></a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-lg-2 reveal-scroll reveal-scale" style="transition-delay: 0.2s">
-            <div class="team-card h-100">
-              <div class="team-avatar mb-3">
-                <img
-                  src="../../public/Kimsun.jpg"
-                  alt="Sarah Chen"
-                  class="img-fluid rounded-circle"
-                />
-              </div>
-              <h6 class="fw-bold mb-1">Ly Kimsun</h6>
-              <p class="text-muted small mb-0">CTO & Co-Founder</p>
-              <div class="team-social mt-3">
-                <a href="#" class="text-muted me-2"><i class="bi bi-facebook"></i></a>
-                <a href="#" class="text-muted me-2"><i class="bi bi-telegram"></i></a>
-                <a href="#" class="text-muted"><i class="bi bi-github"></i></a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-lg-2 reveal-scroll reveal-scale" style="transition-delay: 0.2s">
-            <div class="team-card h-100">
-              <div class="team-avatar mb-3">
-                <img
-                  src="../../public/Haigg.jpg"
-                  alt="Sarah Chen"
-                  class="img-fluid rounded-circle"
-                />
-              </div>
-              <h6 class="fw-bold mb-1">Em Sokhai</h6>
-              <p class="text-muted small mb-0">CTO & Co-Founder</p>
-              <div class="team-social mt-3">
-                <a href="#" class="text-muted me-2"><i class="bi bi-facebook"></i></a>
-                <a href="#" class="text-muted me-2"><i class="bi bi-telegram"></i></a>
-                <a href="#" class="text-muted"><i class="bi bi-github"></i></a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-lg-2 reveal-scroll reveal-scale" style="transition-delay: 0.4s">
-            <div class="team-card h-100">
-              <div class="team-avatar mb-3">
-                <img src="../../public/Vin.jpg" alt="Sarah Chen" class="img-fluid rounded-circle" />
-              </div>
-              <h6 class="fw-bold mb-1">Sim Vin</h6>
-              <p class="text-muted small mb-0">CTO & Co-Founder</p>
-              <div class="team-social mt-3">
-                <a href="#" class="text-muted me-2"><i class="bi bi-facebook"></i></a>
-                <a href="#" class="text-muted me-2"><i class="bi bi-telegram"></i></a>
-                <a href="#" class="text-muted"><i class="bi bi-github"></i></a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-lg-2 reveal-scroll reveal-scale" style="transition-delay: 0.5s">
-            <div class="team-card h-100">
-              <div class="team-avatar mb-3">
-                <img src="../../public/Damrey.jpg" alt="Sarah Chen" class="img-fluid rounded-circle" />
-              </div>
-              <h6 class="fw-bold mb-1">Chin Damrey</h6>
-              <p class="text-muted small mb-0">CTO & Co-Founder</p>
-              <div class="team-social mt-3">
-                <a href="#" class="text-muted me-2"><i class="bi bi-facebook"></i></a>
-                <a href="#" class="text-muted me-2"><i class="bi bi-telegram"></i></a>
-                <a href="#" class="text-muted"><i class="bi bi-github"></i></a>
               </div>
             </div>
           </div>
@@ -399,40 +181,15 @@
         </p>
 
         <div class="row g-4 text-start">
-          <div class="col-md-6 reveal-scroll reveal-up" style="transition-delay: 0.1s">
+          <div
+            v-for="(item, index) in questions"
+            :key="index"
+            class="col-md-6 reveal-scroll reveal-up"
+            :style="{ transitionDelay: (index + 1) * 0.1 + 's' }"
+          >
             <div class="question-card h-100">
-              <h5 class="fw-bold mb-3">How do I join a community?</h5>
-              <p class="text-muted">
-                Simply search for communities that interest you and click the join button. You can
-                join up to 5 communities on the free plan.
-              </p>
-            </div>
-          </div>
-          <div class="col-md-6 reveal-scroll reveal-up" style="transition-delay: 0.2s">
-            <div class="question-card h-100">
-              <h5 class="fw-bold mb-3">Is my data secure?</h5>
-              <p class="text-muted">
-                Yes, we use advanced encryption and privacy controls to keep your data safe. Your
-                information is never shared without your consent.
-              </p>
-            </div>
-          </div>
-          <div class="col-md-6 reveal-scroll reveal-up" style="transition-delay: 0.3s">
-            <div class="question-card h-100">
-              <h5 class="fw-bold mb-3">Can I create my own community?</h5>
-              <p class="text-muted">
-                Absolutely! With a Pro or Enterprise plan, you can create and manage your own
-                communities with unlimited members.
-              </p>
-            </div>
-          </div>
-          <div class="col-md-6 reveal-scroll reveal-up" style="transition-delay: 0.4s">
-            <div class="question-card h-100">
-              <h5 class="fw-bold mb-3">How does real-time chat work?</h5>
-              <p class="text-muted">
-                Our chat system connects you instantly with other members. Messages are delivered in
-                real-time with support for text, images, and files.
-              </p>
+              <h5 class="fw-bold mb-3">{{ item.q }}</h5>
+              <p class="text-muted">{{ item.a }}</p>
             </div>
           </div>
         </div>
@@ -440,22 +197,20 @@
     </section>
     <!-- CTA Section -->
     <section class="cta-section py-5 bg-dark text-white text-center">
-      <div class="container px-4 py-5 reveal-scroll reveal-scale">
+      <div class="tech-faq-bg-overlay"></div>
+      <div
+        class="container px-4 py-5 reveal-scroll reveal-scale position-relative"
+        style="z-index: 2"
+      >
         <h2 class="display-4 fw-bold mb-4">Start explore with Next Gen today</h2>
         <p class="lead mb-5 opacity-75">
           Join millions of designers and teams. 100% free, no credit card required.
         </p>
         <div class="d-flex flex-wrap justify-content-center gap-3 mb-4">
-          <RouterLink
-            to="/register"
-            class="btn btn-light px-5 py-3 rounded-pill fw-bold d-flex align-items-center gap-2 transition-all"
-          >
+          <RouterLink to="/register" class="btn btn-light-custom btn-lg-custom">
             Get Started Free <i class="bi bi-arrow-right"></i>
           </RouterLink>
-          <RouterLink
-            to="/login"
-            class="btn btn-outline-light px-5 py-3 rounded-pill fw-bold transition-all"
-          >
+          <RouterLink to="/login" class="btn btn-outline-light-custom btn-lg-custom">
             Learn More
           </RouterLink>
         </div>
@@ -474,89 +229,188 @@
             </div>
             <p class="opacity-75 pe-lg-5">The collaborative interface design tool for teams.</p>
           </div>
-          <div class="col-6 col-md-3 col-lg-2">
-            <h6 class="fw-bold mb-4">Product</h6>
+          <div v-for="group in footerLinkGroups" :key="group.title" class="col-6 col-md-3 col-lg-2">
+            <h6 class="fw-bold mb-4">{{ group.title }}</h6>
             <ul class="list-unstyled opacity-75">
-              <li class="mb-2"><a href="#" class="text-white text-decoration-none">Design</a></li>
-              <li class="mb-2">
-                <a href="#" class="text-white text-decoration-none">Prototype</a>
+              <li v-for="link in group.links" :key="link.label" class="mb-2">
+                <a :href="link.href" class="text-white text-decoration-none">{{ link.label }}</a>
               </li>
-              <li class="mb-2">
-                <a href="#" class="text-white text-decoration-none">Whiteboard</a>
-              </li>
-              <li class="mb-2"><a href="#" class="text-white text-decoration-none">Plugins</a></li>
-            </ul>
-          </div>
-          <div class="col-6 col-md-3 col-lg-2">
-            <h6 class="fw-bold mb-4">Resources</h6>
-            <ul class="list-unstyled opacity-75">
-              <li class="mb-2"><a href="#" class="text-white text-decoration-none">Learn</a></li>
-              <li class="mb-2">
-                <a href="#" class="text-white text-decoration-none">Community</a>
-              </li>
-              <li class="mb-2">
-                <a href="#" class="text-white text-decoration-none">Best Practices</a>
-              </li>
-              <li class="mb-2"><a href="#" class="text-white text-decoration-none">Support</a></li>
-            </ul>
-          </div>
-          <div class="col-6 col-md-3 col-lg-2">
-            <h6 class="fw-bold mb-4">Legal</h6>
-            <ul class="list-unstyled opacity-75">
-              <li class="mb-2"><a href="#" class="text-white text-decoration-none">Privacy</a></li>
-              <li class="mb-2"><a href="#" class="text-white text-decoration-none">Terms</a></li>
-              <li class="mb-2">
-                <a href="#" class="text-white text-decoration-none">Cookie Policy</a>
-              </li>
-              <li class="mb-2"><a href="#" class="text-white text-decoration-none">Licenses</a></li>
             </ul>
           </div>
         </div>
         <div class="d-flex flex-wrap justify-content-between align-items-center py-4">
           <p class="small mb-0 opacity-50">&copy; 2026 Next Gen, Inc. All rights reserved.</p>
           <div class="d-flex gap-4">
-            <a href="#" class="text-white opacity-75"><i class="bi bi-twitter-x"></i></a>
-            <a href="#" class="text-white opacity-75"><i class="bi bi-github"></i></a>
-            <a href="#" class="text-white opacity-75"><i class="bi bi-linkedin"></i></a>
+            <a
+              v-for="social in socialLinks"
+              :key="social.icon"
+              :href="social.href"
+              class="text-white opacity-75"
+            >
+              <i :class="['bi', social.icon]"></i>
+            </a>
           </div>
         </div>
       </div>
     </footer>
   </div>
 </template>
+
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import lottie from 'lottie-web'
 
+// --- State ---
 const isScrolled = ref(false)
 const heroAnimation = ref(null)
-
 let scrollHandler
+let intersectionObserver
 
-onMounted(() => {
+// --- Constants ---
+const navLinks = [
+  { href: '#features', label: 'Features' },
+  { href: '#community', label: 'Community' },
+  { href: '#customers', label: 'Customers' },
+  { href: '#questions', label: 'Questions' },
+]
+
+const features = [
+  {
+    icon: 'bi-people',
+    title: 'Create & Join Communities',
+    desc: 'Build and discover communities around your interests.',
+  },
+  {
+    icon: 'bi-chat-dots',
+    title: 'Real-time Chat & Comments',
+    desc: 'Connect instantly with live messaging and discussions.',
+  },
+  {
+    icon: 'bi-image',
+    title: 'Share Photos & Stories',
+    desc: 'Capture and share your moments with the world.',
+  },
+  {
+    icon: 'bi-bell',
+    title: 'Smart Notifications',
+    desc: 'Stay updated with personalized, intelligent alerts.',
+  },
+  {
+    icon: 'bi-shield-lock',
+    title: 'Privacy & Control',
+    desc: 'Your data, your rules with advanced privacy settings.',
+  },
+  {
+    icon: 'bi-hand-thumbs-up',
+    title: 'Like, Follow & React',
+    desc: 'Engage with content and connect with others easily.',
+  },
+]
+
+const stats = [
+  { icon: 'bi-people-fill', value: '5M+', label: 'Active Users', sub: 'Designers worldwide' },
+  { icon: 'bi-star-fill', value: '4.9/5', label: 'User Rating', sub: 'From 50K+ reviews' },
+  { icon: 'bi-download', value: '10M+', label: 'Downloads', sub: 'Across all platforms' },
+  { icon: 'bi-globe', value: '150+', label: 'Countries', sub: 'Global community' },
+]
+
+const testimonials = [
+  {
+    text: '"The best platform we\'ve ever used. The community features are game-changing for our team\'s productivity."',
+    author: 'John Doe',
+    role: 'CEO at TechFlow',
+    initials: 'JD',
+  },
+  {
+    text: "\"I've found so many amazing collaborators here. It's more than just a tool, it's a creative ecosystem.\"",
+    author: 'Anna Smith',
+    role: 'Independent Artist',
+    initials: 'AS',
+  },
+  {
+    text: '"Security and privacy were our top concerns, and Next Gen delivered beyond our expectations."',
+    author: 'Mike King',
+    role: 'CTO at SecureData',
+    initials: 'MK',
+  },
+]
+
+const questions = [
+  {
+    q: 'How do I join a community?',
+    a: 'Simply search for communities that interest you and click the join button. You can join up to 5 communities on the free plan.',
+  },
+  {
+    q: 'Is my data secure?',
+    a: 'Yes, we use advanced encryption and privacy controls to keep your data safe. Your information is never shared without your consent.',
+  },
+  {
+    q: 'Can I create my own community?',
+    a: 'Absolutely! With a Pro or Enterprise plan, you can create and manage your own communities with unlimited members.',
+  },
+  {
+    q: 'How does real-time chat work?',
+    a: 'Our chat system connects you instantly with other members. Messages are delivered in real-time with support for text, images, and files.',
+  },
+]
+
+const footerLinkGroups = [
+  {
+    title: 'Product',
+    links: [
+      { label: 'Design', href: '#' },
+      { label: 'Prototype', href: '#' },
+      { label: 'Whiteboard', href: '#' },
+      { label: 'Plugins', href: '#' },
+    ],
+  },
+  {
+    title: 'Resources',
+    links: [
+      { label: 'Learn', href: '#' },
+      { label: 'Community', href: '#' },
+      { label: 'Best Practices', href: '#' },
+      { label: 'Support', href: '#' },
+    ],
+  },
+  {
+    title: 'Legal',
+    links: [
+      { label: 'Privacy', href: '#' },
+      { label: 'Terms', href: '#' },
+      { label: 'Cookie Policy', href: '#' },
+      { label: 'Licenses', href: '#' },
+    ],
+  },
+]
+
+const socialLinks = [
+  { icon: 'bi-twitter-x', href: '#' },
+  { icon: 'bi-github', href: '#' },
+  { icon: 'bi-linkedin', href: '#' },
+]
+
+// --- Initialization ---
+const initScrollHandler = () => {
   scrollHandler = () => {
     isScrolled.value = window.scrollY > 50
   }
   window.addEventListener('scroll', scrollHandler)
+}
 
-  // Intersection Observer for scroll reveal
-  const observerOptions = {
-    threshold: 0.15,
-    rootMargin: '0px 0px -50px 0px',
-  }
-
-  const observer = new IntersectionObserver((entries) => {
+const initIntersectionObserver = () => {
+  const options = { threshold: 0.15, rootMargin: '0px 0px -50px 0px' }
+  intersectionObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('active')
-      }
+      if (entry.isIntersecting) entry.target.classList.add('active')
     })
-  }, observerOptions)
+  }, options)
 
-  document.querySelectorAll('.reveal-scroll').forEach((el) => observer.observe(el))
+  document.querySelectorAll('.reveal-scroll').forEach((el) => intersectionObserver.observe(el))
+}
 
-  // Load Lottie animation
+const initLottie = () => {
   if (heroAnimation.value) {
     lottie.loadAnimation({
       container: heroAnimation.value,
@@ -566,20 +420,72 @@ onMounted(() => {
       path: 'https://assets.lottiefiles.com/packages/lf20_1pxqjqps.json',
     })
   }
+}
+
+onMounted(() => {
+  initScrollHandler()
+  initIntersectionObserver()
+  initLottie()
 })
 
 onUnmounted(() => {
-  if (scrollHandler) {
-    window.removeEventListener('scroll', scrollHandler)
-  }
+  if (scrollHandler) window.removeEventListener('scroll', scrollHandler)
+  if (intersectionObserver) intersectionObserver.disconnect()
 })
 </script>
 
 <style scoped>
+/* --- Base Styles --- */
 .landing-page {
   background-color: #fff;
   min-height: 100vh;
   padding-top: 80px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* --- Utilities --- */
+.bg-light-soft {
+  background-color: #f8f9fa;
+}
+.transition-all {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.transition-transform {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.x-small {
+  font-size: 0.75rem;
+}
+
+.badge-pill {
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  background-color: #f1f3f5;
+  color: #000;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+/* --- Navbar --- */
+.custom-navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1030;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+}
+
+.custom-navbar.scrolled {
+  background-color: rgba(0, 0, 0, 0.95) !important;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
 }
 
 .logo-img {
@@ -589,85 +495,127 @@ onUnmounted(() => {
   border-radius: 50%;
 }
 
-.navbar-brand span {
-  letter-spacing: -0.5px;
-}
-
-.custom-navbar {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1030;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background-color: rgba(255, 255, 255, 0.9) !important;
+.nav-link {
+  color: #1f2937 !important;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
 }
 
-.custom-navbar.scrolled {
-  background-color: rgba(0, 0, 0, 0.95) !important;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+.nav-link:hover {
+  color: #000 !important;
+  border-bottom-color: #000;
 }
 
 .custom-navbar.scrolled .nav-link {
   color: #fff !important;
 }
-
 .custom-navbar.scrolled .nav-link:hover {
-  border-bottom: 2px solid #fff;
+  border-bottom-color: #fff;
 }
-
-.custom-navbar.scrolled .navbar-brand {
-  color: #fff !important;
-}
-
+.custom-navbar.scrolled .navbar-brand,
 .custom-navbar.scrolled .navbar-brand span {
   color: #fff !important;
 }
 
-.nav-link {
-  color: #1f2937 !important;
-  font-weight: 500;
-  border-bottom: 2px solid transparent;
-  transition: border-bottom 0.3s ease;
-}
-
-.nav-link:hover {
-  color: #000;
-  border-bottom: 2px solid #000;
-}
-
-.custom-navbar .btn {
-  background: transparent;
-  border: none;
-  color: #1f2937;
+/* --- Buttons --- */
+.btn {
+  padding: 0.625rem 1.5rem;
+  border-radius: 12px;
   font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid transparent;
 }
 
-.custom-navbar .btn:hover {
-  background: #000;
-  color: #fff;
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-.custom-navbar.scrolled .btn {
-  color: #fff;
+.btn-lg-custom {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
 }
 
-.custom-navbar.scrolled .btn:hover {
-  background: #fff;
-  color: #000;
+.btn-primary-custom,
+.btn-dark-custom {
+  background-color: #000;
+  color: #fff !important;
 }
 
+.btn-primary-custom:hover,
+.btn-dark-custom:hover {
+  background-color: #222;
+}
+
+.btn-outline-custom {
+  background-color: transparent;
+  border-color: #e5e7eb;
+  color: #374151 !important;
+}
+
+.btn-outline-custom:hover {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.btn-ghost-custom {
+  background-color: transparent;
+  color: #374151 !important;
+}
+
+.btn-ghost-custom:hover {
+  background-color: #f3f4f6;
+  color: #000 !important;
+}
+
+.btn-light-custom {
+  background-color: #fff;
+  color: #000 !important;
+}
+
+.btn-light-custom:hover {
+  background-color: #f8f9fa;
+  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+}
+
+.btn-outline-light-custom {
+  background-color: transparent;
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff !important;
+}
+
+.btn-outline-light-custom:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: #fff;
+}
+
+/* Navbar Scrolled States */
+.custom-navbar.scrolled .btn-primary-custom {
+  background-color: #fff;
+  color: #000 !important;
+}
+
+.custom-navbar.scrolled .btn-primary-custom:hover {
+  background-color: #f0f0f0;
+}
+
+.custom-navbar.scrolled .btn-ghost-custom {
+  color: #fff !important;
+}
+
+.custom-navbar.scrolled .btn-ghost-custom:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* --- Hero Section --- */
 .display-1 {
   font-size: clamp(3rem, 8vw, 5.5rem);
   line-height: 1.1;
   letter-spacing: -2px;
-}
-
-.lead {
-  font-size: 1.25rem;
-  line-height: 1.6;
 }
 
 .hero-image-wrapper {
@@ -700,38 +648,28 @@ onUnmounted(() => {
     float 3s ease-in-out infinite;
 }
 
-.hero-logo {
+.hero-logo,
+.hero-youtube-logo {
   position: absolute;
-  bottom: 50%;
-  left: 99%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: auto;
   z-index: 5;
   animation: float 4s ease-in-out infinite;
 }
 
+.hero-logo {
+  bottom: 50%;
+  left: 99%;
+  transform: translateX(-50%);
+  width: 80px;
+}
+
 .hero-youtube-logo {
-  position: absolute;
   top: -5%;
   right: 99%;
   width: 60px;
   height: 60px;
-  z-index: 6;
   border-radius: 50%;
   object-fit: cover;
-  animation: float 5s ease-in-out infinite;
-}
-
-.hero-lottie {
-  position: relative;
-  z-index: 2;
-  box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 500px;
-  display: block;
-  margin: 0 auto;
-  animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-duration: 5s;
 }
 
 .hero-lottie-overlay {
@@ -745,181 +683,84 @@ onUnmounted(() => {
   animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Entrance Animations */
-.reveal-entrance {
-  opacity: 0;
-  animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  animation-delay: var(--delay, 0s);
-}
-
-/* Scroll Reveal Animations */
-.reveal-scroll {
-  opacity: 0;
-  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.reveal-scroll.reveal-up {
-  transform: translateY(30px);
-}
-
-.reveal-scroll.reveal-scale {
-  transform: scale(0.95);
-}
-
-.reveal-scroll.active {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-40px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@media (max-width: 991.98px) {
-  .hero-content {
-    text-align: center;
-  }
-
-  .display-1 {
-    font-size: 3.5rem;
-  }
-
-  .hero-content .d-flex {
-    justify-content: center;
-  }
-
-  .hero-image-shadow {
-    display: none;
-  }
-}
-
-/* New Section Styles */
-.bg-light-soft {
-  background-color: #f8f9fa;
-}
-
-.badge-pill {
-  display: inline-block;
-  padding: 0.5rem 1.5rem;
-  background-color: #e7f0ff;
-  color: #0d6efd;
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: 0.85rem;
-}
-
-.stat-card {
-  padding: 2.5rem 1.5rem;
-  background: white;
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+/* --- Cards --- */
+.feature-card,
+.stat-card,
+.testimonial-card,
+.question-card {
   height: 100%;
-  transition: transform 0.3s ease;
-}
-
-.stat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.151);
-}
-
-.stat-icon-bg {
-  width: 48px;
-  height: 48px;
-  background: #000;
-  color: #fff;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  font-size: 1.25rem;
-}
-
-.x-small {
-  font-size: 0.75rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 1.5rem;
 }
 
 .feature-card {
   padding: 2.5rem;
   border: 1px solid #f1f3f5;
-  border-radius: 1.5rem;
-  background: #fff;
-  transition: all 0.3s ease;
+  background: rgba(213, 217, 247, 0.17);
 }
 
 .feature-card:hover {
   border-color: #dee2e6;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.121);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
 }
 
-.feature-icon-box {
-  width: 48px;
-  height: 48px;
-  background: #f8f9fa;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  color: #212529;
-  transition: all 0.3s ease;
+.stat-card {
+  padding: 2.5rem 1.5rem;
+  background: white;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
 }
 
-.transition-transform {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-.transition-all {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.btn.transition-all:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Customers & Pricing Additional Styles */
 .testimonial-card {
   padding: 3rem 2rem;
-  background: white;
-  border-radius: 2rem;
+  background: rgba(213, 217, 247, 0.17);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-  height: 100%;
 }
 
 .testimonial-card:hover {
   box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+}
+
+.question-card {
+  padding: 2.5rem;
+  background: white;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+.question-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Icons & Avatars --- */
+.feature-icon-box,
+.stat-icon-bg {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.feature-icon-box {
+  background: #f8f9fa;
+  font-size: 1.5rem;
+  color: #212529;
+}
+
+.stat-icon-bg {
+  background: #000;
+  color: #fff;
+  margin: 0 auto;
+  font-size: 1.25rem;
 }
 
 .avatar-sm {
@@ -935,57 +776,18 @@ onUnmounted(() => {
   color: #4b5563;
 }
 
-.popular-badge {
-  position: absolute;
-  top: -15px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #000;
-  color: #fff;
-  padding: 0.4rem 1.2rem;
-  border-radius: 50px;
-  font-size: 0.75rem;
-  font-weight: 800;
-}
-
-.question-card {
-  padding: 2.5rem;
-  background: white;
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-  height: 100%;
-  text-align: left;
-  transition: transform 0.3s ease;
-}
-
-.question-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-/* CTA & Footer Styles */
-.footer-logo {
-  width: 32px;
-  height: 32px;
-  background: #fff;
-  border-radius: 10px;
-}
-
-.footer-section {
-  background-color: #0d1117;
-}
-
-.footer-section a:hover {
-  opacity: 1 !important;
-  color: #fff !important;
-}
-
+/* --- CTA Section --- */
 .cta-section {
-  background-color: #000 !important;
+  position: relative;
+  background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2000')
+    center/cover fixed no-repeat;
+}
+
+.tech-faq-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 3, 15, 0.85);
+  z-index: 1;
 }
 
 .cta-section .display-4 {
@@ -993,49 +795,76 @@ html {
   letter-spacing: -1.5px;
 }
 
-/* Team Section Styles */
-.team-card {
-  padding: 2rem 1rem;
-  background: white;
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-  height: 100%;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-  text-align: center;
+/* --- Footer --- */
+.footer-section {
+  background-color: #0d1117;
 }
 
-.team-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+.footer-section a {
+  transition: opacity 0.3s ease;
+}
+.footer-section a:hover {
+  opacity: 1 !important;
+  color: #fff !important;
 }
 
-.team-avatar {
-  width: 120px;
-  height: 120px;
-  margin: 0 auto;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 4px solid #f8f9fa;
-  transition: border-color 0.3s ease;
+/* --- Animations --- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.team-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
-.team-card:hover .team-avatar {
-  border-color: #0d6efd;
+.reveal-entrance {
+  opacity: 0;
+  animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--delay, 0s);
 }
 
-.team-social a {
-  transition: color 0.3s ease;
+.reveal-scroll {
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.team-social a:hover {
-  color: #0d6efd !important;
+.reveal-scroll.reveal-up {
+  transform: translateY(30px);
+}
+.reveal-scroll.reveal-scale {
+  transform: scale(0.95);
+}
+.reveal-scroll.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* --- Responsive --- */
+@media (max-width: 991.98px) {
+  .hero-content {
+    text-align: center;
+  }
+  .display-1 {
+    font-size: 3.5rem;
+  }
+  .hero-content .d-flex {
+    justify-content: center;
+  }
+  .hero-image-shadow {
+    display: none;
+  }
 }
 </style>
