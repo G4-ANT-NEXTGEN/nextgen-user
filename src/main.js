@@ -4,6 +4,9 @@ import "./assets/main.css";
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 
+import Vue3Toastify, { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -28,5 +31,18 @@ app.component('BaseInput', BaseInput)
 app.component('BaseToast', BaseToast)
 app.component('BaseModal', BaseModal)
 app.component('BaseSelect', BaseSelect)
+
+app.use(Vue3Toastify, {
+    autoClose: 3000,
+    position: toast.POSITION.TOP_RIGHT,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    pauseOnFocusLoss: true,
+    draggable: true,
+    newestOnTop: true,
+    theme: "light",
+});
+
 
 app.mount('#app')

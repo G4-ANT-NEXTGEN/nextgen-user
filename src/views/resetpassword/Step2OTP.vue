@@ -1,6 +1,5 @@
 <template>
     <router-view />
-    <BaseToast :show="toast.show" :message="toast.message" :type="toast.type" title="Error" @close="toast.close" />
     <!-- Step 2: OTP Verification -->
     <div class="form-section">
         <div class="step-indicator">STEP 2 OF 4</div>
@@ -38,12 +37,11 @@
 import BaseButton from "@/components/ui/base/BaseButton.vue"
 import router from "@/router"
 import { useAuthStore } from "@/stores/auth"
-import { useToastStore } from "@/stores/toast"
+import { showError } from "@/utils/toast"
 import { ref, onMounted, nextTick } from "vue"
 
 const otp = ref("")
 const authStore = useAuthStore()
-const toast = useToastStore()
 const inputs = ref([])
 const email = ref(authStore.emailForget)
 const isLoading = ref(false)
@@ -90,7 +88,7 @@ const submitOtp = async () => {
         if (authStore.user?.result) {
             router.push("/reset-password/new-password")
         } else {
-            toast.error(authStore.user?.message || 'Failed to send OTP')
+            showError('Invalid OTP')
         }
     } catch (error) {
         console.log(error);

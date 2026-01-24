@@ -1,7 +1,4 @@
 <template>
-
-    <BaseToast v-if="toast.show" :message="toast.message" :type="toast.type" @close="toast.show = false" />
-
     <!-- Step 1: Create Account -->
     <div class="form-section active">
         <div class="step-indicator">STEP 1 OF 4</div>
@@ -57,15 +54,14 @@
 
 <script setup>
 import { ref, reactive } from 'vue';
+import { showSuccess, showError } from "@/utils/toast";
 import { useRequiredValidator } from '@/composables/useRequiredValidator';
 import { usePasswordValidator } from '@/composables/usePasswordValidator';
 import { useAuthStore } from '@/stores/auth';
-import { useToastStore } from '@/stores/toast';
 import router from '@/router';
 
 const { errors, validateField } = useRequiredValidator()
 const { validatePassword: checkPassword, validatePasswordMatch } = usePasswordValidator()
-const toast = useToastStore()
 const email = ref('')
 const password = ref('')
 const comfirmpassword = ref('')
@@ -111,8 +107,6 @@ const validateForm = () => {
     return isValid
 }
 
-
-
 const nextStep = async () => {
 
     if (!validateForm()) {
@@ -131,15 +125,16 @@ const nextStep = async () => {
             }
         )
 
-        if (authStore.userResult) {
+        if (authStore.userResult == false) {
+            return
+        } else {
             router.push({ name: 'typeuser' })
-        }else{
-            toast.error('Registration failed. Please try again.')
         }
 
     }
-    catch (err) {
-        console.log('Registration error:', err)
+    catch (e) {
+        const res = e.response?.data;
+
     } finally {
         isLoading.value = false
     }
