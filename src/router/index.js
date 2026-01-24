@@ -17,6 +17,10 @@ import Step4PreviewUserView from '@/views/register/Step4PreviewUserView.vue'
 import LandingView from '@/views/LandingView.vue'
 import AboutView from '@/views/AboutView.vue'
 
+import ProfileDetailView from '@/views/profile/ProfileDetailView.vue'
+import ChatListView from '@/views/chat/ChatListView.vue'
+
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -83,6 +87,11 @@ const router = createRouter({
       ],
     },
     {
+      path: '/chat',
+      name: 'chatlist',
+      component: ChatListView
+    },
+    {
       path: '/home',
       name: 'home',
       component: HomeView,
@@ -91,7 +100,15 @@ const router = createRouter({
         requiresAuth: true,
       },
     },
-
+    {
+      path: '/profile',
+      name: 'profile',
+      component: ProfileDetailView,
+      meta: {
+        title: 'ProfileDetail',
+        requiresAuth: true
+      }
+    },
     {
       path: '/reset-password',
       component: ResetLayout,

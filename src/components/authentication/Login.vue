@@ -1,5 +1,5 @@
 <template>
-    <BaseToast :show="toast.show" :message="toast.message" :type="toast.type" @close="toast.show = false" />
+
     <div class="container d-flex align-items-center justify-content-center">
         <div class="main-container">
             <div class="row g-0 h-100">
@@ -124,12 +124,12 @@ import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useRequiredValidator } from '@/composables/useRequiredValidator';
 import { usePasswordValidator } from '@/composables/usePasswordValidator';
-import { useToastStore } from '@/stores/toast';
+import { showError } from '@/utils/toast';
 import BaseInput from '../ui/base/BaseInput.vue';
-import router from '@/router';
+import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore()
-const toast = useToastStore()
+const router = useRouter()
 const email = ref('')
 const password = ref('')
 const showPass = ref(false)
@@ -170,6 +170,8 @@ const loginForm = async () => {
             }
         )
 
+        console.log(authStore.userResult);
+        router.push({ name: 'home' })
     } catch (err) {
         console.log(err);
     } finally {
@@ -212,7 +214,6 @@ body {
     width: 100%;
     height: calc(100vh - 100px);
     border-radius: 24px;
-    overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
 }
 
@@ -225,6 +226,7 @@ body {
     justify-content: space-between;
     padding: 40px;
     min-height: 600px;
+    border-radius: 24px;
 }
 
 .left-panel::before {
@@ -348,6 +350,7 @@ body {
 .right-panel {
     background: white;
     padding: 60px;
+    border-radius: 24px;
     display: flex;
     flex-direction: column;
     justify-content: center;

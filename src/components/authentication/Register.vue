@@ -1,6 +1,6 @@
 <template>
-    <!-- <BaseToast :show="toast.show" :message="toast.message" :type="toast.type" @close="toast.show = false" /> -->
-    <div class="container d-flex align-items-center justify-content-center" style="height: 100vh;">
+    <!--  -->
+    <div class="container container-lg-fluid d-flex align-items-center justify-content-center" style="height: 100vh;">
         <div class="container-custom">
             <div class="row g-0">
                 <!-- Sidebar -->
@@ -55,10 +55,7 @@
                                 </div>
 
                             </div>
-                            <!-- <div @click="gotoLogin()" class="back-link">
-                                <span>←</span>
-                                <span>Back to Login</span>
-                            </div> -->
+
                         </div>
                     </div>
                 </div>
@@ -80,21 +77,17 @@
 import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
-import { useToastStore } from '@/stores/toast'
+
 
 const route = useRoute()
 const router = useRouter()
 const activeStep = ref(1)
-const toast = useToastStore()
-
-const gotoLogin = () => {
-    router.push({ name: 'login' })
-}
 
 const stepMap = {
-    'email': 1,
-    'otp': 2,
-    'new-password': 3
+    'createuser': 1,
+    'typeuser': 2,
+    'positionuser': 3,
+    'previewuser': 4
 }
 
 const updateActiveStep = () => {
@@ -106,6 +99,9 @@ watch(() => route.name, updateActiveStep, { immediate: true })
 
 const isStepActive = (step) => activeStep.value === step
 const isStepCompleted = (step) => activeStep.value > step
+
+
+
 </script>
 
 
@@ -124,11 +120,11 @@ body {
     box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
     width: 100%;
 
-    overflow: hidden;
 }
 
 .sidebar {
     background: #000000;
+    border-radius: 24px;
     color: white;
     position: relative;
     overflow: hidden;
@@ -323,8 +319,8 @@ body {
 
 /* Main Content */
 .main-content {
-    padding: 56px 0px;
-    width: calc(100% - 200px);
+    padding: 20px 0px;
+    width: calc(100% - 400px);
     background: var(--color-accent);
 }
 
@@ -532,7 +528,20 @@ h1 {
     color: white;
 }
 
+@media (min-width: 1024px) {
+    .main-content {
+        width: calc(100% - 300px);
+    }
+
+    .content-wrapper {
+        width: 90%;
+    }
+}
+
 @media (max-width: 768px) {
+    .main-content {
+        width: calc(100% - 50px);
+    }
 
     .sidebar {
         padding: 30px 20px;

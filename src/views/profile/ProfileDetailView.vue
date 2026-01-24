@@ -1,3 +1,7 @@
 <template>
-    <h1>Welcome to the Profile Detail Page</h1>
+    <ProfileLayout/>
 </template>
+<script setup>
+import ProfileLayout from '@/layout/ProfileLayout.vue';
+
+</script>
