@@ -14,7 +14,10 @@ import Step1CreateUserView from '@/views/register/Step1CreateUserView.vue'
 import Step2TypeUserView from '@/views/register/Step2TypeUserView.vue'
 import Step3PositionUserView from '@/views/register/Step3PositionUserView.vue'
 import Step4PreviewUserView from '@/views/register/Step4PreviewUserView.vue'
+import LandingView from '@/views/LandingView.vue'
+import AboutView from '@/views/AboutView.vue'
 
+import ProfileDetailView from '@/views/profile/ProfileDetailView.vue'
 import ChatListView from '@/views/chat/ChatListView.vue'
 
 
@@ -22,13 +25,31 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/landing',
+      name: 'landing',
+      component: LandingView,
+      meta: {
+        title: 'Landing',
+        requiresAuth: false,
+      },
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: AboutView,
+      meta: {
+        title: 'About',
+        requiresAuth: false,
+      },
+    },
+    {
       path: '/',
       name: 'login',
       component: Login,
       meta: {
         title: 'Login',
-        requiresAuth: false
-      }
+        requiresAuth: false,
+      },
     },
     {
       path: '/register',
@@ -36,34 +57,34 @@ const router = createRouter({
       component: Register,
       meta: {
         requiresAuth: false,
-        fromLogin: true
+        fromLogin: true,
       },
       children: [
         {
           path: '/createuser',
           name: 'createuser',
           component: Step1CreateUserView,
-          meta: { title: 'Create User' }
+          meta: { title: 'Create User' },
         },
         {
           path: '/typeuser',
           name: 'typeuser',
           component: Step2TypeUserView,
-          meta: { title: 'Type User' }
+          meta: { title: 'Type User' },
         },
         {
           path: '/positionuser',
           name: 'positionuser',
           component: Step3PositionUserView,
-          meta: { title: 'Position User' }
+          meta: { title: 'Position User' },
         },
         {
           path: '/previewuser',
           name: 'previewuser',
           component: Step4PreviewUserView,
-          meta: { title: 'Preview User' }
-        }
-      ]
+          meta: { title: 'Preview User' },
+        },
+      ],
     },
     {
       path: '/chat',
@@ -76,54 +97,61 @@ const router = createRouter({
       component: HomeView,
       meta: {
         title: 'Home',
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: ProfileDetailView,
+      meta: {
+        title: 'ProfileDetail',
         requiresAuth: true
       }
     },
-
     {
       path: '/reset-password',
       component: ResetLayout,
       meta: {
         requiresAuth: false,
-        fromLogin: true
+        fromLogin: true,
       },
       children: [
         {
           path: '',
-          redirect: { name: 'email' }
+          redirect: { name: 'email' },
         },
         {
           path: 'email',
           name: 'email',
           component: Step1Email,
-          meta: { title: 'Email', fromLogin: true }
+          meta: { title: 'Email', fromLogin: true },
         },
         {
           path: 'otp',
           name: 'otp',
           component: Step2OTP,
-          meta: { title: 'OTP', fromLogin: true }
+          meta: { title: 'OTP', fromLogin: true },
         },
         {
           path: 'new-password',
           name: 'new-password',
           component: Step3NewPassword,
-          meta: { title: 'New Password', fromLogin: true }
-        }
-      ]
+          meta: { title: 'New Password', fromLogin: true },
+        },
+      ],
     },
 
     {
       path: '/:pathMatch(.*)*',
-      redirect: { name: 'login' }
-    }
-  ]
+      redirect: { name: 'login' },
+    },
+  ],
 })
-
 
 router.beforeEach(async (to) => {
   const authStore = useAuthStore()
-  document.title = to.meta.title ? to.meta.title + " - My Admin" : "My Admin"
+  document.title = to.meta.title ? to.meta.title + ' - My Admin' : 'My Admin'
 
   // check user have token or not and have user profile data
   if (authStore.token && !authStore.user) {
@@ -151,6 +179,5 @@ router.beforeEach(async (to) => {
 
   return true
 })
-
 
 export default router

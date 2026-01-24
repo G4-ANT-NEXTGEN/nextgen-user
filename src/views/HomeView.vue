@@ -1,336 +1,369 @@
 <template>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container-fluid px-4">
-            <div class="d-flex align-items-center gap-4">
-                <div class="d-flex align-items-center gap-2">
-                    <div class="logo-box">
-                        <div class="logo-inner"></div>
+    <div class="body">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center gap-4">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="logo-box">
+                            <div class="logo-inner">
+                                <img class="img-fluid" src="../../public/logo.jpg" alt="">
+                            </div>
+                        </div>
+                        <span class="fs-5 fw-bold">NextGen</span>
                     </div>
-                    <span class="fs-5 fw-bold">WeShare</span>
+                    <div class="position-relative ms-4">
+                        <i class="bi bi-search search-icon"></i>
+                        <input type="text" class="search-box" placeholder="Search" style="width: 420px;">
+                    </div>
                 </div>
-                <div class="position-relative ms-4">
-                    <i class="bi bi-search search-icon"></i>
-                    <input type="text" class="form-control search-box" placeholder="Search" style="width: 420px;">
+                <div class="d-flex align-items-center gap-3">
+                    <button @click="toggleTheme" class="theme-btn">
+                        <i v-if="theme === 'light'" class="bi bi-moon-fill icon-btn"></i>
+                        <i v-else class="bi bi-brightness-high-fill icon-btn"></i>
+                    </button>
+                    <button class="theme-btn">
+                        <i class="bi bi-bell icon-btn"></i>
+                    </button>
+                    <button class="theme-btn">
+                        <i class="bi bi-bookmark icon-btn"></i>
+                    </button>
+                    <div class="d-flex align-items-center gap-2" style="cursor: pointer;">
+                        <div class="small-avatar overflow-hidden rounded-circle">
+                            <img class="img-fluid" :src="authStore.user.avatar" alt="">
+                        </div>
+                        <span class="fw-semibold">{{ authStore.user.full_name }}</span>
+                    </div>
                 </div>
             </div>
-            <div class="d-flex align-items-center gap-3">
-                <i class="bi bi-bell fs-5 icon-btn" style="color: var(--color-muted);"></i>
-                <i class="bi bi-bookmark fs-5 icon-btn" style="color: var(--color-muted);"></i>
-                <div class="d-flex align-items-center gap-2" style="cursor: pointer;">
-                    <div class="small-avatar"></div>
-                    <span class="fw-semibold">Jakob Botosh</span>
-                </div>
-            </div>
-        </div>
-    </nav>
+        </nav>
 
-    <div class="container-fluid px-4 py-4 container-wrapper">
-        <div class="row g-4">
-            <!-- Left Sidebar -->
-            <div class="sidebar-left">
-                <div class="sidebar-content">
-                    <!-- Profile Card -->
-                    <div class="card-custom mb-3">
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="avatar"></div>
+        <div class="container-fluid px-4 py-4 container-wrapper">
+            <div class="row g-4">
+                <!-- Left Sidebar -->
+                <div class="sidebar-left">
+                    <div class="sidebar-content">
+                        <!-- Profile Card -->
+                        <div class="card-custom mb-3">
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <div class="avatar overflow-hidden rounded-circle">
+                                    <img class="img-fluid" :src="authStore.user.avatar" alt="">
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold">
+                                        {{ authStore.user.full_name }}
+                                        <i class="bi bi-check-circle-fill text-primary-custom"></i>
+                                    </h6>
+                                    <small style="color: var(--color-muted);">
+                                        @{{ authStore.user.full_name.toLowerCase().replace(/ /g, '.') }}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="row text-center profile-stats">
+                                <div class="col-4">
+                                    <div class="fw-bold fs-5">2.3k</div>
+                                    <small style="color: var(--color-muted);">Follower</small>
+                                </div>
+                                <div class="col-4">
+                                    <div class="fw-bold fs-5">235</div>
+                                    <small style="color: var(--color-muted);">Following</small>
+                                </div>
+                                <div class="col-4">
+                                    <div class="fw-bold fs-5">80</div>
+                                    <small style="color: var(--color-muted);">Post</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Navigation Menu -->
+                        <div class="nav-menu mb-3">
+                            <a href="#" class="nav-item active">
+                                <i class="bi bi-house-door-fill"></i>
+                                <span>Feed</span>
+                            </a>
+                            <a href="#" class="nav-item">
+                                <i class="bi bi-people-fill"></i>
+                                <span>Friends</span>
+                            </a>
+                            <a href="#" class="nav-item position-relative">
+                                <i class="bi bi-calendar-event"></i>
+                                <span>Event</span>
+                                <span class="badge bg-danger badge-custom">1</span>
+                            </a>
+                            <a href="#" class="nav-item">
+                                <i class="bi bi-play-circle-fill"></i>
+                                <span>Watch Videos</span>
+                            </a>
+                            <a href="#" class="nav-item">
+                                <i class="bi bi-image-fill"></i>
+                                <span>Photos</span>
+                            </a>
+                            <a href="#" class="nav-item">
+                                <i class="bi bi-shop"></i>
+                                <span>Marketplace</span>
+                            </a>
+                            <a href="#" class="nav-item position-relative">
+                                <i class="bi bi-file-earmark-text"></i>
+                                <span>Files</span>
+                                <span class="badge badge-custom" style="background-color: #8b5cf6;">7</span>
+                            </a>
+                        </div>
+
+                        <!-- Pages You Like -->
+                        <div class="card-custom">
+                            <h6 class="fw-bold mb-3" style="color: var(--color-muted); letter-spacing: 0.5px;">PAGES YOU
+                                LIKE</h6>
+                            <div class="page-item-custom">
+                                <div class="page-icon"
+                                    style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">UI</div>
+                                <span class="fw-medium">UI/UX Community</span>
+                            </div>
+                            <div class="page-item-custom">
+                                <div class="page-icon"
+                                    style="background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);">WD</div>
+                                <span class="fw-medium">Web Designer</span>
+                            </div>
+                            <div class="page-item-custom">
+                                <div class="page-icon"
+                                    style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);">D</div>
+                                <span class="fw-medium">Dribbble Community</span>
+                            </div>
+                            <div class="page-item-custom">
+                                <div class="page-icon"
+                                    style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);">B</div>
+                                <span class="fw-medium">Behance <i class="bi bi-patch-check-fill text-primary-custom"
+                                        style="font-size: 12px;"></i></span>
+                            </div>
+                            <a href="#" class="link-custom small mt-2 d-inline-block">View All</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Feed -->
+                <div class="col-lg-6 main-feed ">
+                    <!-- Stories -->
+                    <!-- <div class="post-card mb-3">
+                        <div class="d-flex gap-4 overflow-auto pb-2">
+                            <div class="story-item">
+                                <div class="story-avatar active">👤</div>
+                                <small class="fw-medium">Your Story</small>
+                            </div>
+                            <div class="story-item">
+                                <div class="story-avatar">👨</div>
+                                <small class="fw-medium">Justin</small>
+                            </div>
+                            <div class="story-item">
+                                <div class="story-avatar">👱</div>
+                                <small class="fw-medium">Davis</small>
+                            </div>
+                            <div class="story-item">
+                                <div class="story-avatar">👨‍💼</div>
+                                <small class="fw-medium">Randy</small>
+                            </div>
+                            <div class="story-item">
+                                <div class="story-avatar">👔</div>
+                                <small class="fw-medium">Charles</small>
+                            </div>
+                            <div class="story-item">
+                                <div class="story-avatar">👩</div>
+                                <small class="fw-medium">Zana</small>
+                            </div>
+                            <div class="story-item">
+                                <div class="story-avatar">🧑</div>
+                                <small class="fw-medium">Talan</small>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <!-- Create Post -->
+                    <div class="post-card mb-3 create-post">
+                        <div class="d-flex gap-4 mb-3 align-items-center ">
                             <div>
-                                <h6 class="mb-0 fw-bold">
-                                    Jakob Botosh
-                                    <i class="bi bi-check-circle-fill text-primary-custom"></i>
-                                </h6>
-                                <small style="color: var(--color-muted);">@jakobotosh</small>
+                                <div class="small-avatar overflow-hidden rounded-circle">
+                                    <img class="img-fluid" :src="authStore.user.avatar" alt="">
+                                </div>
+                            </div>
+                            <div class="create-post-input">
+                                <input type="text" placeholder="what on your mind?" class="form-control">
                             </div>
                         </div>
-                        <div class="row text-center profile-stats">
-                            <div class="col-4">
-                                <div class="fw-bold fs-5">2.3k</div>
-                                <small style="color: var(--color-muted);">Follower</small>
+                        <div class="d-flex state-post">
+                            <div class="btn-tag">
+                                <i class="bi bi-image icon-image"></i>
+                                <span>Image/Video</span>
                             </div>
-                            <div class="col-4">
-                                <div class="fw-bold fs-5">235</div>
-                                <small style="color: var(--color-muted);">Following</small>
+                            <div class="btn-tag">
+                                <i class="bi bi-paperclip icon-attachment"></i>
+                                <span>Attachment</span>
                             </div>
-                            <div class="col-4">
-                                <div class="fw-bold fs-5">80</div>
-                                <small style="color: var(--color-muted);">Post</small>
+                            <div class="btn-tag">
+                                <i class="bi bi-camera-video icon-live"></i>
+                                <span>Live</span>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Navigation Menu -->
-                    <div class="nav-menu mb-3">
-                        <a href="#" class="nav-item active">
-                            <i class="bi bi-house-door-fill"></i>
-                            <span>Feed</span>
-                        </a>
-                        <a href="#" class="nav-item">
-                            <i class="bi bi-people-fill"></i>
-                            <span>Friends</span>
-                        </a>
-                        <a href="#" class="nav-item position-relative">
-                            <i class="bi bi-calendar-event"></i>
-                            <span>Event</span>
-                            <span class="badge bg-danger badge-custom">1</span>
-                        </a>
-                        <a href="#" class="nav-item">
-                            <i class="bi bi-play-circle-fill"></i>
-                            <span>Watch Videos</span>
-                        </a>
-                        <a href="#" class="nav-item">
-                            <i class="bi bi-image-fill"></i>
-                            <span>Photos</span>
-                        </a>
-                        <a href="#" class="nav-item">
-                            <i class="bi bi-shop"></i>
-                            <span>Marketplace</span>
-                        </a>
-                        <a href="#" class="nav-item position-relative">
-                            <i class="bi bi-file-earmark-text"></i>
-                            <span>Files</span>
-                            <span class="badge badge-custom" style="background-color: #8b5cf6;">7</span>
-                        </a>
-                    </div>
-
-                    <!-- Pages You Like -->
-                    <div class="card-custom">
-                        <h6 class="fw-bold mb-3" style="color: var(--color-muted); letter-spacing: 0.5px;">PAGES YOU
-                            LIKE</h6>
-                        <div class="page-item-custom">
-                            <div class="page-icon"
-                                style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">UI</div>
-                            <span class="fw-medium">UI/UX Community</span>
-                        </div>
-                        <div class="page-item-custom">
-                            <div class="page-icon"
-                                style="background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);">WD</div>
-                            <span class="fw-medium">Web Designer</span>
-                        </div>
-                        <div class="page-item-custom">
-                            <div class="page-icon"
-                                style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);">D</div>
-                            <span class="fw-medium">Dribbble Community</span>
-                        </div>
-                        <div class="page-item-custom">
-                            <div class="page-icon"
-                                style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);">B</div>
-                            <span class="fw-medium">Behance <i class="bi bi-patch-check-fill text-primary-custom"
-                                    style="font-size: 12px;"></i></span>
-                        </div>
-                        <a href="#" class="link-custom small mt-2 d-inline-block">View All</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Main Feed -->
-            <div class="col-lg-6 main-feed">
-                <!-- Stories -->
-                <div class="post-card mb-3">
-                    <div class="d-flex gap-4 overflow-auto pb-2">
-                        <div class="story-item">
-                            <div class="story-avatar active">👤</div>
-                            <small class="fw-medium">Your Story</small>
-                        </div>
-                        <div class="story-item">
-                            <div class="story-avatar">👨</div>
-                            <small class="fw-medium">Justin</small>
-                        </div>
-                        <div class="story-item">
-                            <div class="story-avatar">👱</div>
-                            <small class="fw-medium">Davis</small>
-                        </div>
-                        <div class="story-item">
-                            <div class="story-avatar">👨‍💼</div>
-                            <small class="fw-medium">Randy</small>
-                        </div>
-                        <div class="story-item">
-                            <div class="story-avatar">👔</div>
-                            <small class="fw-medium">Charles</small>
-                        </div>
-                        <div class="story-item">
-                            <div class="story-avatar">👩</div>
-                            <small class="fw-medium">Zana</small>
-                        </div>
-                        <div class="story-item">
-                            <div class="story-avatar">🧑</div>
-                            <small class="fw-medium">Talan</small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Create Post -->
-                <div class="post-card mb-3">
-                    <div class="d-flex gap-3 mb-3">
-                        <div class="small-avatar"></div>
-                        <input type="text" class="form-control create-post-input" placeholder="What's on your mind?">
-                    </div>
-                    <div class="d-flex flex-wrap gap-2">
-                        <button class="btn btn-sm btn-light-custom d-flex align-items-center gap-2">
-                            <i class="bi bi-image text-primary-custom"></i>
-                            <span>Image/Video</span>
-                        </button>
-                        <button class="btn btn-sm btn-light-custom d-flex align-items-center gap-2">
-                            <i class="bi bi-paperclip" style="color: #8b5cf6;"></i>
-                            <span>Attachment</span>
-                        </button>
-                        <button class="btn btn-sm btn-light-custom d-flex align-items-center gap-2">
-                            <i class="bi bi-camera-video text-danger"></i>
-                            <span>Live</span>
-                        </button>
-                        <button class="btn btn-sm btn-light-custom d-flex align-items-center gap-2">
-                            <span class="text-success fw-bold">#</span>
-                            <span>Hashtag</span>
-                        </button>
-                        <button class="btn btn-sm btn-light-custom d-flex align-items-center gap-2">
-                            <span class="fw-bold" style="color: #ec4899;">@</span>
-                            <span>Mention</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Post -->
-                <div class="post-card">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="small-avatar"></div>
-                            <div>
-                                <h6 class="mb-0 fw-bold">Cameron Williamson</h6>
-                                <small style="color: var(--color-muted);">14 Aug at 4:21 PM</small>
+                            <div class="btn-tag">
+                                <span class="icon-hashtag">#</span>
+                                <span>Hashtag</span>
+                            </div>
+                            <div class="btn-tag">
+                                <span class="icon-mention">@</span>
+                                <span>Mention</span>
                             </div>
                         </div>
-                        <i class="bi bi-three-dots icon-btn" style="color: var(--color-muted);"></i>
                     </div>
 
-                    <div class="row g-3 mb-3">
-                        <div class="col-6">
-                            <div class="post-image bg-yellow">🎧</div>
-                        </div>
-                        <div class="col-6">
-                            <div class="post-image bg-gray">🎸</div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center pt-3 divider">
-                        <button class="btn-post-action d-flex align-items-center gap-2">
-                            <i class="bi bi-heart"></i>
-                            <span>30 Like</span>
-                        </button>
-                        <button class="btn-post-action d-flex align-items-center gap-2">
-                            <i class="bi bi-chat"></i>
-                            <span>12 Comment</span>
-                        </button>
-                        <button class="btn-post-action d-flex align-items-center gap-2">
-                            <i class="bi bi-share"></i>
-                            <span>3 Share</span>
-                        </button>
-                        <i class="bi bi-bookmark icon-btn" style="color: var(--color-muted);"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Sidebar -->
-            <div class="col-lg-3 sidebar-right">
-                <div class="sidebar-content">
-                    <!-- Messages -->
-                    <div class="card-custom mb-3">
+                    <!-- Post -->
+                    <div class="post-card" v-for="post in postStore.posts" :key="post.id">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="fw-bold mb-0">Messages</h6>
-                            <i class="bi bi-plus-lg icon-btn"></i>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="small-avatar rounded-circle overflow-hidden">
+                                    <img class="img-fluid w-100 h-100 object-fit-cover" :src="post.creator.avatar"
+                                        alt="">
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold">{{ post.creator.full_name }}</h6>
+                                    <small style="color: var(--color-muted);">
+                                        <i class="bi bi-globe-americas"></i>
+                                        {{ formatDate(post.created_at) }}
+                                    </small>
+                                </div>
+                            </div>
+                            <i class="bi bi-three-dots icon-btn" style="color: var(--color-muted);"></i>
                         </div>
-                        <div class="position-relative mb-3">
-                            <i class="bi bi-search position-absolute"
-                                style="left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-muted);"></i>
-                            <input type="text" class="form-control"
-                                style="padding-left: 38px; background-color: var(--color-secondary); border: 1px solid var(--color-border); border-radius: 10px;"
-                                placeholder="Search">
-                            <i class="bi bi-funnel position-absolute icon-btn"
-                                style="right: 8px; top: 50%; transform: translateY(-50%); color: var(--color-muted);"></i>
-                        </div>
-                        <div class="d-flex gap-2 mb-3">
-                            <button class="tab-filter active">Primary</button>
-                            <button class="tab-filter">General</button>
-                            <button class="tab-filter">Requests(4)</button>
+                        <div>
+                            <p>{{ post.text }}</p>
                         </div>
 
-                        <div class="message-item mb-2">
-                            <div class="position-relative">
-                                <div class="small-avatar"></div>
-                                <div class="online-indicator"></div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-12">
+                                <div class="w-100">
+                                    <img class="img-fluid poduct-post" :src="post.image" alt="">
+                                </div>
                             </div>
-                            <small class="fw-medium">Roger Korsgaard</small>
                         </div>
-                        <div class="message-item mb-2">
-                            <div class="position-relative">
-                                <div class="small-avatar"></div>
-                            </div>
-                            <small class="fw-medium">Terry Torff</small>
+
+                        <div class="d-flex justify-content-between align-items-center pt-3 divider">
+                            <button @click="reactLike(post.id)" class="btn-post-action d-flex align-items-center gap-2">
+                                <i v-if="isLiked(post.id)" class="bi bi-heart-fill"></i>
+                                <i v-else class="bi bi-heart"></i>
+                                <span>{{ getLikeCount(post.id) }} Like</span>
+                            </button>
+                            <button class="btn-post-action d-flex align-items-center gap-2">
+                                <i class="bi bi-chat"></i>
+                                <span>12 Comment</span>
+                            </button>
+                            <button class="btn-post-action d-flex align-items-center gap-2">
+                                <i class="bi bi-share"></i>
+                                <span>3 Share</span>
+                            </button>
+                            <i class="bi bi-bookmark icon-btn" style="color: var(--color-muted);"></i>
                         </div>
-                        <div class="message-item mb-2">
-                            <div class="position-relative">
-                                <div class="small-avatar"></div>
-                                <div class="online-indicator"></div>
-                            </div>
-                            <small class="fw-medium">Angel Bergson</small>
-                        </div>
-                        <div class="message-item mb-2">
-                            <div class="position-relative">
-                                <div class="small-avatar"></div>
-                            </div>
-                            <small class="fw-medium">Emerson Gouse</small>
-                        </div>
-                        <div class="message-item mb-2">
-                            <div class="position-relative">
-                                <div class="small-avatar"></div>
-                                <div class="online-indicator"></div>
-                            </div>
-                            <small class="fw-medium">Corey Baptista</small>
-                        </div>
-                        <div class="message-item mb-2">
-                            <div class="position-relative">
-                                <div class="small-avatar"></div>
-                            </div>
-                            <small class="fw-medium">Zain Culhane</small>
-                        </div>
-                        <div class="message-item mb-2">
-                            <div class="position-relative">
-                                <div class="small-avatar"></div>
-                                <div class="online-indicator"></div>
-                            </div>
-                            <small class="fw-medium">Randy Lipshulz</small>
-                        </div>
-                        <a href="#" class="link-custom small d-block text-center mt-3">View All</a>
                     </div>
+                </div>
 
-                    <!-- Events -->
-                    <div class="card-custom">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="fw-bold mb-0">Events</h6>
-                            <i class="bi bi-three-dots icon-btn"></i>
-                        </div>
-                        <div class="event-item">
-                            <i class="bi bi-calendar3 fs-2" style="color: var(--color-muted);"></i>
-                            <div>
-                                <small class="fw-semibold d-block">10 Events Invites</small>
+                <!-- Right Sidebar -->
+                <div class="col-lg-3 sidebar-right">
+                    <div class="sidebar-content">
+                        <!-- Messages -->
+                        <div class="card-custom mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="fw-bold mb-0">Messages</h6>
+                                <i class="bi bi-plus-lg icon-btn"></i>
                             </div>
-                        </div>
-                        <div class="event-item">
-                            <i class="bi bi-calendar3 fs-2" style="color: var(--color-muted);"></i>
-                            <div>
-                                <small class="fw-semibold d-block">Design System Collaboration</small>
-                                <small style="color: var(--color-muted);">Thu - Harpoon Mall, YK</small>
+                            <div class="position-relative mb-3">
+                                <i class="bi bi-search position-absolute"
+                                    style="left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-muted);"></i>
+                                <input type="text" class="form-control"
+                                    style="padding-left: 38px; background-color: var(--color-secondary); border: 1px solid var(--color-border); border-radius: 10px;"
+                                    placeholder="Search">
+                                <i class="bi bi-funnel position-absolute icon-btn"
+                                    style="right: 8px; top: 50%; transform: translateY(-50%); color: var(--color-muted);"></i>
                             </div>
-                        </div>
-                        <div class="event-item">
-                            <i class="bi bi-calendar3 fs-2" style="color: var(--color-muted);"></i>
-                            <div>
-                                <small class="fw-semibold d-block">Web Dev 2.0 Meetup</small>
-                                <small style="color: var(--color-muted);">Yoshkar-Ola, Russia</small>
+                            <div class="d-flex gap-2 mb-3">
+                                <button class="tab-filter active">Primary</button>
+                                <button class="tab-filter">General</button>
+                                <button class="tab-filter">Requests(4)</button>
                             </div>
+
+                            <div class="message-item mb-2">
+                                <div class="position-relative">
+                                    <div class="small-avatar"></div>
+                                    <div class="online-indicator"></div>
+                                </div>
+                                <small class="fw-medium">Roger Korsgaard</small>
+                            </div>
+                            <div class="message-item mb-2">
+                                <div class="position-relative">
+                                    <div class="small-avatar"></div>
+                                </div>
+                                <small class="fw-medium">Terry Torff</small>
+                            </div>
+                            <div class="message-item mb-2">
+                                <div class="position-relative">
+                                    <div class="small-avatar"></div>
+                                    <div class="online-indicator"></div>
+                                </div>
+                                <small class="fw-medium">Angel Bergson</small>
+                            </div>
+                            <div class="message-item mb-2">
+                                <div class="position-relative">
+                                    <div class="small-avatar"></div>
+                                </div>
+                                <small class="fw-medium">Emerson Gouse</small>
+                            </div>
+                            <div class="message-item mb-2">
+                                <div class="position-relative">
+                                    <div class="small-avatar"></div>
+                                    <div class="online-indicator"></div>
+                                </div>
+                                <small class="fw-medium">Corey Baptista</small>
+                            </div>
+                            <div class="message-item mb-2">
+                                <div class="position-relative">
+                                    <div class="small-avatar"></div>
+                                </div>
+                                <small class="fw-medium">Zain Culhane</small>
+                            </div>
+                            <div class="message-item mb-2">
+                                <div class="position-relative">
+                                    <div class="small-avatar"></div>
+                                    <div class="online-indicator"></div>
+                                </div>
+                                <small class="fw-medium">Randy Lipshulz</small>
+                            </div>
+                            <a href="#" class="link-custom small d-block text-center mt-3">View All</a>
                         </div>
-                        <div class="event-item">
-                            <i class="bi bi-calendar3 fs-2" style="color: var(--color-muted);"></i>
-                            <div>
-                                <small class="fw-semibold d-block">Prada's Invitation Birthday</small>
+
+                        <!-- Events -->
+                        <div class="card-custom">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="fw-bold mb-0">Events</h6>
+                                <i class="bi bi-three-dots icon-btn"></i>
+                            </div>
+                            <div class="event-item">
+                                <i class="bi bi-calendar3 fs-2" style="color: var(--color-muted);"></i>
+                                <div>
+                                    <small class="fw-semibold d-block">10 Events Invites</small>
+                                </div>
+                            </div>
+                            <div class="event-item">
+                                <i class="bi bi-calendar3 fs-2" style="color: var(--color-muted);"></i>
+                                <div>
+                                    <small class="fw-semibold d-block">Design System Collaboration</small>
+                                    <small style="color: var(--color-muted);">Thu - Harpoon Mall, YK</small>
+                                </div>
+                            </div>
+                            <div class="event-item">
+                                <i class="bi bi-calendar3 fs-2" style="color: var(--color-muted);"></i>
+                                <div>
+                                    <small class="fw-semibold d-block">Web Dev 2.0 Meetup</small>
+                                    <small style="color: var(--color-muted);">Yoshkar-Ola, Russia</small>
+                                </div>
+                            </div>
+                            <div class="event-item">
+                                <i class="bi bi-calendar3 fs-2" style="color: var(--color-muted);"></i>
+                                <div>
+                                    <small class="fw-semibold d-block">Prada's Invitation Birthday</small>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -338,15 +371,22 @@
             </div>
         </div>
     </div>
+
 </template>
 
 <script setup>
+
 import { useAuthStore } from '@/stores/auth';
 import { usePostStore } from '@/stores/post';
+import { useTheme } from '@/composables/useTheme'
 import moment from 'moment-timezone';
+import { ref } from 'vue';
 
+const { theme, toggleTheme } = useTheme()
 const authStore = useAuthStore();
 const postStore = usePostStore();
+const likedPosts = ref(new Set());
+const postLikeCounts = ref({});
 
 const formatDate = (date) => {
     return moment.utc(date).local().fromNow();
@@ -355,36 +395,56 @@ const formatDate = (date) => {
 authStore.fetchProfile();
 postStore.fetchPosts();
 
+// Initialize like counts from posts
+setTimeout(() => {
+    postStore.posts.forEach(post => {
+        if (!(post.id in postLikeCounts.value)) {
+            postLikeCounts.value[post.id] = 10;
+        }
+    });
+}, 100);
+
+function reactLike(postId) {
+    if (!postLikeCounts.value[postId]) {
+        postLikeCounts.value[postId] = 10;
+    }
+
+    if (likedPosts.value.has(postId)) {
+        likedPosts.value.delete(postId);
+        postLikeCounts.value[postId]--;
+    } else {
+        likedPosts.value.add(postId);
+        postLikeCounts.value[postId]++;
+    }
+}
+
+function isLiked(postId) {
+    return likedPosts.value.has(postId);
+}
+
+function getLikeCount(postId) {
+    return postLikeCounts.value[postId] || 10;
+}
+
 </script>
 
 <style scoped>
-:root {
-    --color-text: #030307;
-    --color-background: #f5f5f5;
-    --color-primary: #0a0a0a;
-    --color-secondary: #f1f4f8;
-    --color-accent: #fdfaff;
-    --color-border: #e0e0e0;
-    --color-hover: #eaeaea;
-    --color-muted: #6b6b6b;
-    --color-blue: #2563eb;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    background-color: var(--color-background);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+.theme-btn {
+    background: var(--color-secondary);
     color: var(--color-text);
-    line-height: 1.6;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.body {
+    background-color: var(--color-background);
+    color: var(--color-text);
 }
 
 .navbar {
-    background-color: var(--color-accent);
+    background-color: var(--color-background);
     border-bottom: 1px solid var(--color-border);
     padding: 16px 0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -393,25 +453,23 @@ body {
 .logo-box {
     width: 40px;
     height: 40px;
-    background-color: var(--color-primary);
-    border-radius: 10px;
+    border-radius: 50%;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 8px rgba(10, 10, 10, 0.15);
 }
 
-.logo-inner {
-    width: 24px;
-    height: 24px;
-    background-color: white;
-    transform: rotate(45deg);
-    border-radius: 2px;
+.logo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .search-box {
     background-color: var(--color-secondary);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--border-color);
     border-radius: 10px;
     padding: 10px 16px 10px 42px;
     transition: all 0.3s ease;
@@ -420,7 +478,8 @@ body {
 .search-box:focus {
     outline: none;
     border-color: var(--color-primary);
-    background-color: white;
+    color: var(--color-text);
+    background-color: var(--color-accent);
     box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.05);
 }
 
@@ -431,6 +490,7 @@ body {
     transform: translateY(-50%);
     color: var(--color-muted);
 }
+
 
 .card-custom {
     background: var(--color-accent);
@@ -448,9 +508,14 @@ body {
 .avatar {
     width: 48px;
     height: 48px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 50%;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.poduct-post {
+    border-radius: 20px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .nav-menu {
@@ -532,40 +597,97 @@ body {
 
 .post-card {
     background: var(--color-accent);
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 20px;
-    border: 1px solid var(--color-border);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    transition: box-shadow 0.3s ease;
-}
-
-.post-card:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-}
-
-.post-image {
-    aspect-ratio: 1;
+    box-shadow: 3px 10px 67px 0px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
-    overflow: hidden;
+    padding: 26px;
+    margin-bottom: 26px;
+}
+
+.small-avatar {
+    width: 40px;
+    height: 40px;
+}
+
+
+.create-post-input input {
+    border: none;
+    width: 400px;
+    background-color: var(--color-secondary);
+    font-size: 15px;
+    border-radius: 10px;
+    color: #6b7280;
+    padding: 8px 0;
+    padding-left: 20px;
+}
+
+.create-post-input input:focus {
+    outline: none;
+    box-shadow: none;
+    color: var(--color-text);
+}
+
+.create-post-input input::placeholder {
+    color: #9ca3af;
+}
+
+.state-post {
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 80px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    justify-content: space-evenly;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 16px;
+    gap: 12px;
 }
 
-.post-image:hover {
-    transform: scale(1.02);
+/* Tag Button Styles */
+.btn-tag {
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-evenly;
 }
 
-.bg-yellow {
-    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+.btn-tag:hover {
+    background: var(--bg-hover);
+    border-color: var(--color-primary);
+    cursor: pointer;
 }
 
-.bg-gray {
-    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+.btn-tag i {
+    font-size: 16px;
+}
+
+/* Icon Colors */
+.btn-tag .icon-image {
+    color: #3b82f6;
+}
+
+.btn-tag .icon-attachment {
+    color: #8b5cf6;
+}
+
+.btn-tag .icon-live {
+    color: #ef4444;
+}
+
+.btn-tag .icon-hashtag {
+    color: #10b981;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.btn-tag .icon-mention {
+    color: #ec4899;
+    font-weight: 700;
+    font-size: 16px;
 }
 
 .message-item {
@@ -655,21 +777,6 @@ body {
     background-color: var(--color-hover);
 }
 
-.create-post-input {
-    background-color: var(--color-secondary);
-    border: 1px solid var(--color-border);
-    border-radius: 24px;
-    padding: 10px 20px;
-    transition: all 0.3s ease;
-}
-
-.create-post-input:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    background-color: white;
-    box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.05);
-}
-
 .tab-filter {
     border: none;
     background: none;
@@ -702,7 +809,8 @@ body {
 .icon-btn {
     cursor: pointer;
     transition: all 0.2s ease;
-    padding: 8px;
+    width: 40px;
+    height: 40px;
     border-radius: 8px;
 }
 
@@ -802,23 +910,19 @@ body {
     }
 }
 
-/* Sidebar base */
 .sidebar-left,
 .sidebar-right {
     overflow-y: auto;
 
-    /* Firefox */
     scrollbar-width: thin;
     scrollbar-color: transparent transparent;
 }
 
-/* Firefox – show on hover */
 .sidebar-left:hover,
 .sidebar-right:hover {
     scrollbar-color: rgba(0, 0, 0, 0.35) transparent;
 }
 
-/* ===== Chrome / Edge / Safari ===== */
 .sidebar-left::-webkit-scrollbar,
 .sidebar-right::-webkit-scrollbar {
     width: 8px;
@@ -832,24 +936,20 @@ body {
 .sidebar-left::-webkit-scrollbar-thumb,
 .sidebar-right::-webkit-scrollbar-thumb {
     background-color: transparent;
-    /* hidden by default */
     border-radius: 10px;
     transition: background-color 0.25s ease;
 }
 
-/* Show scrollbar when hovering sidebar */
 .sidebar-left:hover::-webkit-scrollbar-thumb,
 .sidebar-right:hover::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, 0.25);
 }
 
-/* Darker when hovering thumb */
 .sidebar-left::-webkit-scrollbar-thumb:hover,
 .sidebar-right::-webkit-scrollbar-thumb:hover {
     background-color: rgba(0, 0, 0, 0.4);
 }
 
-/* Darkest when dragging */
 .sidebar-left::-webkit-scrollbar-thumb:active,
 .sidebar-right::-webkit-scrollbar-thumb:active {
     background-color: rgba(0, 0, 0, 0.6);
@@ -858,7 +958,7 @@ body {
 
 .main-feed {
     margin-bottom: 40px;
-    margin-top: 80px;
+    margin-top: 110px;
     margin-inline: auto;
 }
 

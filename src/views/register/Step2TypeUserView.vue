@@ -72,12 +72,8 @@ const usersTypes = ref([
     },
     {
         id: 5,
-        name: 'Business',
+        name: 'Other',
     },
-    {
-        id: 6,
-        name: 'Enterprise',
-    }
 ])
 
 const nextStep = async () => {
