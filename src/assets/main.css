@@ -14,10 +14,38 @@ body {
   --color-accent: #fdfaff;
   --color-dark: #1f2937;
   --color-gray: #6b7280;
+  --color-muted: #9ca3af;
+  --color-muted-light: #e5e7eb;
+  --border-color: #e5e7eb;
+  --border-color-hover: #d1d5db;
+  --border-color-strong: #cbd5e1;
+  --bg-hover: #f3f4f6;
+
   --toastify-color-success: #22c55e;
   --toastify-color-error: #ef4444;
   --toastify-color-warning: #f59e0b;
   --toastify-color-info: #3b82f6;
+}
+
+[data-theme="dark"] {
+  --color-text: #f9fafb;
+  --color-background: #0b0f19;
+  --color-primary: #ffffff;
+  --color-secondary: #111827;
+  --color-accent: #1f2937;
+  --color-dark: #e5e7eb;
+  --color-gray: #9ca3af;
+  --color-muted: #6b7280;
+  --color-muted-light: #1f2937;
+  --border-color: #1f2937;
+  --border-color-hover: #374151;
+  --border-color-strong: #4b5563;
+  --bg-hover: #374151;
+
+  --toastify-color-success: #4ade80;
+  --toastify-color-error: #f87171;
+  --toastify-color-warning: #fbbf24;
+  --toastify-color-info: #60a5fa;
 }
 
 /* Custom toast */
