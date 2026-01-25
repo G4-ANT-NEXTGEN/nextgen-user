@@ -1,12 +1,6 @@
-BaseModal.vue
 <template>
   <teleport to="body">
-    <div
-      class="modal fade show d-block"
-      tabindex="-1"
-      style="background-color: rgba(0, 0, 0, 0.5)"
-      @click.self="close"
-    >
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5)" @click.self="close">
       <div class="modal-dialog modal-dialog-centered" :class="sizeClass">
         <div class="modal-content">
           <div class="modal-header">
@@ -43,16 +37,38 @@ const sizeClass = computed(() => (props.size ? `modal-${props.size}` : ''))
 
 <style scoped>
 
-
 .modal-body {
   max-height: calc(100vh - 250px);
   overflow-y: auto;
   overflow-x: hidden;
+  background-color: var(--color-secondary);
+}
+
+.modal-content {
+  background-color: var(--color-secondary);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.modal-header,
+.modal-footer {
+  background-color: var(--color-secondary);
+}
+
+.modal-title {
+  color: var(--color-text);
+  font-weight: bold;
+}
+
+.btn-close {
+  filter: var(--filter);
+  color: var(--color-secondary);
 }
 
 /* Optional: Add scrollbar styling for better appearance */
 .modal-body::-webkit-scrollbar {
   width: 8px;
+  display: none;
 }
 
 .modal-body::-webkit-scrollbar-track {
@@ -67,5 +83,7 @@ const sizeClass = computed(() => (props.size ? `modal-${props.size}` : ''))
 
 .modal-body::-webkit-scrollbar-thumb:hover {
   background: #555;
+  display: block;
 }
+
 </style>

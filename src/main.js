@@ -26,7 +26,6 @@ app.use(router)
 
 app.component('BaseButton', BaseButton)
 app.component('BaseInput', BaseInput)
-
 app.component('BaseModal', BaseModal)
 app.component('BaseSelect', BaseSelect)
 

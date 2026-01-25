@@ -12,10 +12,10 @@
                         </div>
                         <span class="fs-5 fw-bold">NextGen</span>
                     </div>
-                    <div class="position-relative ms-4">
-                        <i class="bi bi-search search-icon"></i>
-                        <input type="text" class="search-box" placeholder="Search" style="width: 420px;">
-                    </div>
+                </div>
+                <div class="position-relative ms-4">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" class="search-box" placeholder="Search" style="width: 420px;">
                 </div>
                 <div class="d-flex align-items-center gap-3">
                     <button @click="toggleTheme" class="theme-btn">
@@ -177,17 +177,17 @@
 
                     <!-- Create Post -->
                     <div class="post-card mb-3 create-post">
-                        <div class="d-flex gap-4 mb-3 align-items-center ">
+                        <div class="d-flex gap-4 mb-4 align-items-center ">
                             <div>
                                 <div class="small-avatar overflow-hidden rounded-circle">
                                     <img class="img-fluid" :src="authStore.user.avatar" alt="">
                                 </div>
                             </div>
-                            <div class="create-post-input">
+                            <div class="create-post-input" @click="openCreatePostModal">
                                 <input type="text" placeholder="what on your mind?" class="form-control">
                             </div>
                         </div>
-                        <div class="d-flex state-post">
+                        <div class="d-flex state-post mb-2">
                             <div class="btn-tag">
                                 <i class="bi bi-image icon-image"></i>
                                 <span>Image/Video</span>
@@ -255,7 +255,9 @@
                                 <i class="bi bi-share"></i>
                                 <span>3 Share</span>
                             </button>
-                            <i class="bi bi-bookmark icon-btn" style="color: var(--color-muted);"></i>
+                            <div>
+                                <i class="bi bi-bookmark icon-btn" style="color: var(--color-muted);"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -281,7 +283,6 @@
                             <div class="d-flex gap-2 mb-3">
                                 <button class="tab-filter active">Primary</button>
                                 <button class="tab-filter">General</button>
-                                <button class="tab-filter">Requests(4)</button>
                             </div>
 
                             <div class="message-item mb-2">
@@ -372,21 +373,83 @@
         </div>
     </div>
 
+    <BaseModal v-if="showModal" title="Create Post" size="lg" @close="showModal = false">
+        <div class="p-2">
+            <!-- BODY -->
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <div class="avatar overflow-hidden rounded-circle">
+                    <img class="img-fluid" :src="authStore.user.avatar" alt="">
+                </div>
+                <div>
+                    <h5 class="mb-0 fw-bold d-flex align-items-center gap-2 name-creator">
+                        {{ authStore.user.full_name }}
+                        <i class="bi bi-check-circle-fill text-primary-custom"></i>
+                    </h5>
+                    <small style="color: var(--color-muted);">
+                        {{ authStore.user.positions[0].name }}
+                    </small>
+                </div>
+            </div>
+            <div class="my-3">
+                <textarea class="title-post" rows="4" placeholder="What's on your mind?"></textarea>
+            </div>
+            <div class="category-selection">
+                <p class="text-category fw-semibold">Select Category</p>
+            </div>
+            <div>
+                <div class="pill-container">
+                    <div v-for="category in categoryStore.categories" :key="category.id"
+                        :class="['category', { active: category.id === selected?.id }]" @click="selectPill(category)">
+                        {{ category.name }}
+                    </div>
+                </div>
+                <!-- <p class="text-category">Selected: <span>{{ selected?.id || 'None' }}</span></p> -->
+            </div>
+        </div>
+        <div class=" w-100 category-selection d-flex justify-content-between align-items-center mb-3 px-2">
+            <p class="text-category fw-semibold">Add to your post</p>
+            <div class="text-category">
+                <input type="file" ref="fileInput" class="d-none" @change="handleFileChange" />
+                <i class="bi bi-image icon-post" @click="openFilePicker"></i>
+            </div>
+        </div>
+        <div class="post-img">
+            <img class="img-fluid" src="../../public/AboutVie/hero-section.jpg" alt="">
+        </div>
+
+        <!-- FOOTER -->
+        <template #footer>
+            <div class="group-btn-modal d-flex justify-content-end gap-3 align-items-center">
+                <BaseButton variant="primary" @click="showModal = false">
+                    Publish
+                </BaseButton>
+            </div>
+        </template>
+    </BaseModal>
+
+
 </template>
 
 <script setup>
 
 import { useAuthStore } from '@/stores/auth';
 import { usePostStore } from '@/stores/post';
+import { useCategoryStore } from '@/stores/category';
 import { useTheme } from '@/composables/useTheme'
 import moment from 'moment-timezone';
 import { ref } from 'vue';
+import BaseButton from '@/components/ui/base/BaseButton.vue';
 
 const { theme, toggleTheme } = useTheme()
 const authStore = useAuthStore();
+const categoryStore = useCategoryStore();
 const postStore = usePostStore();
 const likedPosts = ref(new Set());
 const postLikeCounts = ref({});
+const showModal = ref(true);
+
+console.log(categoryStore.categories);
+
 
 const formatDate = (date) => {
     return moment.utc(date).local().fromNow();
@@ -394,6 +457,37 @@ const formatDate = (date) => {
 
 authStore.fetchProfile();
 postStore.fetchPosts();
+categoryStore.fetchCategorys();
+
+
+const openCreatePostModal = () => {
+    showModal.value = true;
+}
+
+// Selected category
+const selected = ref(null)
+
+// Function to select a category
+function selectPill(category) {
+    selected.value = category
+}
+
+
+const fileInput = ref(null)
+
+const openFilePicker = () => {
+    fileInput.value.click()
+}
+
+const handleFileChange = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+        console.log(file)
+    }
+}
+
+
+
 
 // Initialize like counts from posts
 setTimeout(() => {
@@ -438,6 +532,40 @@ function getLikeCount(postId) {
     cursor: pointer;
 }
 
+
+.pill-container {
+    display: flex;
+    gap: 10px;
+    margin: 20px;
+    margin-left: 0px;
+    flex-wrap: wrap;
+}
+
+.category {
+    padding: 10px 16px;
+    border-radius: 50px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    background-color: var(--bg-tag);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.category:hover {
+    background-color: var(--color-hover);
+}
+
+.category.active {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    border-color: var(--color-primary);
+}
+
+.group-btn-modal {
+    width: 200px;
+}
+
 .body {
     background-color: var(--color-background);
     color: var(--color-text);
@@ -459,6 +587,48 @@ function getLikeCount(postId) {
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 8px rgba(10, 10, 10, 0.15);
+}
+
+.post-img{
+    width: 100%;
+    height: auto;
+    margin-top: 15px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.post-img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.name-creator {
+    color: var(--color-text);
+}
+
+.text-category {
+    color: var(--color-text);
+}
+
+.text-category .icon-post {
+    color: var(--color-text);
+    cursor: pointer;
+}
+
+.text-category .icon-post:hover {
+    cursor: pointer;
+}
+
+
+.title-post {
+    border: 2px solid #e5e7eb;
+    width: 100%;
+    background-color: var(--color-secondary);
+    font-size: 15px;
+    border-radius: 10px;
+    color: var(--color-text);
+    padding: 20px;
 }
 
 .logo-box img {
@@ -667,7 +837,8 @@ function getLikeCount(postId) {
 
 /* Icon Colors */
 .btn-tag .icon-image {
-    color: #3b82f6;
+    color: var(--color-text);
+    cursor: pointer;
 }
 
 .btn-tag .icon-attachment {
@@ -876,7 +1047,7 @@ function getLikeCount(postId) {
 
 .sidebar-left {
     width: 350px;
-    left: 0;
+    left: 20px;
 }
 
 .sidebar-right {
