@@ -13,7 +13,6 @@ import 'tom-select/dist/css/tom-select.css'
 
 import BaseButton from './components/ui/base/BaseButton.vue'
 import BaseInput from './components/ui/base/BaseInput.vue'
-
 import BaseModal from './components/ui/base/BaseModal.vue'
 import BaseSelect from './components/ui/base/BaseSelect.vue'
 
