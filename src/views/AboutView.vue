@@ -49,7 +49,7 @@
         <div class="row align-items-center">
           <div class="col-lg-6 pe-lg-5 mb-5 mb-lg-0 reveal-scroll reveal-up">
             <img
-              src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1000"
+              src="../..//public/AboutVie/Meedilenguajpg.jpg"
               alt="Community Collaboration"
               class="img-fluid rounded-4 shadow-lg scale-hover-anim"
             />
@@ -159,7 +159,7 @@
           <div class="col-lg-6 reveal-scroll reveal-scale">
             <div class="tech-image-wrapper">
               <img
-                src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1000"
+                src="../../public/AboutVie/diploma.jpg "
                 alt="Technology background"
                 class="img-fluid rounded-4 shadow-lg tech-image"
               />
