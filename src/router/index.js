@@ -18,7 +18,10 @@ import LandingView from '@/views/LandingView.vue'
 import AboutView from '@/views/AboutView.vue'
 
 import ProfileDetailView from '@/views/profile/ProfileDetailView.vue'
-import ChatListView from '@/views/chat/ChatListView.vue'
+
+import ChatLayout from '@/layout/ChatLayout.vue'
+import ChatRoomView from '@/views/chat/ChatRoomView.vue'
+
 
 
 const router = createRouter({
@@ -88,8 +91,21 @@ const router = createRouter({
     },
     {
       path: '/chat',
-      name: 'chatlist',
-      component: ChatListView
+      name: 'chat-layout',
+      component: ChatLayout,
+      meta:{
+        title: 'Chat'
+      },
+      children:[
+        {
+          path:':id',
+          name:'chat-room',
+          component:ChatRoomView,
+          meta:{
+            title:'Conversation'
+          }
+        }
+      ]
     },
     {
       path: '/home',
@@ -147,6 +163,8 @@ const router = createRouter({
       redirect: { name: 'login' },
     },
   ],
+  linkExactActiveClass: 'active'
+
 })
 
 router.beforeEach(async (to) => {
