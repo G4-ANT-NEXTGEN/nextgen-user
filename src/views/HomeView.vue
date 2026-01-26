@@ -141,39 +141,6 @@
 
                 <!-- Main Feed -->
                 <div class="col-lg-6 main-feed ">
-                    <!-- Stories -->
-                    <!-- <div class="post-card mb-3">
-                        <div class="d-flex gap-4 overflow-auto pb-2">
-                            <div class="story-item">
-                                <div class="story-avatar active">👤</div>
-                                <small class="fw-medium">Your Story</small>
-                            </div>
-                            <div class="story-item">
-                                <div class="story-avatar">👨</div>
-                                <small class="fw-medium">Justin</small>
-                            </div>
-                            <div class="story-item">
-                                <div class="story-avatar">👱</div>
-                                <small class="fw-medium">Davis</small>
-                            </div>
-                            <div class="story-item">
-                                <div class="story-avatar">👨‍💼</div>
-                                <small class="fw-medium">Randy</small>
-                            </div>
-                            <div class="story-item">
-                                <div class="story-avatar">👔</div>
-                                <small class="fw-medium">Charles</small>
-                            </div>
-                            <div class="story-item">
-                                <div class="story-avatar">👩</div>
-                                <small class="fw-medium">Zana</small>
-                            </div>
-                            <div class="story-item">
-                                <div class="story-avatar">🧑</div>
-                                <small class="fw-medium">Talan</small>
-                            </div>
-                        </div>
-                    </div> -->
 
                     <!-- Create Post -->
                     <div class="post-card mb-3 create-post">
@@ -188,23 +155,23 @@
                             </div>
                         </div>
                         <div class="d-flex state-post mb-2">
-                            <div class="btn-tag">
+                            <div class="btn-tag" @click="openCreatePostModal">
                                 <i class="bi bi-image icon-image"></i>
                                 <span>Image/Video</span>
                             </div>
-                            <div class="btn-tag">
+                            <div class="btn-tag" @click="openCreatePostModal">
                                 <i class="bi bi-paperclip icon-attachment"></i>
                                 <span>Attachment</span>
                             </div>
-                            <div class="btn-tag">
+                            <div class="btn-tag" @click="openCreatePostModal">
                                 <i class="bi bi-camera-video icon-live"></i>
                                 <span>Live</span>
                             </div>
-                            <div class="btn-tag">
+                            <div class="btn-tag" @click="openCreatePostModal">
                                 <span class="icon-hashtag">#</span>
                                 <span>Hashtag</span>
                             </div>
-                            <div class="btn-tag">
+                            <div class="btn-tag" @click="openCreatePostModal">
                                 <span class="icon-mention">@</span>
                                 <span>Mention</span>
                             </div>
@@ -227,13 +194,44 @@
                                     </small>
                                 </div>
                             </div>
-                            <i class="bi bi-three-dots icon-btn" style="color: var(--color-muted);"></i>
+
+                            <div class="dropdown">
+                                <button class="btn btn-edit-post" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <i class="bi bi-three-dots cursor-pointer"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <button type="button" class="dropdown-item">
+                                            <i class="bi bi-pencil"></i>
+                                            <span>Edit</span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button type="button" class="dropdown-item text-danger">
+                                            <i class="bi bi-trash"></i>
+                                            <span>Delete</span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <button type="button" class="dropdown-item">
+                                            <i class="bi bi-flag"></i>
+                                            <span>Report</span>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+
                         </div>
                         <div>
                             <p>{{ post.text }}</p>
                         </div>
 
-                        <div class="row g-3 mb-3">
+                        <div class="row g-3 mb-3"
+                            v-if="post.image && post.image !== 'http://novia.csm.linkpc.net/storage/posts'">
                             <div class="col-12">
                                 <div class="w-100">
                                     <img class="img-fluid poduct-post" :src="post.image" alt="">
@@ -391,7 +389,10 @@
                 </div>
             </div>
             <div class="my-3">
-                <textarea class="title-post" rows="4" placeholder="What's on your mind?"></textarea>
+                <textarea v-model="titlePost" class="title-post" :class="{ 'is-invalid': errorTitle }" rows="4"
+                    placeholder="What's on your mind?" @input="validateTitle"></textarea>
+                <div v-if="errorTitle" class="invalid-feedback d-block">{{ errorTitle }}</div>
+                <small v-if="titlePost" class="text-muted d-block mt-2">{{ titlePost.length }}/500 characters</small>
             </div>
             <div class="category-selection">
                 <p class="text-category fw-semibold">Select Category</p>
@@ -408,19 +409,23 @@
         </div>
         <div class=" w-100 category-selection d-flex justify-content-between align-items-center mb-3 px-2">
             <p class="text-category fw-semibold">Add to your post</p>
-            <div class="text-category">
-                <input type="file" ref="fileInput" class="d-none" @change="handleFileChange" />
-                <i class="bi bi-image icon-post" @click="openFilePicker"></i>
+            <div class="text-category d-flex gap-3">
+                <input type="file" ref="fileInput" class="d-none" accept="image/jpeg,image/png,image/jpg"
+                    @change="handleFileChange" />
+                <input type="file" ref="attachmentInput" class="d-none" accept=".jpeg,.png,.jpg,.pdf,.mp4,.mp3,.zip"
+                    @change="handleAttachmentChange" />
+                <i class="bi bi-image icon-post" @click="openFilePicker" title="Add image"></i>
+                <i class="bi bi-paperclip icon-post" @click="openAttachmentPicker" title="Add attachment"></i>
             </div>
         </div>
-        <div class="post-img">
-            <img class="img-fluid" src="../../public/AboutVie/hero-section.jpg" alt="">
+        <div class="post-img" v-if="imgPost">
+            <img class="img-fluid" :src="imgPost" alt="">
         </div>
 
         <!-- FOOTER -->
         <template #footer>
             <div class="group-btn-modal d-flex justify-content-end gap-3 align-items-center">
-                <BaseButton variant="primary" @click="showModal = false">
+                <BaseButton variant="primary" @click="publishPost" :disabled="isLoading">
                     Publish
                 </BaseButton>
             </div>
@@ -436,60 +441,118 @@ import { useAuthStore } from '@/stores/auth';
 import { usePostStore } from '@/stores/post';
 import { useCategoryStore } from '@/stores/category';
 import { useTheme } from '@/composables/useTheme'
+import { useRequiredValidator } from '@/composables/useRequiredValidator';
 import moment from 'moment-timezone';
 import { ref } from 'vue';
-import BaseButton from '@/components/ui/base/BaseButton.vue';
 
 const { theme, toggleTheme } = useTheme()
 const authStore = useAuthStore();
 const categoryStore = useCategoryStore();
 const postStore = usePostStore();
+const { errors: validationErrors, validateField } = useRequiredValidator();
+const isLoading = ref(false);
 const likedPosts = ref(new Set());
 const postLikeCounts = ref({});
-const showModal = ref(true);
-
-console.log(categoryStore.categories);
-
-
-const formatDate = (date) => {
-    return moment.utc(date).local().fromNow();
-}
+const showModal = ref(false);
+const titlePost = ref('');
+const selected = ref(null)
+const file = ref(null)
+const attachment = ref(null);
+const formData = new FormData();
+const imgPost = ref(null);
+const errorTitle = ref(null);
+const errorFile = ref(null);
 
 authStore.fetchProfile();
 postStore.fetchPosts();
 categoryStore.fetchCategorys();
 
-
-const openCreatePostModal = () => {
-    showModal.value = true;
-}
-
-// Selected category
-const selected = ref(null)
-
-// Function to select a category
-function selectPill(category) {
-    selected.value = category
-}
-
-
 const fileInput = ref(null)
+const attachmentInput = ref(null)
+
 
 const openFilePicker = () => {
     fileInput.value.click()
 }
 
+const openAttachmentPicker = () => {
+    attachmentInput.value.click()
+}
+
 const handleFileChange = (event) => {
-    const file = event.target.files[0]
-    if (file) {
-        console.log(file)
+    file.value = event.target.files[0]
+    if (file.value) {
+        console.log('Image file:', file.value.name)
+        // Create preview URL
+        imgPost.value = URL.createObjectURL(file.value)
     }
+}
+
+const handleAttachmentChange = (event) => {
+    attachment.value = event.target.files[0]
+    if (attachment.value) {
+        console.log('Attachment file:', attachment.value.name)
+    }
+}
+
+const openCreatePostModal = () => {
+    showModal.value = true;
+}
+
+function validateTitle() {
+    // Real-time validation with character limit
+    const maxLength = 500;
+    if (titlePost.value.length > maxLength) {
+        titlePost.value = titlePost.value.substring(0, maxLength);
+    }
+
+    // Validate field using composable
+    if (titlePost.value.trim()) {
+        errorTitle.value = null;
+        validationErrors.title = '';
+    } else {
+        errorTitle.value = 'Post content is required';
+        validationErrors.title = 'Post content is required';
+    }
+}
+
+function selectPill(category) {
+    selected.value = category
 }
 
 
 
+// Function to prepare FormData
+const prepareFormData = () => {
+    const data = new FormData();
 
-// Initialize like counts from posts
+    // Add text content
+    if (titlePost.value.trim()) {
+        data.append('text', titlePost.value.trim());
+    }
+
+    // Add image file (required by API)
+    if (file.value && file.value instanceof File) {
+        data.append('image', file.value);
+    }
+
+    // Add attachment file (optional)
+    if (attachment.value && attachment.value instanceof File) {
+        data.append('attachment', attachment.value);
+    }
+
+    // Add category IDs as JSON string array
+    const categoryIds = selected.value ? [selected.value.id] : [];
+    data.append('category_ids', JSON.stringify(categoryIds));
+
+    return data;
+};
+
+const formatDate = (date) => {
+    return moment.utc(date).local().fromNow();
+}
+
+
 setTimeout(() => {
     postStore.posts.forEach(post => {
         if (!(post.id in postLikeCounts.value)) {
@@ -520,14 +583,52 @@ function getLikeCount(postId) {
     return postLikeCounts.value[postId] || 10;
 }
 
+const publishPost = async () => {
+    isLoading.value = true;
+    try {
+        // Validation before publish
+        if (!validateField('title', titlePost.value.trim(), 'Post content is required')) {
+            errorTitle.value = validationErrors.title;
+            return;
+        }
+
+        const data = prepareFormData();
+
+        // Log FormData contents for debugging
+        console.log('FormData contents:');
+        for (let [key, value] of data.entries()) {
+            console.log(`${key}:`, value);
+        }
+
+        // Send to API
+        await postStore.createPost(data);
+        showModal.value = false;
+        // Reset form
+        titlePost.value = '';
+        file.value = null;
+        attachment.value = null;
+        selected.value = null;
+        imgPost.value = null;
+        errorTitle.value = null;
+
+        await postStore.fetchPosts();
+    } catch (error) {
+        console.error('Error publishing post:', error);
+    } finally {
+        isLoading.value = false
+    }
+}
+
 </script>
 
 <style scoped>
 .theme-btn {
+    border: 1px solid var(--border-color);
     background: var(--color-secondary);
     color: var(--color-text);
-    padding: 8px 14px;
-    border-radius: 8px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
     border: none;
     cursor: pointer;
 }
@@ -572,7 +673,7 @@ function getLikeCount(postId) {
 }
 
 .navbar {
-    background-color: var(--color-background);
+    background-color: var(--color-accent);
     border-bottom: 1px solid var(--color-border);
     padding: 16px 0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -589,7 +690,7 @@ function getLikeCount(postId) {
     box-shadow: 0 2px 8px rgba(10, 10, 10, 0.15);
 }
 
-.post-img{
+.post-img {
     width: 100%;
     height: auto;
     margin-top: 15px;
@@ -597,7 +698,7 @@ function getLikeCount(postId) {
     overflow: hidden;
 }
 
-.post-img img{
+.post-img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -620,6 +721,128 @@ function getLikeCount(postId) {
     cursor: pointer;
 }
 
+.btn-edit-post {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none !important;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.btn-edit-post:hover {
+    background-color: var(--color-secondary);
+    cursor: pointer;
+
+}
+
+
+/* Dropdown Toggle Button */
+.btn-edit-post {
+    background: transparent;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-edit-post:hover {
+    background-color: var(--bg-dropdown-hover);
+}
+
+.btn-edit-post i {
+    color: var(--color-muted);
+    font-size: 20px;
+    transition: color 0.2s ease;
+}
+
+.btn-edit-post:hover i {
+    color: var(--color-text);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
+    background-color: var(--color-accent);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 8px;
+    min-width: 200px;
+    margin-top: 8px;
+}
+
+/* Dropdown Items */
+.dropdown-menu .dropdown-item {
+    color: var(--color-text);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+}
+
+.dropdown-menu .dropdown-item i {
+    font-size: 16px;
+    width: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: var(--bg-dropdown-hover);
+    transform: translateX(2px);
+}
+
+.dropdown-menu .dropdown-item:active {
+    transform: scale(0.98);
+}
+
+/* Delete Item - Danger State */
+.dropdown-menu .dropdown-item.text-danger {
+    color: #dc3545;
+}
+
+.dropdown-menu .dropdown-item.text-danger:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+/* Dropdown Divider */
+.dropdown-divider {
+    margin: 8px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    opacity: 1;
+}
+
+/* Focus State for Accessibility */
+.dropdown-menu .dropdown-item:focus-visible {
+    outline: 2px solid var(--color-primary, #0d6efd);
+    outline-offset: -2px;
+}
+
+/* Dark Mode Support (Optional) */
+@media (prefers-color-scheme: dark) {
+    .dropdown-menu {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .dropdown-divider {
+        border-top-color: rgba(255, 255, 255, 0.1);
+    }
+}
 
 .title-post {
     border: 2px solid #e5e7eb;
@@ -629,6 +852,22 @@ function getLikeCount(postId) {
     border-radius: 10px;
     color: var(--color-text);
     padding: 20px;
+    transition: all 0.2s ease;
+}
+
+.title-post:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(10, 100, 235, 0.1);
+}
+
+.title-post.is-invalid {
+    border-color: #dc2626;
+    background-color: rgba(220, 38, 38, 0.05);
+}
+
+.title-post.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
 .logo-box img {
@@ -711,14 +950,13 @@ function getLikeCount(postId) {
 }
 
 .nav-item:hover {
-    background-color: var(--color-hover);
+    background-color: var(--bg-hover);
     transform: translateX(4px);
 }
 
 .nav-item.active {
-    background-color: var(--color-primary);
-    color: white;
-    box-shadow: 0 2px 8px rgba(10, 10, 10, 0.2);
+    background-color: var(--color-secondary);
+    color: var(--color-text);
 }
 
 .badge-custom {
@@ -1136,5 +1374,18 @@ function getLikeCount(postId) {
 .sidebar-content {
     padding-right: 12px;
     width: 100%;
+}
+
+.invalid-feedback {
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 8px;
+    display: block;
+}
+
+.text-muted {
+    color: var(--color-muted);
+    font-size: 13px;
 }
 </style>

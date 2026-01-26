@@ -30,15 +30,15 @@ app.component('BaseModal', BaseModal)
 app.component('BaseSelect', BaseSelect)
 
 app.use(Vue3Toastify, {
-  autoClose: 3000,
-  position: toast.POSITION.TOP_RIGHT,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  pauseOnFocusLoss: true,
-  draggable: true,
-  newestOnTop: true,
-  theme: 'light',
+    autoClose: 3000,
+    position: toast.POSITION.TOP_RIGHT,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    pauseOnFocusLoss: true,
+    draggable: true,
+    newestOnTop: true,
+    theme: 'light',
 })
 
 app.mount('#app')

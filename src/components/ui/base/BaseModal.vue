@@ -1,6 +1,6 @@
 <template>
   <teleport to="body">
-    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5)" @click.self="close">
+    <div class="modal fade show d-block" tabindex="-1" @click.self="close">
       <div class="modal-dialog modal-dialog-centered" :class="sizeClass">
         <div class="modal-content">
           <div class="modal-header">
@@ -36,6 +36,10 @@ const sizeClass = computed(() => (props.size ? `modal-${props.size}` : ''))
 </script>
 
 <style scoped>
+.modal {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
 
 .modal-body {
   max-height: calc(100vh - 250px);
@@ -85,5 +89,4 @@ const sizeClass = computed(() => (props.size ? `modal-${props.size}` : ''))
   background: #555;
   display: block;
 }
-
 </style>
