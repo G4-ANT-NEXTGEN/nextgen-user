@@ -32,10 +32,10 @@
               <div v-if="!receive.isMine">
 
                 <img class="bg-danger rounded-5 me-2" :src="conversationMessage[0]?.isMine ? conversationMessage[0]?.receiver.avatar : conversationMessage[0]?.sender.avatar" alt="" width="30" height="30">
-                <p class="receive-message">{{ receive.message }}</p>
+                <p class="receive-message">{{ receive.message }} <br> <span class="" style="font-size: 11px;">{{ formatLocalTime(receive.created_at) }}</span></p>
               </div>
               <div class="text-end" v-else>
-                <p class="send-message">{{ receive.message }}</p>
+                <p class="send-message">{{ receive.message }} <br> <span class="" style="font-size: 11px;">{{ formatLocalTime(receive.created_at) }}</span></p>
               </div>
             </div>
             <div class="input-message d-flex">
@@ -73,11 +73,23 @@ const receiverId = ref(null)
 // const id=ref()
 // console.log('route id : ',id.value)
 
+const formatLocalTime =(time) => {
+  if(!time) return '';
+  const date =new Date (time)
+  date.setHours(date.getHours()+7)
+  return date.toLocaleTimeString([],{
+    hour:'2-digit',
+    minute:'2-digit'
+  })
+}
 const conversationMessage=computed(()=>{
   const id=Number(route.params.id)
   return chatStore.getConversationMessages(id)
 })
-console.log('conversation message : ',conversationMessage.value)
+// console.log('conversation message : ',conversationMessage.value)
+conversationMessage.value.forEach((msg)=>{
+  console.log('each message : ',msg.isMine )
+})
 const sendMessage = async () => {
   const formData = new FormData();
   formData.append('message', message.value);
@@ -110,7 +122,7 @@ onMounted(async() => {
 .chat-section {
   background: #f5f5f5;
   height: 100vh;
-  padding: 16px;
+  padding: 16px 0;
 }
 
 .chat-list {

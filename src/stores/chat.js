@@ -89,7 +89,7 @@ export const useChatStore = defineStore('chat', () => {
 
       map.get(uid).messages.push({
         ...chat,
-        isMine:true
+        isMine:false
 
       })
     })
@@ -104,7 +104,7 @@ export const useChatStore = defineStore('chat', () => {
       }
       map.get(rid).messages.push({
         ...receive,
-        isMine:false
+        isMine:true
       })
 
     })

@@ -4,6 +4,11 @@
       <div class="">
         <div class="chat-list">
 
+          <div class="search-chat p-3 pb-1">
+            <h4>Messages</h4>
+            <base-input class="w-100 pt-3" placeholder="Search Conversation..."></base-input>
+          </div>
+          <hr class="my-1"/>
           <div class="chat" v-for="chat in chatStore.chatList" :key="chat.id">
             <router-link class="text-start conversationer text-decoration-none"  :to="{ name: 'chat-room', params: { id: chat.messages[0].isMine ? chat.receiver.id : chat.sender.id }}" type="button" variant="white"
             >
@@ -13,8 +18,7 @@
                   <div>
                     <p class="mb-0 fw-bold">{{ chat.messages[0].isMine ? chat.receiver.full_name : chat.sender.full_name }}
                     </p>
-                    <div class="message">{{ chat.messages[0].isMine ? 'You : ' : `${chat.sender.full_name} : ` }}{{
-                      chat.messages[0].message }}</div>
+                    <div class="message">{{ chat.messages[0].isMine ? `You : ${chat.messages[0].isMine}` : `${chat.sender.full_name} : ${chat.messages[0].isMine}` }}</div>
                   </div>
                 </div>
               </router-link >
@@ -40,7 +44,8 @@ onMounted(async () => {
 .chat-section {
   background: #f5f5f5;
   height: 100vh;
-  padding: 16px;
+  padding: 16px 0;
+  padding-left: 16px;
 }
 
 .chat-list {
