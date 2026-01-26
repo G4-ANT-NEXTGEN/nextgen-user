@@ -1,5 +1,7 @@
 <template>
-  <div class="profile-page">
+  <div class="profile-page p-3">
+    <Navbar/>
+
     <ProfileHeader :activeTab="activeTab" @change-tab="activeTab = $event" />
 
     <div class="profile-container">
@@ -11,6 +13,9 @@
 
         <!-- Main content -->
         <main class="profile-content">
+          <div class="mb-3">
+            <h5>Post Card</h5>
+          </div>
           <component :is="currentComponent" />
         </main>
       </div>
@@ -26,18 +31,19 @@ import ProfileSidebar from '@/components/profile/ProfileSidebar.vue'
 
 import PersonalInfo from '@/components/profile/sidebar/PersonalInfo.vue'
 import ProfessionalInfo from '@/components/profile/sidebar/ProfessionalInfo.vue'
-import SkillsInfo from '@/components/profile/sidebar/SkillsInfo.vue'
 import ProjectsInfo from '@/components/profile/sidebar/ProjectsInfo.vue'
 import EducationInfo from '@/components/profile/sidebar/EducationInfo.vue'
+import CVInfo from '@/components/profile/sidebar/CVInfo.vue'
+import Navbar from '@/components/Navbar.vue'
 
 const activeTab = ref('overview')
 
 const map = {
   overview: PersonalInfo,
   professional: ProfessionalInfo,
-  skills: SkillsInfo,
   project: ProjectsInfo,
   education: EducationInfo,
+  cv: CVInfo,
 }
 
 const currentComponent = computed(() => map[activeTab.value])
@@ -45,14 +51,15 @@ const currentComponent = computed(() => map[activeTab.value])
 
 <style scoped>
 .profile-page {
-  background: #f5f5f5;
+  background: var(--color-background);
   min-height: 100vh;
+  margin-top: 77px;
 }
 
 .profile-container {
   width: 100%;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 1.5rem 0;
 }
 
 .profile-layout {

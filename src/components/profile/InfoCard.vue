@@ -114,8 +114,8 @@ onUnmounted(() => {
 
 <style scoped>
 .info-card {
-  background: white;
-  border: 1px solid var(--color-secondary);
+  background: var(--color-accent);
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   margin-bottom: 1rem;
   color: var(--color-text);
@@ -125,7 +125,7 @@ onUnmounted(() => {
 
 .info-card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border-color: #e5e7eb;
+  border-color: var(--border-color-hover);
 }
 
 .info-card-header {
@@ -133,7 +133,7 @@ onUnmounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--color-secondary);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .left {
@@ -157,7 +157,7 @@ onUnmounted(() => {
 .actions-trigger {
   border: none;
   background: transparent;
-  color: var(--color-gray);
+  color: var(--color-muted);
   cursor: pointer;
   padding: 6px;
   border-radius: 6px;
@@ -168,7 +168,7 @@ onUnmounted(() => {
 }
 
 .actions-trigger:hover {
-  background: var(--color-secondary);
+  background: var(--bg-hover);
   color: var(--color-dark);
 }
 
@@ -176,10 +176,10 @@ onUnmounted(() => {
   position: absolute;
   right: 0;
   top: calc(100% + 8px);
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--color-accent);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   min-width: 140px;
   opacity: 0;
   visibility: hidden;
@@ -198,7 +198,7 @@ onUnmounted(() => {
 .action-item {
   width: 100%;
   border: none;
-  background: white;
+  background: transparent;
   padding: 10px 14px;
   display: flex;
   align-items: center;
@@ -211,25 +211,26 @@ onUnmounted(() => {
 }
 
 .action-item:hover {
-  background: var(--color-secondary);
+  background: var(--bg-hover);
 }
 
-.action-item svg {
+.action-item i {
   color: var(--color-gray);
   flex-shrink: 0;
 }
 
-.action-item:hover svg {
+.action-item:hover i {
   color: var(--color-dark);
 }
 
+/* Danger action */
 .action-item.danger:hover {
-  background: #fef2f2;
-  color: #dc2626;
+  background: rgba(239, 68, 68, 0.12); /* error color with opacity */
+  color: var(--toastify-color-error);
 }
 
-.action-item.danger:hover svg {
-  color: #dc2626;
+.action-item.danger:hover i {
+  color: var(--toastify-color-error);
 }
 
 .info-card-body {

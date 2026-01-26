@@ -51,10 +51,14 @@
     >
       <BaseInput label="Job Title" placeholder="e.g Software Engineering" />
       <BaseInput label="Company Name" placeholder="e.g Chipmong Group" />
-      <BaseInput
-        label="Responsibilities"
-        placeholder="Describe your Responsibilities and achivements.."
-      />
+      <div class="mb-2">
+        <label class="mb-2 fw-semibold">Responsibilities</label>
+        <textarea
+          class="form-control"
+          placeholder="Responsibilities"
+          style="height: 100px"
+        ></textarea>
+      </div>
 
       <template #footer>
         <button class="btn btn-outline-dark" @click="closeProfessionalUpdate">Cancel</button>
@@ -96,15 +100,15 @@
     <InfoCard
       title="Projects"
       icon="bi bi-folder"
-      :showCreate="false"
-      :showUpdate="true"
+      :showCreate="true"
+      :showUpdate="false"
       :showDelete="false"
       @create="AddProject"
     >
       <p>8 Projects</p>
     </InfoCard>
 
-    <!-- Modal for Project -CUD -->
+    <!-- Modal for Project -->
     <!-- Add New Project -->
     <BaseModal v-if="addNewProject" title="Create New Project" @close="closeAddNewProject">
       <BaseInput label="Project Title" placeholder="Enter Your Project Title" />
@@ -120,28 +124,64 @@
     <InfoCard
       title="Education"
       icon="bi bi-mortarboard"
-      :showCreate="false"
-      :showUpdate="true"
+      :showCreate="true"
+      :showUpdate="false"
       :showDelete="false"
-      @update="updateEducation"
+      @create="createEducation"
     >
       <p>Bachelor Degree</p>
     </InfoCard>
 
-    <!-- Modal for Education -CUD -->
+    <!-- Modal for Education -->
     <!-- Add New Education -->
     <BaseModal v-if="addNewEducation" title="Add New Education" @close="closeAddNewEducation">
       <BaseSelect
         v-model="level"
-        label="Skill Level"
-        placeholder="Select level"
+        label="School/University"
+        placeholder="Select Sclool"
         :options="[
-          { value: 'junior', label: 'Junior' },
-          { value: 'mid', label: 'Mid' },
-          { value: 'senior', label: 'Senior' },
+          { value: 'rupp', label: 'RUPP' },
+          { value: 'aupp', label: 'AUPP' },
+          { value: 'ict', label: 'ICT' },
         ]"
       />
-      <BaseInput label="Project Link " placeholder="Enter Your Project Link" />
+      <div class="d-flex my-2">
+        <div class="col-6 me-1">
+          <BaseSelect
+            v-model="level"
+            label="Degree"
+            placeholder="Select Degree"
+            :options="[
+              { value: 'master', label: 'Master' },
+              { value: 'bachelor', label: 'Bachelor' },
+              { value: 'phd', label: 'PHD' },
+            ]"
+          />
+        </div>
+        <div class="col-6 ms-1">
+          <BaseSelect
+            v-model="level"
+            label="Subject"
+            placeholder="Select Subject"
+            :options="[
+              { value: 'computer_science', label: 'Computer Science' },
+              { value: 'ITE', label: 'Information Technology And Engineering' },
+            ]"
+          />
+        </div>
+      </div>
+      <div class="d-flex my-2">
+        <div class="col-6 me-1">
+          <BaseInput label="Start Date" />
+        </div>
+        <div class="col-6 ms-1">
+          <BaseInput label="End Date " />
+        </div>
+      </div>
+      <div class="mb-2">
+        <label class="mb-2 fw-semibold">Description</label>
+        <textarea class="form-control" placeholder="Description" style="height: 100px"></textarea>
+      </div>
 
       <template #footer>
         <button class="btn btn-outline-dark" @click="closeAddNewEducation">Cancel</button>
@@ -225,16 +265,15 @@ const HandleAddNewProject = () => {
 // Education Add New
 const addNewEducation = ref(false)
 const closeAddNewEducation = () => {
-  addNewEducation.value = false;
-}
-
-function AddEducation() {
-  addNewEducation.value = true;
-}
-
-const HandleAddNewEducation = () => {
-  alert('Successfully');
   addNewEducation.value = false
 }
 
+function createEducation() {
+  addNewEducation.value = true
+}
+
+const HandleAddNewEducation = () => {
+  alert('Successfully')
+  addNewEducation.value = false
+}
 </script>

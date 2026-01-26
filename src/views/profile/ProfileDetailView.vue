@@ -1,7 +1,6 @@
 <template>
-    <ProfileLayout/>
+  <ProfileLayout />
 </template>
 <script setup>
-import ProfileLayout from '@/layout/ProfileLayout.vue';
-
+import ProfileLayout from '@/layout/ProfileLayout.vue'
 </script>
