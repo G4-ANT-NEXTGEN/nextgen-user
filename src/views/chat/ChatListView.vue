@@ -10,15 +10,18 @@
           </div>
           <hr class="my-1"/>
           <div class="chat" v-for="chat in chatStore.chatList" :key="chat.id">
-            <router-link class="text-start conversationer text-decoration-none"  :to="{ name: 'chat-room', params: { id: chat.messages[0].isMine ? chat.receiver.id : chat.sender.id }}" type="button" variant="white"
+            <router-link class="text-start conversationer text-decoration-none" @click="chatStore.isSelectChat=true"  :to="{ name: 'chat-room', params: { id: chat.messages[0].isMine ? chat.messages[0].receiver.id : chat.messages[0].sender.id }}" type="button" variant="white"
             >
                 <div class="d-flex align-items-center">
-                  <img :src="chat.messages[0].isMine ? chat.receiver.avatar : chat.sender.avatar" class="rounded-5 me-2"
+                  <img :src="chat.messages[0].isMine ? chat.messages[0].receiver.avatar : chat.messages[0].sender.avatar" class="rounded-5 me-2"
                     width="60" height="60" alt="">
                   <div>
-                    <p class="mb-0 fw-bold">{{ chat.messages[0].isMine ? chat.receiver.full_name : chat.sender.full_name }}
+                    <p class="mb-0 fw-bold">{{ chat.messages[0].isMine ? chat.messages[0].receiver.full_name : chat.messages[0].sender.full_name }}
                     </p>
-                    <div class="message">{{ chat.messages[0].isMine ? `You : ${chat.messages[0].isMine}` : `${chat.sender.full_name} : ${chat.messages[0].isMine}` }}</div>
+                    <div class="message">
+                      <span v-if="chat.messages[0].isMine">{{ `You : ${chat.messages[0].message}` }}</span>
+                      <span v-else style="font-weight: bold; font-size: 15px;">{{ `${chat.messages[0].sender.full_name} : ${chat.messages[0].message}` }}</span>
+                      </div>
                   </div>
                 </div>
               </router-link >
@@ -34,22 +37,27 @@
 import { onMounted } from 'vue'
 import { useChatStore } from '@/stores/chat'
 
+// chatStore.isSelectChat = false
 const chatStore = useChatStore()
+// console.log()
 onMounted(async () => {
+  chatStore.isSelectChat=false;
+  console.log('chat open ?', chatStore.isSelectChat)
   await chatStore.fetchChats()
+  await chatStore.fetchReceivedChats();
   console.log('all conversation : ', chatStore.chatList)
 })
 </script>
 <style scoped>
 .chat-section {
-  background: #f5f5f5;
+  background: var(--color-accent);
   height: 100vh;
   padding: 16px 0;
   padding-left: 16px;
 }
 
 .chat-list {
-  background: white;
+  background: var(--color-background);
   height: calc(100vh - 32px);
   border-radius: 10px;
   width: 100%;
@@ -59,7 +67,8 @@ onMounted(async () => {
   width: 100%;
 }
 .chat:hover {
-  background: #f5f5f5;
+  background: var(--color-gray);
+  border-radius: 10px;
 }
 .conversationer {
   align-content: center;
@@ -71,7 +80,9 @@ onMounted(async () => {
 }
 
 .conversationer.active {
-  background-color: #f5f5f5;
+  background-color: var(--color-gray);
+  color: var(--color-text);
+  border-radius: 10px;
   /* border-left: 4px solid #4f46e5; */
   font-weight: 600;
 }
@@ -82,7 +93,7 @@ onMounted(async () => {
   overflow: hidden;
   text-overflow: ellipsis;
   height: auto;
-  color: gray;
+  color: var(--color-background);
   font-size: 14px;
 }
 </style>
