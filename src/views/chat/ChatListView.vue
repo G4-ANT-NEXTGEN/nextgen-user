@@ -38,7 +38,7 @@
         <div v-else class="chat-list">
 
           <div class="search-chat p-3 pb-1">
-            <div>
+            <div class="d-flex justify-content-between align-items-center">
               <h4 style="color:var(--color-dark)">Messages</h4>
                <button @click="toggleTheme" class="theme-btn">
                         <i v-if="theme === 'light'" class="bi bi-moon-fill icon-btn"></i>
@@ -187,4 +187,15 @@ onMounted(async () => {
 .skeleton-small {
   height: 10px;
 }
+.theme-btn {
+  border: 1px solid var(--border-color);
+  background: var(--color-secondary);
+  color: var(--color-text);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+
 </style>
