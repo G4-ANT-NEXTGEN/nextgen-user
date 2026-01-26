@@ -36,12 +36,29 @@ export const usePostStore = defineStore('post', () => {
         }
     }
 
+    const createPost = async (payload) => {
+        try {
+            const response = await api.post('/api/posts', payload, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            showSuccess('Post created successfully')
+            return response.data.data
+        } catch (err) {
+            console.log(err.response?.data)
+            showError('Failed to create post')
+        }
+
+    }
+
     return {
         posts,
         post,
         loading,
         error,
         fetchPosts,
-        fetchPostsById
+        fetchPostsById,
+        createPost
     }
 })
