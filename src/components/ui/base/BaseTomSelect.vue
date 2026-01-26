@@ -1,14 +1,6 @@
 <template>
-  <select
-    ref="selectEl"
-    class="form-select tom-select"
-    :multiple="multiple"
-  >
-    <option
-      v-for="option in options"
-      :key="option.value"
-      :value="option.value"
-    >
+  <select ref="selectEl" class="form-select tom-select" :multiple="multiple">
+    <option v-for="option in options" :key="option.value" :value="option.value">
       {{ option.label }}
     </option>
   </select>
@@ -60,7 +52,8 @@ onBeforeUnmount(() => tom?.destroy())
 
 /* input area */
 .ts-control {
-  background: #f8fafc; /* modal input bg */
+  background: #f8fafc;
+  /* modal input bg */
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   min-height: 48px;
@@ -127,11 +120,13 @@ onBeforeUnmount(() => tom?.destroy())
 .ts-dropdown-content::-webkit-scrollbar {
   width: 6px;
 }
+
 .ts-dropdown-content::-webkit-scrollbar-thumb {
   background: #d1d5db;
   border-radius: 10px;
 }
-.ts-wrapper.multi .ts-control > div{
-    padding: 6px !important;
+
+.ts-wrapper.multi .ts-control>div {
+  padding: 6px !important;
 }
 </style>

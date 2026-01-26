@@ -7,21 +7,12 @@
     </label>
 
     <!-- Select -->
-    <select
-      class="form-select select-input"
-      :value="modelValue"
-      :disabled="disabled"
-      @change="onChange"
-    >
+    <select class="form-select select-input" :value="modelValue" :disabled="disabled" @change="onChange">
       <option v-if="placeholder" disabled value="">
         {{ placeholder }}
       </option>
 
-      <option
-        v-for="option in options"
-        :key="option.value"
-        :value="option.value"
-      >
+      <option v-for="option in options" :key="option.value" :value="option.value">
         {{ option.label }}
       </option>
     </select>
