@@ -1,9 +1,12 @@
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { computed, ref,  } from "vue";
+
 import api from '@/api/api';
 export const useChatStore = defineStore('chat', () => {
   const chats = ref([]);
   const receivedChats = ref([]);
+  const isSelectChat = ref(true)
+
   //own messages
   const fetchChats = async () => {
     try {
@@ -89,7 +92,7 @@ export const useChatStore = defineStore('chat', () => {
 
       map.get(uid).messages.push({
         ...chat,
-        isMine:false
+        isMine:true
 
       })
     })
@@ -104,10 +107,15 @@ export const useChatStore = defineStore('chat', () => {
       }
       map.get(rid).messages.push({
         ...receive,
-        isMine:true
+        isMine:false
       })
 
     })
+     map.forEach(conversation => {
+    conversation.messages.sort(
+      (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    )
+  })
     return Array.from(map.values())
   })
 
@@ -119,6 +127,7 @@ export const useChatStore = defineStore('chat', () => {
     sendMessage,
     getConversationMessages,
     chatList,
-    getAllConversationMessages
+    getAllConversationMessages,
+    isSelectChat
   }
 })
