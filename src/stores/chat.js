@@ -25,17 +25,17 @@ export const useChatStore = defineStore('chat', () => {
       console.log("Error in fetching received chat list", e);
     }
   }
-// get messages for a specific conversation by sender/receiver id
+  // get messages for a specific conversation by sender/receiver id
   const getConversationMessages = (chatId) => {
     const sent = chats.value
-      .filter(chat => chat.receiver.id === chatId)
+      .filter(chat => chat.receiver && chat.receiver.id == chatId)
       .map(chat => ({
         ...chat,
         isMine: true
       }))
 
     const received = receivedChats.value
-      .filter(chat => chat.sender.id === chatId)
+      .filter(chat => chat.sender && chat.sender.id == chatId)
       .map(chat => ({
         ...chat,
         isMine: false
@@ -45,7 +45,7 @@ export const useChatStore = defineStore('chat', () => {
       (a, b) => new Date(a.created_at) - new Date(b.created_at) // older first
     )
   }
-    const getAllConversationMessages = () => {
+  const getAllConversationMessages = () => {
     const sent = chats.value
       // .filter(chat => chat.receiver.id === chatId)
       .map(chat => ({
@@ -67,6 +67,9 @@ export const useChatStore = defineStore('chat', () => {
   const sendMessage = async (payload) => {
     try {
       const res = await api.post(`/api/messages`, payload);
+      await fetchChats();
+      await fetchReceivedChats();
+      return res.data.data;
     }
     catch (e) {
       console.log("Error in sending message", e);
@@ -89,22 +92,22 @@ export const useChatStore = defineStore('chat', () => {
 
       map.get(uid).messages.push({
         ...chat,
-        isMine:false
+        isMine: true
 
       })
     })
     receivedChats.value.forEach(receive => {
-      if(!receive.sender) return ;
+      if (!receive.sender) return;
       const rid = receive.sender.id
-      if(!map.has(rid)){
-        map.set(rid,{
+      if (!map.has(rid)) {
+        map.set(rid, {
           sender: receive.sender,
-          messages:[]
+          messages: []
         })
       }
       map.get(rid).messages.push({
         ...receive,
-        isMine:true
+        isMine: false
       })
 
     })
