@@ -71,10 +71,11 @@ authStore.fetchProfile()
 }
 
 .navbar {
-  background-color: var(--color-background);
+  background-color: var(--color-accent);
   border-bottom: 1px solid var(--color-border);
   padding: 16px 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .logo-box {
@@ -100,10 +101,18 @@ authStore.fetchProfile()
 
 .search-box {
   background-color: var(--color-secondary);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
   border-radius: 10px;
   padding: 10px 16px 10px 42px;
   transition: all 0.3s ease;
+}
+
+.search-box:focus {
+  outline: none;
+  background-color: var(--color-accent);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
 }
 
 .search-icon {

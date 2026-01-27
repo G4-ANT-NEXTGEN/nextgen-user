@@ -41,99 +41,7 @@
     <div class="container-fluid px-4 py-4 container-wrapper">
       <div class="row g-4">
         <!-- Left Sidebar -->
-        <div class="sidebar-left">
-          <div class="sidebar-content">
-            <!-- Profile Card -->
-            <div class="card-custom mb-3">
-              <div class="d-flex align-items-center gap-3 mb-3">
-                <div class="avatar overflow-hidden rounded-circle">
-                  <img class="img-fluid" :src="authStore.user.avatar" alt="">
-                </div>
-                <div>
-                  <h6 class="mb-0 fw-bold">
-                    {{ authStore.user.full_name }}
-                    <i class="bi bi-check-circle-fill text-primary-custom"></i>
-                  </h6>
-                  <small style="color: var(--color-muted);">
-                    @{{ authStore.user.full_name.toLowerCase().replace(/ /g, '.') }}
-                  </small>
-                </div>
-              </div>
-              <div class="row text-center profile-stats">
-                <div class="col-4">
-                  <div class="fw-bold fs-5">2.3k</div>
-                  <small style="color: var(--color-muted);">Follower</small>
-                </div>
-                <div class="col-4">
-                  <div class="fw-bold fs-5">235</div>
-                  <small style="color: var(--color-muted);">Following</small>
-                </div>
-                <div class="col-4">
-                  <div class="fw-bold fs-5">80</div>
-                  <small style="color: var(--color-muted);">Post</small>
-                </div>
-              </div>
-            </div>
-
-            <!-- Navigation Menu -->
-            <div class="nav-menu mb-3">
-              <a href="#" class="nav-item active">
-                <i class="bi bi-house-door-fill"></i>
-                <span>Feed</span>
-              </a>
-              <a href="#" class="nav-item">
-                <i class="bi bi-people-fill"></i>
-                <span>Friends</span>
-              </a>
-              <a href="#" class="nav-item position-relative">
-                <i class="bi bi-calendar-event"></i>
-                <span>Event</span>
-                <span class="badge bg-danger badge-custom">1</span>
-              </a>
-              <a href="#" class="nav-item">
-                <i class="bi bi-play-circle-fill"></i>
-                <span>Watch Videos</span>
-              </a>
-              <a href="#" class="nav-item">
-                <i class="bi bi-image-fill"></i>
-                <span>Photos</span>
-              </a>
-              <a href="#" class="nav-item">
-                <i class="bi bi-shop"></i>
-                <span>Marketplace</span>
-              </a>
-              <a href="#" class="nav-item position-relative">
-                <i class="bi bi-file-earmark-text"></i>
-                <span>Files</span>
-                <span class="badge badge-custom" style="background-color: #8b5cf6;">7</span>
-              </a>
-            </div>
-
-            <!-- Pages You Like -->
-            <div class="card-custom">
-              <h6 class="fw-bold mb-3" style="color: var(--color-muted); letter-spacing: 0.5px;">PAGES YOU
-                LIKE</h6>
-              <div class="page-item-custom">
-                <div class="page-icon" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">UI</div>
-                <span class="fw-medium">UI/UX Community</span>
-              </div>
-              <div class="page-item-custom">
-                <div class="page-icon" style="background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);">WD</div>
-                <span class="fw-medium">Web Designer</span>
-              </div>
-              <div class="page-item-custom">
-                <div class="page-icon" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);">D</div>
-                <span class="fw-medium">Dribbble Community</span>
-              </div>
-              <div class="page-item-custom">
-                <div class="page-icon" style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);">B</div>
-                <span class="fw-medium">Behance <i class="bi bi-patch-check-fill text-primary-custom"
-                    style="font-size: 12px;"></i></span>
-              </div>
-              <a href="#" class="link-custom small mt-2 d-inline-block">View All</a>
-            </div>
-          </div>
-        </div>
+        <AppSidebar />
 
         <!-- Main Feed -->
         <div class="col-lg-6 main-feed ">
@@ -174,129 +82,21 @@
             </div>
           </div>
 
+          <!-- Post Skeleton -->
+          <template v-if="postStore.loading && postStore.posts.length === 0">
+            <ArticleCardSkeleton v-for="n in 3" :key="n" />
+          </template>
+
           <!-- Post -->
-          <div class="post-card" v-for="post in postStore.posts" :key="post.id">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <div class="d-flex align-items-center gap-3">
-                <div class="small-avatar rounded-circle overflow-hidden">
-                  <img class="img-fluid w-100 h-100 object-fit-cover" :src="post.creator.avatar" alt="">
-                </div>
-                <div>
-                  <h6 class="mb-0 fw-bold">{{ post.creator.full_name }}</h6>
-                  <small style="color: var(--color-muted);">
-                    <i class="bi bi-globe-americas"></i>
-                    {{ formatDate(post.created_at) }}
-                  </small>
-                </div>
-              </div>
-
-              <div class="dropdown" v-if="post.creator.id == authStore.user?.id">
-                <button @click="GetpostId(post.id)" class="btn btn-edit-post" type="button" data-bs-toggle="dropdown"
-                  aria-expanded="false">
-                  <i class="bi bi-three-dots cursor-pointer"></i>
-                </button>
-                <ul class="dropdown-menu">
-                  <li>
-                    <button @click="OpenModeledit" type="button" class="dropdown-item">
-                      <i class="bi bi-pencil"></i>
-                      <span>Edit</span>
-                    </button>
-                  </li>
-                  <li>
-                    <button @click="OpenModeldelete" type="button" class="dropdown-item text-danger">
-                      <i class="bi bi-trash"></i>
-                      <span>Delete</span>
-                    </button>
-                  </li>
-                  <!-- <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li>
-                    <button type="button" class="dropdown-item">
-                      <i class="bi bi-flag"></i>
-                      <span>Report</span>
-                    </button>
-                  </li> -->
-                </ul>
-              </div>
-
-            </div>
-            <div>
-              <p>{{ post.text }}</p>
-            </div>
-
-            <div class="row g-3 mb-3" v-if="post.image && post.image !== 'http://novia.csm.linkpc.net/storage/posts'">
-              <div class="col-12">
-                <div class="w-100">
-                  <img class="img-fluid poduct-post" :src="post.image" alt="">
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center pt-3 divider">
-              <button @click="reactLike(post.id)" class="btn-post-action d-flex align-items-center gap-2">
-                <i v-if="isLiked(post.id)" class="bi bi-heart-fill"></i>
-                <i v-else class="bi bi-heart"></i>
-                <span>{{ getLikeCount(post.id) }} Like</span>
-              </button>
-              <button class="btn-post-action d-flex align-items-center gap-2">
-                <i class="bi bi-chat"></i>
-                <span>12 Comment</span>
-              </button>
-              <button class="btn-post-action d-flex align-items-center gap-2">
-                <i class="bi bi-share"></i>
-                <span>3 Share</span>
-              </button>
-              <div>
-                <i class="bi bi-bookmark icon-btn" style="color: var(--color-muted);"></i>
-              </div>
-            </div>
-          </div>
+          <ArticleCard v-for="post in visiblePosts" :key="post.id" :post="post" :currentUserId="authStore.user?.id"
+            :isLiked="isLiked(post.id)" :likeCount="getLikeCount(post.id)" @get-id="GetpostId" @edit="OpenModeledit"
+            @delete="OpenModeldelete" @like="reactLike" @hide="hidePost" @pin="pinPost" @report="reportPost" />
         </div>
 
         <!-- Right Sidebar -->
         <div class="col-lg-3 sidebar-right">
           <div class="sidebar-content">
             <!-- Messages -->
-            <!-- <div class="card-custom mb-3">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="fw-bold mb-0">Messages</h6>
-                <i class="bi bi-plus-lg icon-btn-massage"></i>
-              </div>
-              <div class="position-relative mb-3">
-                <i class="bi bi-search position-absolute"
-                  style="left: 12px; top: 50%; transform: translateY(-50%); color: var(--color-muted);"></i>
-                <input type="text" class="form-control"
-                  style="padding-left: 38px; background-color: var(--color-secondary); border: 1px solid var(--color-border); border-radius: 10px;"
-                  placeholder="Search">
-                <i class="bi bi-funnel position-absolute icon-btn-massage"
-                  style="right: 8px; top: 50%; transform: translateY(-50%); color: var(--color-muted);"></i>
-              </div>
-              <div class="d-flex gap-2 mb-3">
-                <button class="tab-filter active">Primary</button>
-                <button class="tab-filter">General</button>
-              </div>
-
-              <div v-for="chat in chatStore.chatList" :key="chat.id" class="message-item mb-2 cursor-pointer"
-                @click="$router.push({ name: 'chat-room', params: { id: chat.receiver?.id || chat.sender?.id } })">
-                <div class="position-relative">
-                  <div class="small-avatar overflow-hidden rounded-circle">
-                    <img :src="chat.receiver?.avatar || chat.sender?.avatar || 'https://via.placeholder.com/40'"
-                      class="img-fluid" alt="">
-                  </div>
-                  <div class="online-indicator"></div>
-                </div>
-                <small class="fw-medium">{{ chat.receiver?.full_name || chat.sender?.full_name }}</small>
-              </div>
-              <div v-if="chatStore.chatList.length === 0" class="text-center py-3">
-                <small style="color: var(--color-muted);">No messages yet</small>
-              </div>
-              <button @click="$router.push({ name: 'chat-layout' })" class="link-custom small d-block text-center mt-3">
-                View All
-              </button>
-            </div> -->
-
-
             <div class="card-custom mb-3">
               <!-- Header -->
               <div class="messages-header">
@@ -484,6 +284,9 @@
 <script setup>
 
 import { useAuthStore } from '@/stores/auth';
+import ArticleCard from '@/components/common/ArticleCard.vue';
+import ArticleCardSkeleton from '@/components/common/ArticleCardSkeleton.vue';
+import AppSidebar from '@/components/layout/AppSidebar.vue';
 import { usePostStore } from '@/stores/post';
 import { useCategoryStore } from '@/stores/category';
 import { useChatStore } from '@/stores/chat';
@@ -492,6 +295,7 @@ import { useTheme } from '@/composables/useTheme'
 import { useRequiredValidator } from '@/composables/useRequiredValidator';
 import moment from 'moment-timezone';
 import { ref, computed } from 'vue';
+import { showSuccess, showInfo } from '@/utils/toast';
 
 const { theme, toggleTheme } = useTheme()
 const router = useRouter();
@@ -512,6 +316,23 @@ const imgPost = ref(null);
 const errorTitle = ref(null);
 const PostId = ref(null);
 const showModalDelete = ref(false);
+const hiddenPosts = ref(new Set());
+
+const hidePost = (postId) => {
+  hiddenPosts.value.add(postId);
+};
+
+const visiblePosts = computed(() => {
+  return postStore.posts.filter(post => !hiddenPosts.value.has(post.id));
+});
+
+const pinPost = () => {
+  showSuccess('Post pinned successfully');
+};
+
+const reportPost = () => {
+  showInfo('Post reported. Thank you for making our community safer.');
+};
 
 // Messages Sidebar State
 const searchQuery = ref('');
@@ -717,9 +538,7 @@ const prepareFormData = () => {
   return data;
 };
 
-const formatDate = (date) => {
-  return moment.utc(date).local().fromNow();
-}
+
 
 
 setTimeout(() => {

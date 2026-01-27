@@ -16,6 +16,8 @@ import Step3PositionUserView from '@/views/register/Step3PositionUserView.vue'
 import Step4PreviewUserView from '@/views/register/Step4PreviewUserView.vue'
 import LandingView from '@/views/LandingView.vue'
 import AboutView from '@/views/AboutView.vue'
+import EventsView from '@/views/EventsView.vue'
+import HelpView from '@/views/HelpView.vue'
 
 import ProfileDetailView from '@/views/profile/ProfileDetailView.vue'
 
@@ -42,6 +44,24 @@ const router = createRouter({
       component: AboutView,
       meta: {
         title: 'About',
+        requiresAuth: false,
+      },
+    },
+    {
+      path: '/events',
+      name: 'events',
+      component: EventsView,
+      meta: {
+        title: 'Events',
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/help',
+      name: 'help',
+      component: HelpView,
+      meta: {
+        title: 'Help',
         requiresAuth: false,
       },
     },
@@ -93,16 +113,16 @@ const router = createRouter({
       path: '/chat',
       name: 'chat-layout',
       component: ChatLayout,
-      meta:{
+      meta: {
         title: 'Chat'
       },
-      children:[
+      children: [
         {
-          path:':id',
-          name:'chat-room',
-          component:ChatRoomView,
-          meta:{
-            title:'Conversation'
+          path: ':id',
+          name: 'chat-room',
+          component: ChatRoomView,
+          meta: {
+            title: 'Conversation'
           }
         }
       ]
@@ -175,7 +195,7 @@ router.beforeEach(async (to) => {
   if (authStore.token && !authStore.user) {
     try {
       await authStore.fetchProfile()
-    } catch (error) {
+    } catch {
       authStore.logout()
       return { name: 'login' }
     }
