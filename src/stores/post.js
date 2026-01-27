@@ -33,7 +33,8 @@ export const usePostStore = defineStore('post', () => {
       const response = await api.get('/api/posts', {
         params: {
           page: page.value,
-          per_page: 9,
+          per_page: 20,
+          category: 0,
           search: search.value,
         },
       })
@@ -118,6 +119,7 @@ export const usePostStore = defineStore('post', () => {
     post,
     loading,
     error,
+    search,
     pagination,
     fetchPosts,
     fetchMorePosts,

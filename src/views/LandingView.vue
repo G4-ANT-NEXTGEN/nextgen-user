@@ -32,6 +32,10 @@
             </li>
           </ul>
           <div class="d-flex align-items-center gap-3">
+            <button @click="toggleTheme" class="theme-btn">
+              <i v-if="theme === 'light'" class="bi bi-moon-fill icon-btn"></i>
+              <i v-else class="bi bi-brightness-high-fill icon-btn"></i>
+            </button>
             <RouterLink to="/login" class="btn btn-primary-custom">Log In</RouterLink>
             <RouterLink to="/register" class="btn btn-primary-custom">Sign Up Free</RouterLink>
           </div>
@@ -260,6 +264,9 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import lottie from 'lottie-web'
+import { useTheme } from '@/composables/useTheme'
+
+const { theme, toggleTheme } = useTheme()
 
 // --- State ---
 const isScrolled = ref(false)
@@ -437,7 +444,8 @@ onUnmounted(() => {
 <style scoped>
 /* --- Base Styles --- */
 .landing-page {
-  background-color: #fff;
+  background-color: var(--color-background);
+  color: var(--color-text);
   min-height: 100vh;
   padding-top: 80px;
 }
@@ -448,7 +456,7 @@ html {
 
 /* --- Utilities --- */
 .bg-light-soft {
-  background-color: #f8f9fa;
+  background-color: var(--color-secondary);
 }
 .transition-all {
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -463,8 +471,8 @@ html {
 .badge-pill {
   display: inline-block;
   padding: 0.5rem 1.5rem;
-  background-color: #f1f3f5;
-  color: #000;
+  background-color: var(--bg-tag);
+  color: var(--color-text);
   border-radius: 50px;
   font-weight: 600;
   font-size: 0.85rem;
@@ -478,13 +486,14 @@ html {
   z-index: 1030;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  background-color: rgba(255, 255, 255, 0.9) !important;
+  background-color: var(--color-background) !important;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .custom-navbar.scrolled {
-  background-color: rgba(0, 0, 0, 0.95) !important;
+  background-color: var(--color-background) !important;
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
 }
 
@@ -496,31 +505,50 @@ html {
 }
 
 .nav-link {
-  color: #1f2937 !important;
+  color: var(--color-text) !important;
   font-weight: 500;
   border-bottom: 2px solid transparent;
   transition: all 0.3s ease;
 }
 
 .nav-link:hover {
-  color: #000 !important;
-  border-bottom-color: #000;
+  color: var(--color-primary) !important;
+  border-bottom-color: var(--color-primary);
 }
 
 .custom-navbar.scrolled .nav-link {
-  color: #fff !important;
+  color: var(--color-text) !important;
 }
 .custom-navbar.scrolled .nav-link:hover {
-  border-bottom-color: #fff;
+  border-bottom-color: var(--color-primary);
 }
+.navbar-brand,
+.navbar-brand span {
+  color: var(--color-text) !important;
+}
+
 .custom-navbar.scrolled .navbar-brand,
 .custom-navbar.scrolled .navbar-brand span {
-  color: #fff !important;
+  color: var(--color-text) !important;
 }
 
 /* --- Buttons --- */
+.theme-btn {
+  background: var(--color-secondary);
+  color: var(--color-text);
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-btn:hover {
+  background-color: var(--color-hover);
+}
+
 .btn {
-  padding: 0.625rem 1.5rem;
+  padding: 0.325rem 1.2rem;
   border-radius: 12px;
   font-weight: 600;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);

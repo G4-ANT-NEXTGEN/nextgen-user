@@ -26,8 +26,8 @@
 
 <style scoped>
 .post-card-skeleton {
-  background: var(--color-accent, #ffffff);
-  border: 1px solid var(--color-border, #f0f0f0);
+  background: var(--color-accent);
+  border: 1px solid var(--color-border);
   border-radius: 16px;
   padding: 24px;
   margin-bottom: 24px;
@@ -45,7 +45,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: #f1f5f9;
+  background: var(--color-border);
   animation: pulse 1.5s infinite;
 }
 
@@ -54,7 +54,7 @@
 }
 
 .skeleton-line {
-  background: #f1f5f9;
+  background: var(--color-border);
   border-radius: 4px;
   animation: pulse 1.5s infinite;
 }
@@ -86,7 +86,7 @@
 .skeleton-media {
   width: 100%;
   height: 300px;
-  background: #f1f5f9;
+  background: var(--color-border);
   border-radius: 12px;
   margin-bottom: 20px;
   animation: pulse 1.5s infinite;
@@ -96,7 +96,7 @@
   display: flex;
   justify-content: space-between;
   padding-top: 16px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid var(--color-border);
 }
 
 .skeleton-actions {
@@ -107,7 +107,7 @@
 .skeleton-btn {
   width: 80px;
   height: 32px;
-  background: #f1f5f9;
+  background: var(--color-border);
   border-radius: 8px;
   animation: pulse 1.5s infinite;
 }
@@ -115,7 +115,7 @@
 .skeleton-bookmark {
   width: 32px;
   height: 32px;
-  background: #f1f5f9;
+  background: var(--color-border);
   border-radius: 8px;
   animation: pulse 1.5s infinite;
 }

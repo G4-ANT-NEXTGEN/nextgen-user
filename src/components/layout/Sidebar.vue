@@ -1,7 +1,7 @@
 <template>
     <div class="sidebar-left">
         <div class="sidebar-content">
-            <!-- Profile Card -->
+            <!-- Profile Card --> 
             <div class="card-custom mb-3">
                 <div class="d-flex align-items-center gap-3 mb-3">
                     <div class="avatar overflow-hidden rounded-circle">

@@ -34,18 +34,6 @@
             </button>
           </li>
           <li>
-            <button @click="$emit('pin', post.id)" type="button" class="action-item">
-              <i class="bi bi-pin"></i>
-              <span>Pin Post</span>
-            </button>
-          </li>
-          <li>
-            <button @click="$emit('report', post.id)" type="button" class="action-item action-item--danger">
-              <i class="bi bi-flag"></i>
-              <span>Report Post</span>
-            </button>
-          </li>
-          <li>
             <button @click="$emit('hide', post.id)" type="button" class="action-item action-item--danger">
               <i class="bi bi-eye-slash"></i>
               <span>Hide Post</span>
@@ -133,7 +121,7 @@ const formatDate = (date) => {
   background: var(--color-accent, #ffffff);
   border: 1px solid var(--color-border, #f0f0f0);
   border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
   padding: 24px;
   margin-bottom: 24px;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -141,8 +129,8 @@ const formatDate = (date) => {
 }
 
 .post-card:hover {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 24px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  /* transform: translateY(-2px); */
 }
 
 @keyframes fadeInUp {
@@ -183,7 +171,7 @@ const formatDate = (date) => {
 }
 
 .avatar-wrapper:hover {
-  transform: scale(1.05);
+  /* transform: scale(1.05); */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
@@ -251,6 +239,10 @@ const formatDate = (date) => {
 }
 
 .action-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 999999;
   min-width: 180px;
   background-color: var(--color-accent);
   border: 1px solid var(--color-border);
@@ -283,6 +275,7 @@ const formatDate = (date) => {
 
 .action-item i {
   font-size: 16px;
+  color: var(--color-text);
 }
 
 .action-item--danger {

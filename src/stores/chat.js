@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { computed, ref,  } from "vue";
+import { computed, ref, } from "vue";
 
 import api from '@/api/api';
 export const useChatStore = defineStore('chat', () => {
@@ -77,13 +77,13 @@ export const useChatStore = defineStore('chat', () => {
     catch (e) {
       console.log("Error in sending message", e);
     }
-    finally{
+    finally {
       isLoading.value = false;
     }
   }
   const chatList = computed(() => {
     const map = new Map()
-    // you messages
+    // Process sent messages
     chats.value.forEach(chat => {
       if (!chat.receiver) return
 
@@ -91,6 +91,8 @@ export const useChatStore = defineStore('chat', () => {
 
       if (!map.has(uid)) {
         map.set(uid, {
+          id: uid,
+          otherUser: chat.receiver,
           receiver: chat.receiver,
           messages: []
         })
@@ -98,31 +100,34 @@ export const useChatStore = defineStore('chat', () => {
 
       map.get(uid).messages.push({
         ...chat,
-        isMine:true
-
+        isMine: true
       })
     })
+    // Process received messages
     receivedChats.value.forEach(receive => {
       if (!receive.sender) return;
       const rid = receive.sender.id
       if (!map.has(rid)) {
         map.set(rid, {
+          id: rid,
+          otherUser: receive.sender,
           sender: receive.sender,
           messages: []
         })
       }
       map.get(rid).messages.push({
         ...receive,
-        isMine:false
+        isMine: false
       })
 
     })
-     map.forEach(conversation => {
-    conversation.messages.sort(
-      (a, b) => new Date(b.created_at) - new Date(a.created_at)
-    )
-  })
-    return Array.from(map.values())
+    map.forEach(conversation => {
+      conversation.messages.sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      )
+      conversation.lastUpdate = conversation.messages[0]?.created_at;
+    })
+    return Array.from(map.values()).sort((a, b) => new Date(b.lastUpdate) - new Date(a.lastUpdate));
   })
 
   return {

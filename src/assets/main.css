@@ -2,100 +2,137 @@
 
 html,
 body {
-  font-family: "Noto Sans Khmer", " Roboto", sans-serif;
+  font-family: "Noto Sans Khmer", "Roboto", sans-serif;
   overflow-x: hidden;
   background-color: var(--color-background);
   color: var(--color-text);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 :root {
-  /* Surface Colors */
+  /* Generic Surface Colors */
   --color-text: #030307;
-  --color-border: #e0e0e0;
   --color-background: #f5f5f7;
-  --color-primary: #0a0a0a;
-  --color-on-primary: #ffffff;
-  --color-secondary: #f1f4f8;
-  --color-accent: #fdfaff;
-  --color-white: #ffffff;
+  --color-border: #e0e0e0;
+  --color-hover: #f0f0f0;
+  --color-muted: #7a7a7a;
+  --color-surface: #fdfdfd;
+  --color-text-secondary: #4a4a4a;
+  --color-text-tertiary: #717171;
+  --color-close: #030307;
 
-  /* Status Colors */
-  --color-dark: #1f2937;
-  --color-gray: #6b7280;
-  --color-muted: #9ca3af;
-  --color-muted-light: #e5e7eb;
+  /* Navbar Specific */
+  --nav-bg: #ffffff;
+  --nav-surface: #f9f9f9;
 
-  /* Borders */
-  --border-color: #e0e0e0;
-  --border-color-hover: #d1d5db;
-  --border-color-strong: #cbd5e1;
+  /* Sidebar Specific */
+  --sidebar-bg: #f8f8f9;
+  --sidebar-text: #030307;
+  --sidebar-muted: #7a7a7a;
+  --sidebar-hover: #e8e8eb;
+  --sidebar-border: #e0e0e0;
+  --sidebar-active: #dfe1e8;
 
-  /* Interactions */
-  --bg-hover: #f3f4f6;
+  /* Functional Colors */
+  --color-primary: #000000;
+  --color-secondary: #ffffff;
+  --color-accent: #f5f5f7;
+  --color-danger: #dc3545;
+  --color-on-primary: #000;
+
+  /* Misc & Interactions */
+  --bg-hover: #f0f0f0;
   --bg-tag: #e5e7eb;
   --bg-dropdown-hover: #f3f4f6;
   --filter: invert(0);
 
-  /* Status Colors */
-  --color-blue: #2563eb;
-  --color-red: #dc2626;
-  --color-green: #16a34a;
-
-  /* Toastity Colors (Light) */
-  --toastify-color-success: #22c55e;
-  --toastify-color-error: #ef4444;
-  --toastify-color-warning: #f59e0b;
-  --toastify-color-info: #3b82f6;
-
   /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  /* Toastify Colors */
+  --toastify-color-success: #10B981;
+  --toastify-color-error: #EF4444;
+  --toastify-color-warning: #F59E0B;
+  --toastify-color-info: #3B82F6;
+
+  /* Profile Sidebar (White/Black) */
+  --profile-cover-bg: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+  --profile-cover-grid: rgba(255, 255, 255, 0.1);
+  --stats-bg: #f9fafb;
+  --profile-accent: #000000;
+
+  /* About Page */
+  --about-hero-bg: linear-gradient(135deg, rgba(10, 10, 10, 0.9) 0%, rgba(10, 10, 10, 0.6) 100%);
+  --hero-grid-color: rgba(255, 255, 255, 0.03);
+  --about-stats-bg: #0a0a0a;
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'Noto Sans Khmer', 'Roboto', sans-serif;
+  --transition: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-theme="dark"] {
-  /* Surface Colors */
+  /* Generic Surface Colors */
   --color-text: #f8f8fc;
-  --color-border: #2a2a2a;
   --color-background: #0f0f0f;
-  --color-primary: #ffffff;
-  --color-on-primary: #0a0a0a;
-  --color-secondary: #252525;
-  --color-accent: #1a1a1a;
-  --color-white: #1a1a1a;
-  /* Shift white to accent in dark mode */
+  --color-border: #2a2a2a;
+  --color-hover: #1a1a1a;
+  --color-muted: #a0a0a0;
+  --color-surface: #1a1a1a;
+  --color-text-secondary: #c0c0c0;
+  --color-text-tertiary: #909090;
+  --color-close: #ffffff;
 
-  /* Status Colors */
-  --color-dark: #e5e7eb;
-  --color-gray: #9ca3af;
-  --color-muted: #6b7280;
-  --color-muted-light: #1f2937;
+  /* Navbar Specific */
+  --nav-bg: #1a1a1a;
+  --nav-surface: #252525;
 
-  /* Borders */
-  --border-color: #1f2937;
-  --border-color-hover: #374151;
-  --border-color-strong: #4b5563;
+  /* Sidebar Specific */
+  --sidebar-bg: #1a1a1a;
+  --sidebar-text: #f8f8fc;
+  --sidebar-muted: #a0a0a0;
+  --sidebar-hover: #2a2a2a;
+  --sidebar-border: #2a2a2a;
+  --sidebar-active: #2f3139;
 
-  /* Interactions */
-  --bg-hover: #1a1a1a;
+  /* Functional Colors */
+  --color-primary: #f8f8fc;
+  --color-secondary: #1a1a1a;
+  --color-accent: #252525;
+  --color-danger: #ef4444;
+  --color-on-primary: #ffffff;
 
-  /* Status Colors */
-  --color-blue: #60a5fa;
-  --color-red: #f87171;
-  --color-green: #4ade80;
-  --bg-tag: #374151;
-  --bg-dropdown-hover: #262626;
+  /* Misc & Interactions */
+  --bg-hover: #2a2a2a;
+  --bg-tag: #1E293B;
+  --bg-dropdown-hover: #334155;
   --filter: invert(1);
 
-  /* Toastity Colors (Dark) */
-  --toastify-color-success: #4ade80;
-  --toastify-color-error: #f87171;
-  --toastify-color-warning: #fbbf24;
-  --toastify-color-info: #60a5fa;
-
   /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+
+  /* Toastify Colors */
+  --toastify-color-success: #34D399;
+  --toastify-color-error: #F87171;
+  --toastify-color-warning: #FBBF24;
+  --toastify-color-info: #60A5FA;
+
+  /* Profile Sidebar (White/Black) */
+  --profile-cover-bg: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
+  --profile-cover-grid: rgba(0, 0, 0, 0.1);
+  --stats-bg: #252525;
+  --profile-accent: #ffffff;
+
+  /* About Page */
+  --about-hero-bg: linear-gradient(135deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.5) 100%);
+  --hero-grid-color: rgba(255, 255, 255, 0.05);
+  --about-stats-bg: #0a0a0a;
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'Noto Sans Khmer', 'Roboto', sans-serif;
+  --transition: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Professional Toast Styling */
@@ -104,7 +141,7 @@ body {
   color: var(--color-text) !important;
   border-radius: 12px !important;
   border: 1px solid var(--color-border) !important;
-  box-shadow: var(--shadow-md) !important;
+  box-shadow: var(--shadow-lg) !important;
   padding: 12px 18px !important;
   min-height: 64px !important;
   backdrop-filter: blur(12px) !important;
@@ -113,7 +150,7 @@ body {
 }
 
 [data-theme="dark"] .my-toast {
-  background: rgba(30, 30, 30, 0.9) !important;
+  background: rgba(30, 41, 59, 0.9) !important;
 }
 
 .my-toast-body {

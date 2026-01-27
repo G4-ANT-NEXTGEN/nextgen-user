@@ -1,55 +1,51 @@
 <template>
-    <MainLayout>
-        <div class="help-page">
-            <div class="help-hero-small rounded-4 mb-4">
-                <div class="text-center py-4">
-                    <h3 class="fw-bold text-white mb-3">How can we help?</h3>
-                    <div class="search-box mx-auto px-3">
-                        <i class="bi bi-search"></i>
-                        <input type="text" placeholder="Search for help...">
-                    </div>
+    <div class="help-page">
+        <div class="help-hero-small rounded-4 mb-4">
+            <div class="text-center py-4">
+                <h3 class="fw-bold text-white mb-3">How can we help?</h3>
+                <div class="search-box mx-auto px-3">
+                    <i class="bi bi-search"></i>
+                    <input type="text" placeholder="Search for help...">
                 </div>
             </div>
+        </div>
 
-            <div class="row g-3 mb-4">
-                <div v-for="category in categories" :key="category.title" class="col-md-4">
-                    <div class="card-custom h-100 p-3 text-center help-card">
-                        <div class="help-icon-wrapper mb-3" :style="{ background: category.gradient }">
-                            <i :class="['bi', category.icon]"></i>
-                        </div>
-                        <h6 class="fw-bold mb-2">{{ category.title }}</h6>
-                        <p class="text-muted extra-small mb-3">{{ category.desc }}</p>
-                        <button class="btn btn-outline-primary btn-sm rounded-pill px-3">Articles</button>
+        <div class="row g-3 mb-4">
+            <div v-for="category in categories" :key="category.title" class="col-md-4">
+                <div class="card-custom h-100 p-3 text-center help-card">
+                    <div class="help-icon-wrapper mb-3" :style="{ background: category.gradient }">
+                        <i :class="['bi', category.icon]"></i>
                     </div>
+                    <h6 class="fw-bold mb-2">{{ category.title }}</h6>
+                    <p class="text-muted extra-small mb-3">{{ category.desc }}</p>
+                    <button class="btn btn-outline-primary btn-sm rounded-pill px-3">Articles</button>
                 </div>
             </div>
+        </div>
 
-            <div class="help-faq section">
-                <h5 class="fw-bold mb-3">Common Questions</h5>
-                <div class="accordion" id="faqAccordion">
-                    <div v-for="(faq, index) in faqs" :key="index"
-                        class="accordion-item border-0 mb-2 card-custom overflow-hidden">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed fw-bold small" type="button"
-                                data-bs-toggle="collapse" :data-bs-target="'#faq' + index">
-                                {{ faq.q }}
-                            </button>
-                        </h2>
-                        <div :id="'faq' + index" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body text-muted small">
-                                {{ faq.a }}
-                            </div>
+        <div class="help-faq section">
+            <h5 class="fw-bold mb-3">Common Questions</h5>
+            <div class="accordion" id="faqAccordion">
+                <div v-for="(faq, index) in faqs" :key="index"
+                    class="accordion-item border-0 mb-2 card-custom overflow-hidden">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold small" type="button" data-bs-toggle="collapse"
+                            :data-bs-target="'#faq' + index">
+                            {{ faq.q }}
+                        </button>
+                    </h2>
+                    <div :id="'faq' + index" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted small">
+                            {{ faq.a }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </MainLayout>
+    </div>
 </template>
 
 <script setup>
-import MainLayout from '@/layout/MainLayout.vue';
-
 const categories = [
     {
         title: 'Getting Started',

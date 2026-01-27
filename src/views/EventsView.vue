@@ -1,51 +1,48 @@
 <template>
-    <MainLayout>
-        <div class="events-page">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h2 class="fw-bold mb-1">Upcoming Events</h2>
-                    <p class="text-muted small">Stay connected with your community through live events.</p>
-                </div>
-                <button class="btn btn-primary rounded-pill px-4 btn-sm">
-                    <i class="bi bi-plus-lg me-2"></i>Create Event
-                </button>
+    <div class="events-page">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-1">Upcoming Events</h2>
+                <p class="text-muted small">Stay connected with your community through live events.</p>
             </div>
+            <button class="btn btn-primary rounded-pill px-4 btn-sm">
+                <i class="bi bi-plus-lg me-2"></i>Create Event
+            </button>
+        </div>
 
-            <div class="row g-3">
-                <div v-for="n in 6" :key="n" class="col-md-12 col-xl-6">
-                    <div class="card-custom h-100 event-card">
-                        <div class="event-image-wrapper">
-                            <img :src="`https://picsum.photos/seed/${n + 10}/800/450`" alt="Event cover"
-                                class="event-image">
-                            <div class="event-date-badge">
-                                <span class="day">{{ 10 + n }}</span>
-                                <span class="month">JAN</span>
-                            </div>
+        <div class="row g-3">
+            <div v-for="n in 6" :key="n" class="col-md-12 col-xl-6">
+                <div class="card-custom h-100 event-card">
+                    <div class="event-image-wrapper">
+                        <img :src="`https://picsum.photos/seed/${n + 10}/800/450`" alt="Event cover"
+                            class="event-image">
+                        <div class="event-date-badge">
+                            <span class="day">{{ 10 + n }}</span>
+                            <span class="month">JAN</span>
                         </div>
-                        <div class="p-3">
-                            <div class="d-flex align-items-center gap-2 mb-2">
-                                <span class="badge bg-primary-soft text-primary">Workshop</span>
-                                <span class="text-muted small"><i class="bi bi-clock me-1"></i>10:00 AM</span>
+                    </div>
+                    <div class="p-3">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span class="badge bg-primary-soft text-primary">Workshop</span>
+                            <span class="text-muted small"><i class="bi bi-clock me-1"></i>10:00 AM</span>
+                        </div>
+                        <h6 class="fw-bold mb-2">Modern UI Design Trends 2026</h6>
+                        <div class="d-flex align-items-center justify-content-between pt-2 border-top mt-3">
+                            <div class="avatar-group">
+                                <img v-for="i in 3" :key="i" :src="`https://i.pravatar.cc/150?u=${i + n}`"
+                                    alt="Attendee">
+                                <div class="avatar-more">+{{ 12 + n }}</div>
                             </div>
-                            <h6 class="fw-bold mb-2">Modern UI Design Trends 2026</h6>
-                            <div class="d-flex align-items-center justify-content-between pt-2 border-top mt-3">
-                                <div class="avatar-group">
-                                    <img v-for="i in 3" :key="i" :src="`https://i.pravatar.cc/150?u=${i + n}`"
-                                        alt="Attendee">
-                                    <div class="avatar-more">+{{ 12 + n }}</div>
-                                </div>
-                                <button class="btn btn-outline-dark btn-sm rounded-pill px-3">Interested</button>
-                            </div>
+                            <button class="btn btn-outline-dark btn-sm rounded-pill px-3">Interested</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </MainLayout>
+    </div>
 </template>
 
 <script setup>
-import MainLayout from '@/layout/MainLayout.vue';
 </script>
 
 <style scoped>
