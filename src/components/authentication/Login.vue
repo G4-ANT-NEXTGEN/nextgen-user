@@ -452,6 +452,12 @@ body {
 
 }
 
+.btn-login {
+    width: 100%;
+    color: var(--color-secondary);
+    background-color: var(--color-primary);
+}
+
 .forgot-password:hover {
     color: #000000;
     background: none;

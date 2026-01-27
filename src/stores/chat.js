@@ -1,9 +1,13 @@
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { computed, ref, } from "vue";
+
 import api from '@/api/api';
 export const useChatStore = defineStore('chat', () => {
   const chats = ref([]);
   const receivedChats = ref([]);
+  const isSelectChat = ref(false)
+  const isLoading = ref(false);
+
   //own messages
   const fetchChats = async () => {
     try {
@@ -14,28 +18,31 @@ export const useChatStore = defineStore('chat', () => {
     catch (e) {
       console.log("Error in fetching chat list", e);
     }
+
   }
   //received messages
   const fetchReceivedChats = async () => {
     try {
+
       const res = await api.get(`/api/profile/received-messages`);
       receivedChats.value = res.data.data;
     }
     catch (e) {
       console.log("Error in fetching received chat list", e);
     }
+
   }
-// get messages for a specific conversation by sender/receiver id
+  // get messages for a specific conversation by sender/receiver id
   const getConversationMessages = (chatId) => {
     const sent = chats.value
-      .filter(chat => chat.receiver.id === chatId)
+      .filter(chat => chat.receiver && chat.receiver.id == chatId)
       .map(chat => ({
         ...chat,
         isMine: true
       }))
 
     const received = receivedChats.value
-      .filter(chat => chat.sender.id === chatId)
+      .filter(chat => chat.sender && chat.sender.id == chatId)
       .map(chat => ({
         ...chat,
         isMine: false
@@ -45,43 +52,47 @@ export const useChatStore = defineStore('chat', () => {
       (a, b) => new Date(a.created_at) - new Date(b.created_at) // older first
     )
   }
-    const getAllConversationMessages = () => {
+  const getAllConversationMessages = () => {
     const sent = chats.value
-      // .filter(chat => chat.receiver.id === chatId)
       .map(chat => ({
         ...chat,
-        // isMine: true
       }))
 
     const received = receivedChats.value
-      // .filter(chat => chat.sender.id === chatId)
       .map(chat => ({
         ...chat,
-
       }))
-
     return [...sent, ...received]
   }
 
 
   const sendMessage = async (payload) => {
     try {
+      isLoading.value = true;
       const res = await api.post(`/api/messages`, payload);
+      await fetchChats();
+      await fetchReceivedChats();
+      return res.data.data;
     }
     catch (e) {
       console.log("Error in sending message", e);
     }
+    finally {
+      isLoading.value = false;
+    }
   }
   const chatList = computed(() => {
     const map = new Map()
-    // you messages
+    // Process sent messages
     chats.value.forEach(chat => {
-      if (!chat.receiver) return   // ✅ safety
+      if (!chat.receiver) return
 
       const uid = chat.receiver.id
 
       if (!map.has(uid)) {
         map.set(uid, {
+          id: uid,
+          otherUser: chat.receiver,
           receiver: chat.receiver,
           messages: []
         })
@@ -89,26 +100,34 @@ export const useChatStore = defineStore('chat', () => {
 
       map.get(uid).messages.push({
         ...chat,
-        isMine:true
-
+        isMine: true
       })
     })
+    // Process received messages
     receivedChats.value.forEach(receive => {
-      if(!receive.sender) return ;
+      if (!receive.sender) return;
       const rid = receive.sender.id
-      if(!map.has(rid)){
-        map.set(rid,{
+      if (!map.has(rid)) {
+        map.set(rid, {
+          id: rid,
+          otherUser: receive.sender,
           sender: receive.sender,
-          messages:[]
+          messages: []
         })
       }
       map.get(rid).messages.push({
         ...receive,
-        isMine:false
+        isMine: false
       })
 
     })
-    return Array.from(map.values())
+    map.forEach(conversation => {
+      conversation.messages.sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      )
+      conversation.lastUpdate = conversation.messages[0]?.created_at;
+    })
+    return Array.from(map.values()).sort((a, b) => new Date(b.lastUpdate) - new Date(a.lastUpdate));
   })
 
   return {
@@ -119,6 +138,9 @@ export const useChatStore = defineStore('chat', () => {
     sendMessage,
     getConversationMessages,
     chatList,
-    getAllConversationMessages
+    getAllConversationMessages,
+    isSelectChat,
+    isLoading
+
   }
 })

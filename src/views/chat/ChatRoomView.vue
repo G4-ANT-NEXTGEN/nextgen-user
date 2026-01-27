@@ -1,57 +1,62 @@
 <template>
   <div class="chat-section container-fluid">
     <div class="row">
-      <div v-if="false" class="col-3 d-none">
-        <div class="chat-list">
-          <div class="chat" v-for="chat in chatStore.chatList" :key="chat.id">
-            <base-button class="text-start" type="button" variant="white" @click="selectChat(chat.messages[0].isMine ? chat.receiver.id : chat.sender.id)">
-              <div class="d-flex align-items-center">
-                <img :src="chat.messages[0].isMine ? chat.receiver.avatar : chat.sender.avatar" class="rounded-5 me-2" width="60" height="60" alt="">
-                <div>
-                  <p class="mb-0 fw-bold">{{chat.messages[0].isMine ? chat.receiver.full_name : chat.sender.full_name }}</p>
-                  <div class="message">{{chat.messages[0].isMine ? 'You : ': `${chat.sender.full_name} : ` }}{{ chat.messages[0].message }}</div>
-                </div>
-              </div>
-            </base-button>
-          </div>
-
+      <div v-if="isLoading" class="p-4">
+        <div class="d-flex align-items-center py-3">
+          <div class="skeleton skeleton-circle me-3" style="width:50px;height:50px;"></div>
+          <div class="skeleton skeleton-text" style="width:120px;"></div>
+        </div>
+        <div v-for="i in 8" :key="i" class="d-flex mb-3"
+          :class="i % 2 ? 'justify-content-end' : 'justify-content-start'">
+          <div class="skeleton" :style="{
+            width: i % 2 ? '200px' : '220px',
+            height: '40px'
+          }"></div>
+        </div>
+        <div class="py-3 d-flex align-items-center">
+          <div class="skeleton flex-grow-1" style="height:45px;"></div>
+          <div class="skeleton ms-2" style="width:45px;height:45px;"></div>
         </div>
       </div>
-      <!-- <p>{{ conversationMessage[0]?.isMine }}</p> -->
-      <!-- <P v-for="c in conversationMessage" :key="c.id">{{ c.isMine ? 'You : ' : `${c.sender.full_name} : ` }}{{ c.message }}</P> -->
-      <div v-if=true>
-        <div v-if="isSelectChat" class="main-content">
-          <div class="receiver-name">
+
+      <div v-else-if="chatStore.isSelectChat" class="main-content">
+        <div class="receiver-name">
+          <router-link :to="{ name: 'profile' }" class="text-decoration-none text-dark">
             <div class="d-flex align-items-center h-100 px-3">
-              <img class="rounded-5 me-2" :src="conversationMessage[0]?.isMine ? conversationMessage[0]?.receiver.avatar : conversationMessage[0]?.sender.avatar" alt="" width="60" height="60">
-              <h4 class="m-0">{{ conversationMessage[0]?.isMine ? conversationMessage[0]?.receiver.full_name : conversationMessage[0]?.sender.full_name }}</h4>
+              <img class="rounded-5 me-2"
+                :src="conversationMessage[0]?.isMine ? conversationMessage[0]?.receiver.avatar : conversationMessage[0]?.sender.avatar"
+                alt="" width="60" height="60">
+              <h4 class="m-0" style="color:var(--color-dark)">{{ conversationMessage[0]?.isMine ?
+                conversationMessage[0]?.receiver.full_name :
+                conversationMessage[0]?.sender.full_name }}</h4>
             </div>
-          </div>
-          <div class="px-3 pt-5">
-            <div v-for="receive in conversationMessage" :key="receive.id">
-              <div v-if="!receive.isMine">
-
-                <img class="bg-danger rounded-5 me-2" :src="conversationMessage[0]?.isMine ? conversationMessage[0]?.receiver.avatar : conversationMessage[0]?.sender.avatar" alt="" width="30" height="30">
-                <p class="receive-message">{{ receive.message }}</p>
-              </div>
-              <div class="text-end" v-else>
-                <p class="send-message">{{ receive.message }}</p>
-              </div>
-            </div>
-            <div class="input-message d-flex">
-
-              <base-input class="w-100" v-model="message" placeholder="send message..."></base-input>
-              <base-button class="btn-send-message" @click="sendMessage"><i class="bi bi-send"></i></base-button>
-            </div>
-            <!-- <input type="text" class="form-control"> -->
-
-          </div>
-
+          </router-link>
         </div>
-        <div v-else class="main-content d-flex justify-content-center align-items-center">
-          <h3>Start message now...</h3>
+        <div class="px-3 pt-5">
+          <div v-for="receive in conversationMessage" :key="receive.id">
+            <div v-if="!receive.isMine">
+
+              <img class="bg-danger rounded-5 me-2"
+                :src="conversationMessage[0]?.isMine ? conversationMessage[0]?.receiver.avatar : conversationMessage[0]?.sender.avatar"
+                alt="" width="30" height="30">
+              <p class="receive-message">{{ receive.message }} <br> <span class="" style="font-size: 11px;">{{
+                formatLocalTime(receive.created_at) }}</span></p>
+            </div>
+            <div class="text-end" v-else>
+              <p class="send-message">{{ receive.message }} <br> <span class="" style="font-size: 11px; color: gray;">{{
+                formatLocalTime(receive.created_at) }}</span></p>
+            </div>
+          </div>
+          <div class="input-message d-flex">
+
+            <base-input class="w-100" v-model="message" placeholder="send message..."></base-input>
+            <base-button class="btn-send-message" @click="sendMessage"><span style="font-size: 14px;"
+                v-if="chatStore.isLoading"> Sending...</span><span v-else><i
+                  class="bi bi-send"></i></span></base-button>
+          </div>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -59,85 +64,78 @@
 <script setup>
 
 import { useChatStore } from '@/stores/chat'
-import { ref,computed,onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 
-
-const route=useRoute()
-// const id =ref();
+const route = useRoute()
 const message = ref('')
 const chatStore = useChatStore()
-const isSelectChat = ref(true)
-const receiverId = ref(null)
-// const id=ref()
-// console.log('route id : ',id.value)
+const isLoading = ref()
 
-const conversationMessage=computed(()=>{
-  const id=Number(route.params.id)
+const formatLocalTime = (time) => {
+  if (!time) return '';
+  const date = new Date(time)
+  date.setHours(date.getHours() + 7)
+  return date.toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
+const conversationMessage = computed(() => {
+  const id = Number(route.params.id)
   return chatStore.getConversationMessages(id)
 })
-console.log('conversation message : ',conversationMessage.value)
 const sendMessage = async () => {
   const formData = new FormData();
   formData.append('message', message.value);
   formData.append('receiver_id', route.params.id);
   await chatStore.sendMessage(formData);
+  await chatStore.fetchChats()
+  await chatStore.fetchReceivedChats()
   message.value = '';
 
 }
-onMounted(async() => {
-  await chatStore.fetchChats()
-  await chatStore.fetchReceivedChats()
-  // chatStore.chatList
-  console.log('all conversation : ',chatStore.chatList)
-  // console.log('your own conversation : ',chatStore.chats)
-  // console.log('you received conversation : ',chatStore.receivedChats)
+onMounted(async () => {
+  if (route.params.id) {
+    chatStore.isSelectChat = true;
+  }
+  try {
+    isLoading.value = true
+    await chatStore.fetchChats()
+    await chatStore.fetchReceivedChats()
+  }
+  catch (e) {
+    console.log(e)
+  }
+  finally {
+    isLoading.value = false
+  }
 })
 </script>
 <style scoped>
 .main-content {
-  /* max-height: 100vh; */
-  /* width: 80%; */
-  background: #f5f5f5;
+  background: var(--color-background);
   border-radius: 10px;
   height: calc(100vh - 108px);
   padding-bottom: 36px;
-  /* margin-bottom: 46px; */
   overflow-y: scroll;
 }
 
 .chat-section {
-  background: #f5f5f5;
+  background: var(--color-backgrond);
   height: 100vh;
-  padding: 16px;
-}
-
-.chat-list {
-  background: white;
-  height: calc(100vh - 32px);
-  border-radius: 10px;
-  width: 100%;
-}
-
-.chat {
-  transition: all 0.5s;
-  width: 100%;
-}
-
-.chat:hover {
-
-  background: #f5f5f5;
-
+  padding: 16px 0;
 }
 
 .receiver-name {
   position: sticky;
-  background: white;
+  background: var(--color-accent);
   border-radius: 16px 16px 0px 0px;
   height: 80px;
-  margin-top:-36px;
+  margin-top: -36px;
   top: 0;
+  color: var(--color-dark);
 
 }
 
@@ -148,17 +146,18 @@ onMounted(async() => {
   padding-inline: 16px;
   border-radius: 0px 0px 16px 16px;
   bottom: 16px;
-  width: 72%;
+  width: 73.8%;
   margin-left: -16px;
-  background: white;
+  background: var(--color-accent);
 }
+
 .receive-message {
   max-width: 60%;
   height: auto;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  background: white;
-  /* color: white; */
+  background: var(--color-accent);
+  color: var(--color-dark);
   padding: 8px 12px;
   border-radius: 10px;
   display: inline-block;
@@ -170,35 +169,51 @@ onMounted(async() => {
   height: auto;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  background: #131313;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-secondary);
   padding: 8px 12px;
   border-radius: 10px;
   display: inline-block;
   margin-bottom: 5px;
 }
 
-.message {
-  /* background: red; */
-  max-width: 250px;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  height: auto;
-  /* overflow-x: scroll; */
-  color: gray;
-  font-size: 14px;
-}
-
 .btn-send-message {
   margin-left: 8px;
-  /* color:red; */
   font-size: 24px;
-  /* margin-top:-14px; */
   width: 8%;
   height: 60px;
   padding: 10px;
-  /* align-self: center; */
+}
+
+.skeleton {
+  background: linear-gradient(90deg,
+      #e0e0e0 25%,
+      #f5f5f5 37%,
+      #e0e0e0 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+}
+
+.skeleton-text {
+  height: 14px;
+}
+
+.skeleton-small {
+  height: 10px;
 }
 </style>

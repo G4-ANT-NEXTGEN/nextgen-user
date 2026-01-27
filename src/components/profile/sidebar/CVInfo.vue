@@ -1,0 +1,9 @@
+<template>
+    <div>
+        <img
+            src="#"
+            class="img-fluid"
+            alt="CV"
+        />
+    </div>
+</template>

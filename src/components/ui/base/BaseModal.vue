@@ -1,11 +1,11 @@
 <template>
   <teleport to="body">
-    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5)" @click.self="close">
+    <div class="modal fade show d-block" tabindex="-1" @click.self="close">
       <div class="modal-dialog modal-dialog-centered" :class="sizeClass">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">{{ title }}</h5>
-            <button type="button" class="btn-close" @click="close"></button>
+            <button type="button" class="btn-close btn-close-dark" @click="close"></button>
           </div>
           <div class="modal-body">
             <slot />
@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted } from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps({
   title: String,
@@ -32,58 +32,78 @@ const emit = defineEmits(['close'])
 const close = () => emit('close')
 
 const sizeClass = computed(() => (props.size ? `modal-${props.size}` : ''))
-
 </script>
 
 <style scoped>
+.modal {
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
 
-.modal-body {
-  max-height: calc(100vh - 250px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  background-color: var(--color-secondary);
+.modal-dialog {
+  margin-top: 5vh;
 }
 
 .modal-content {
-  background-color: var(--color-secondary);
-  border-radius: 12px;
-  padding: 20px;
+  background-color: var(--sidebar-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
 }
 
-.modal-header,
-.modal-footer {
-  background-color: var(--color-secondary);
+.modal-header {
+  border-bottom: 1px solid var(--color-border);
+  padding: 20px 24px;
 }
 
 .modal-title {
+  font-weight: 700;
+  font-size: 1.25rem;
   color: var(--color-text);
-  font-weight: bold;
 }
 
 .btn-close {
-  filter: var(--filter);
-  color: var(--color-secondary);
+  border-radius: 50%;
+  padding: 8px;
+  opacity: 0.8;
+  color: var(--color-close) !important;
+  transition: all 0.2s ease;
 }
 
-/* Optional: Add scrollbar styling for better appearance */
+.btn-close:hover {
+  opacity: 1;
+  
+}
+
+.modal-body {
+  padding: 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+  background-color: var(--sidebar-bg);
+}
+
+.modal-footer {
+  border-top: 1px solid var(--color-border);
+  padding: 16px 24px;
+}
+
+/* Custom Scrollbar for Modal Body */
 .modal-body::-webkit-scrollbar {
-  width: 8px;
-  display: none;
+  width: 6px;
 }
 
 .modal-body::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
+  background: transparent;
 }
 
 .modal-body::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
+  background: var(--color-border);
+  border-radius: 10px;
 }
 
 .modal-body::-webkit-scrollbar-thumb:hover {
-  background: #555;
-  display: block;
+  background: var(--color-muted);
 }
-
 </style>

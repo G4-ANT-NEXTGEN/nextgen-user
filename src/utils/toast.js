@@ -4,29 +4,29 @@ import { toast } from "vue3-toastify";
 const baseOptions = {
     toastClassName: "my-toast",
     bodyClassName: "my-toast-body",
-    progressClassName: "my-progress"
+    progressClassName: "my-progress",
+    transition: "slide",
+    autoClose: 3000,
+    closeButton: true,
+    hideProgressBar: true,
 };
 
 export const showSuccess = (message) =>
     toast.success(message, {
         ...baseOptions,
-        icon: "✅"
     });
 
 export const showError = (message) =>
     toast.error(message, {
         ...baseOptions,
-        icon: "❌"
     });
 
 export const showWarning = (message) =>
     toast.warning(message, {
         ...baseOptions,
-        icon: "⚠️"
     });
 
 export const showInfo = (message) =>
     toast.info(message, {
         ...baseOptions,
-        icon: "ℹ️"
     });
