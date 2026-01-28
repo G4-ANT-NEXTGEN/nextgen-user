@@ -39,24 +39,24 @@
           <div class="avatar-actions">
             <label class="avatar-action upload">
               <i class="bi bi-upload"></i>
-              Upload New Photo
+              Upload New Profile
               <input type="file" hidden @change="onFileChange" />
-              <Cropper
-                v-if="image"
-                :src="image"
-                :stencil-props="{ aspectRatio: 1 }"
-                class="cropper"
-                @change="crop"
-              />
-
-              <img v-if="croppedImage" :src="croppedImage" class="preview" />
             </label>
+            <Cropper v-if="image" :src="image" :stencil-props="{ aspectRatio: 1 }" class="cropper" @change="crop" />
+            <img v-if="croppedImage" :src="croppedImage" class="preview px-4"  width="100%"/>
+            <div v-else-if="!image">
+              <p>Current Profile</p>
+              <img :src="profileStore.user.avatar " class="preview px-4" width="100%"/>
+            </div>
 
             <button class="avatar-action delete" @click="handleAvatarDelete">
               <i class="bi bi-trash"></i>
               Remove Photo
             </button>
           </div>
+          <template #footer>
+            <base-button variant="secondary">Save</base-button>
+          </template>
         </BaseModal>
 
         <!-- Info and Actions -->
@@ -91,11 +91,7 @@
             </button>
 
             <!-- Update Collaboration -->
-            <BaseModal
-              v-if="editCollaboration"
-              title="Upload Your Collaboration"
-              @close="closeEditCollaboration"
-            >
+            <BaseModal v-if="editCollaboration" title="Upload Your Collaboration" @close="closeEditCollaboration">
               <div class="mb-3">
                 <label for="formFile" class="form-label">Upload Your Collaboration</label>
                 <input class="form-control" type="file" id="formFile" />
@@ -116,16 +112,10 @@
             <BaseModal v-if="openSetting" title="Account Settings" @close="closeSetting">
               <!-- Tabs -->
               <div class="setting-tabs">
-                <button
-                  :class="['tab', { active: settingTab === 'password' }]"
-                  @click="settingTab = 'password'"
-                >
+                <button :class="['tab', { active: settingTab === 'password' }]" @click="settingTab = 'password'">
                   Change Password
                 </button>
-                <button
-                  :class="['tab danger', { active: settingTab === 'delete' }]"
-                  @click="settingTab = 'delete'"
-                >
+                <button :class="['tab danger', { active: settingTab === 'delete' }]" @click="settingTab = 'delete'">
                   Delete Account
                 </button>
               </div>
@@ -164,12 +154,8 @@
 
       <!-- Tabs -->
       <div class="profile-tabs">
-        <button
-          v-for="tab in tabs"
-          :key="tab.key"
-          :class="['tab-btn', { active: activeTab === tab.key }]"
-          @click="$emit('change-tab', tab.key)"
-        >
+        <button v-for="tab in tabs" :key="tab.key" :class="['tab-btn', { active: activeTab === tab.key }]"
+          @click="$emit('change-tab', tab.key)">
           {{ tab.label }}
         </button>
       </div>
@@ -178,22 +164,31 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+//----------------------------------------------------
 import { Cropper } from 'vue-advanced-cropper'
+import { useProfileStore } from '@/stores/profile'
 
+const profileStore = useProfileStore()
+onMounted(async () => {
+  await profileStore.fetchProfile();
+  console.log(await profileStore.fetchProfile());
+})
 const image = ref(null)
-const cropedImage = ref(null)
+const croppedImage = ref(null)
 const onFileChange = (e) => {
   const file = e.target.files[0]
   if (!file) return
   image.value = URL.createObjectURL(file)
+  console.log(image.value)
 }
 const crop = (cropper) => {
   const canvas = cropper.getResult().canvas
   if (canvas) {
-    cropedImage.value = canvas.toDataURL('image/png')
+    croppedImage.value = canvas.toDataURL('image/png')
   }
 }
+//---------------------------------------------------------------------
 defineProps({
   activeTab: {
     type: String,
@@ -292,6 +287,7 @@ const settingTab = ref('password') // 'password' | 'delete'
   border-radius: 10px;
   overflow: hidden;
 }
+
 .avatar-wrapper {
   position: relative;
   width: fit-content;
@@ -605,17 +601,17 @@ const settingTab = ref('password') // 'password' | 'delete'
   .tab-btn {
     white-space: nowrap;
   }
-  .cropper {
-  height: 300px;
-  background: #000;
-}
 
-.preview {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-}
+  .cropper {
+    height: 200px;
+    background: #000;
+  }
+
+  .preview {
+
+    border-radius: 50%;
+    object-fit: cover;
+  }
 
 }
 </style>

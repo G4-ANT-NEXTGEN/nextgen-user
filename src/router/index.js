@@ -134,24 +134,10 @@ const router = createRouter({
       ]
     },
     {
-<<<<<<< HEAD
-
       path:'/profile-test',
-      name:'profile-test',
       component:ProfileHeaderTest
     },
     {
-      path: '/home',
-      name: 'home',
-      component: HomeView,
-      meta: {
-        title: 'Home',
-        requiresAuth: true,
-      },
-    },
-    {
-=======
->>>>>>> 4fba55c4511d3cfc438c00c1906a80fd1d3fc4b7
       path: '/profile',
       name: 'profile',
       component: ProfileDetailView,
