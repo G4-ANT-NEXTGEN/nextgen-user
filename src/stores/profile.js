@@ -117,7 +117,15 @@ export const useProfileStore = defineStore("profile", () => {
       isProcessing.value = false;
     }
   };
+const updateAvatar= async(payload)=>{
+  try{
+    api.post(`/api/profile/avatar`,payload)
+  }
+  catch(e){
+    console.log(e)
+  }
 
+}
   return {
     user,
     isLoading,
@@ -128,5 +136,6 @@ export const useProfileStore = defineStore("profile", () => {
     updatePersonalInfo,
     updateProfessionalInfo,
     changePassword,
+    updateAvatar
   };
 });

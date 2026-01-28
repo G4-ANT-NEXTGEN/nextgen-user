@@ -42,11 +42,18 @@
               Upload New Profile
               <input type="file" hidden @change="onFileChange" />
             </label>
-            <Cropper v-if="image" :src="image" :stencil-props="{ aspectRatio: 1 }" class="cropper" @change="crop" />
-            <img v-if="croppedImage" :src="croppedImage" class="preview px-4"  width="100%"/>
+            <Cropper
+            ref="cropperRef"
+              v-if="image"
+              :src="image"
+              :stencil-props="{ aspectRatio: 1 }"
+              class="cropper"
+              @change="crop"
+            />
+            <img v-if="croppedImage" :src="croppedImage" class="preview px-4" width="100%" />
             <div v-else-if="!image">
               <p>Current Profile</p>
-              <img :src="profileStore.user.avatar " class="preview px-4" width="100%"/>
+              <img :src="profileStore.user.avatar" class="preview px-4" width="100%" />
             </div>
 
             <button class="avatar-action delete" @click="handleAvatarDelete">
@@ -91,7 +98,11 @@
             </button>
 
             <!-- Update Collaboration -->
-            <BaseModal v-if="editCollaboration" title="Upload Your Collaboration" @close="closeEditCollaboration">
+            <BaseModal
+              v-if="editCollaboration"
+              title="Upload Your Collaboration"
+              @close="closeEditCollaboration"
+            >
               <div class="mb-3">
                 <label for="formFile" class="form-label">Upload Your Collaboration</label>
                 <input class="form-control" type="file" id="formFile" />
@@ -112,10 +123,16 @@
             <BaseModal v-if="openSetting" title="Account Settings" @close="closeSetting">
               <!-- Tabs -->
               <div class="setting-tabs">
-                <button :class="['tab', { active: settingTab === 'password' }]" @click="settingTab = 'password'">
+                <button
+                  :class="['tab', { active: settingTab === 'password' }]"
+                  @click="settingTab = 'password'"
+                >
                   Change Password
                 </button>
-                <button :class="['tab danger', { active: settingTab === 'delete' }]" @click="settingTab = 'delete'">
+                <button
+                  :class="['tab danger', { active: settingTab === 'delete' }]"
+                  @click="settingTab = 'delete'"
+                >
                   Delete Account
                 </button>
               </div>
@@ -154,8 +171,12 @@
 
       <!-- Tabs -->
       <div class="profile-tabs">
-        <button v-for="tab in tabs" :key="tab.key" :class="['tab-btn', { active: activeTab === tab.key }]"
-          @click="$emit('change-tab', tab.key)">
+        <button
+          v-for="tab in tabs"
+          :key="tab.key"
+          :class="['tab-btn', { active: activeTab === tab.key }]"
+          @click="$emit('change-tab', tab.key)"
+        >
           {{ tab.label }}
         </button>
       </div>
@@ -171,23 +192,27 @@ import { useProfileStore } from '@/stores/profile'
 
 const profileStore = useProfileStore()
 onMounted(async () => {
-  await profileStore.fetchProfile();
-  console.log(await profileStore.fetchProfile());
+  await profileStore.fetchProfile()
+  console.log(await profileStore.fetchProfile())
 })
 const image = ref(null)
+const cropperRef=ref()
 const croppedImage = ref(null)
+// const formData=new FormData()
 const onFileChange = (e) => {
   const file = e.target.files[0]
   if (!file) return
   image.value = URL.createObjectURL(file)
-  console.log(image.value)
 }
-const crop = (cropper) => {
-  const canvas = cropper.getResult().canvas
-  if (canvas) {
-    croppedImage.value = canvas.toDataURL('image/png')
-  }
-}
+const crop = async () => {
+    const canvas = cropperRef.value.getResult().canvas;
+    const avatar = canvas.toDataURL("image/jpeg", 0.9);
+    await profileStore.uploadAvatarBase64(avatar);
+    showImageCropper.value = false;
+    uploadedImage.value = null;
+};
+
+
 //---------------------------------------------------------------------
 defineProps({
   activeTab: {
@@ -608,10 +633,8 @@ const settingTab = ref('password') // 'password' | 'delete'
   }
 
   .preview {
-
     border-radius: 50%;
     object-fit: cover;
   }
-
 }
 </style>
