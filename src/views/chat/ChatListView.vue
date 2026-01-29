@@ -25,7 +25,7 @@
         <div v-else class="chat-list">
           <div class="search-chat p-3 pb-1">
             <div class="d-flex justify-content-between align-items-center">
-              <h4 style="color:var(--color-dark)">Messages</h4>
+              <h4 style="color:var(--color-text)">Messages</h4>
               <button @click="toggleTheme" class="theme-btn">
                 <i v-if="theme === 'light'" class="bi bi-moon-fill icon-btn"></i>
                 <i v-else class="bi bi-brightness-high-fill icon-btn"></i>
@@ -100,7 +100,7 @@ onMounted(async () => {
 }
 
 .chat-list {
-  background: var(--color-accent);
+  background: var(--sidebar-bg);
   height: calc(100vh - 32px);
   border-radius: 10px;
   width: 100%;
@@ -116,7 +116,7 @@ onMounted(async () => {
 }
 
 .chat:hover {
-  background: var(--border-color-hover);
+  background: var(--sidebar-hover);
   border-radius: 10px;
 }
 
@@ -125,11 +125,11 @@ onMounted(async () => {
   padding: 10px;
   height: 80px;
   width: 100%;
-  color: black
+  color: var(--color-text)
 }
 
 .conversationer.active {
-  background-color: var(--color-gray);
+  background-color: var( --sidebar-active);
   color: var(--color-text);
   border-radius: 10px;
   font-weight: 600;

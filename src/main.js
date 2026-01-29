@@ -10,6 +10,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import 'tom-select/dist/css/tom-select.css'
+import 'vue-advanced-cropper/dist/style.css'
+
 
 import BaseButton from './components/ui/base/BaseButton.vue'
 import BaseInput from './components/ui/base/BaseInput.vue'

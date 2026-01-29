@@ -21,6 +21,8 @@ import HelpView from '@/views/HelpView.vue'
 import FeedView from '@/views/feed/FeedView.vue'
 import ProfileDetailView from '@/views/profile/ProfileDetailView.vue'
 
+import ProfileHeaderTest from '@/components/profile/ProfileHeaderTest.vue'
+
 import ChatLayout from '@/layout/ChatLayout.vue'
 import ChatRoomView from '@/views/chat/ChatRoomView.vue'
 
@@ -130,6 +132,10 @@ const router = createRouter({
           }
         }
       ]
+    },
+    {
+      path:'/profile-test',
+      component:ProfileHeaderTest
     },
     {
       path: '/profile',

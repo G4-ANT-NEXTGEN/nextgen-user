@@ -21,7 +21,7 @@
 
       <div v-else-if="chatStore.isSelectChat" class="main-content">
         <div class="receiver-name">
-          <router-link :to="{ name: 'profile' }" class="text-decoration-none text-dark">
+          <router-link :to="{ name: 'profile' }" class="text-decoration-none" style="color:var(--color-text)">
             <div class="d-flex align-items-center h-100 px-3">
               <img class="rounded-5 me-2"
                 :src="conversationMessage[0]?.isMine ? conversationMessage[0]?.receiver.avatar : conversationMessage[0]?.sender.avatar"
@@ -39,11 +39,11 @@
               <img class="bg-danger rounded-5 me-2"
                 :src="conversationMessage[0]?.isMine ? conversationMessage[0]?.receiver.avatar : conversationMessage[0]?.sender.avatar"
                 alt="" width="30" height="30">
-              <p class="receive-message">{{ receive.message }} <br> <span class="" style="font-size: 11px;">{{
+              <p class="receive-message mb-2">{{ receive.message }} <br> <span  style="font-size: 11px;">{{
                 formatLocalTime(receive.created_at) }}</span></p>
             </div>
             <div class="text-end" v-else>
-              <p class="send-message">{{ receive.message }} <br> <span class="" style="font-size: 11px; color: gray;">{{
+              <p class="send-message mb-2">{{ receive.message }} <br> <span class="" style="font-size: 11px; color: gray;">{{
                 formatLocalTime(receive.created_at) }}</span></p>
             </div>
           </div>
@@ -130,12 +130,12 @@ onMounted(async () => {
 
 .receiver-name {
   position: sticky;
-  background: var(--color-accent);
+  background: var(--sidebar-bg);
   border-radius: 16px 16px 0px 0px;
   height: 80px;
   margin-top: -36px;
   top: 0;
-  color: var(--color-dark);
+  color:var(--color-text)
 
 }
 
@@ -148,7 +148,7 @@ onMounted(async () => {
   bottom: 16px;
   width: 73.8%;
   margin-left: -16px;
-  background: var(--color-accent);
+  background: var(--sidebar-bg);
 }
 
 .receive-message {
@@ -156,8 +156,8 @@ onMounted(async () => {
   height: auto;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  background: var(--color-accent);
-  color: var(--color-dark);
+  background: var(--color-surface);
+  color: var(--color-text);
   padding: 8px 12px;
   border-radius: 10px;
   display: inline-block;
@@ -169,8 +169,8 @@ onMounted(async () => {
   height: auto;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  background: var(--color-primary);
-  color: var(--color-secondary);
+  background: var(--color-text);
+  color: var(--color-surface);
   padding: 8px 12px;
   border-radius: 10px;
   display: inline-block;
