@@ -117,15 +117,16 @@ export const useProfileStore = defineStore("profile", () => {
       isProcessing.value = false;
     }
   };
-const updateAvatar= async(payload)=>{
-  try{
-    api.post(`/api/profile/avatar`,payload)
-  }
-  catch(e){
-    console.log(e)
-  }
-
-}
+const uploadAvatarBase64 = async (myImage) => {
+    try {
+      const response = await fetch(myImage);
+      const blob = await response.blob();
+      const file = new File([blob], "avatar.jpg", { type: "image/jpeg" });
+      return await uploadAvatar(file);
+    } catch (err) {
+      console.log("Failed to upload avatar (base64):", err);
+    }
+  };
   return {
     user,
     isLoading,
@@ -136,6 +137,6 @@ const updateAvatar= async(payload)=>{
     updatePersonalInfo,
     updateProfessionalInfo,
     changePassword,
-    updateAvatar
+    uploadAvatarBase64
   };
 });

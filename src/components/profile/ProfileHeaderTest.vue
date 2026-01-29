@@ -2,23 +2,30 @@
   <div class="profile-header-wrapper">
     <!-- Cover -->
     <div class="cover position-relative">
-      <button class="btn btn-light btn-sm edit-cover" @click="openEditCover">
+      <button class="btn btn-light btn-sm edit-cover" @click="editCover=true">
         <i class="bi bi-pencil-square"></i>
         Edit Cover Photo
       </button>
     </div>
 
     <!-- Update Cover -->
-    <BaseModal v-if="editCover" title="Update Your Cover" @close="closeEditCover">
-      <div class="mb-3">
-        <label for="formFile" class="form-label">Update Your Cover</label>
-        <input class="form-control" type="file" id="formFile" />
-      </div>
+    <BaseModal v-if="editCover" title="Update Your Cover" size="lg" @close="closeEditCover">
+       <div class="cropper-container">
+                <Cropper v-if="uploadedImage" ref="cropperRef" :src="uploadedImage" :stencil-props="{ aspectRatio: 1 }"
+                    :stencil-component="CircleStencil" />
+            </div>
 
-      <template #footer>
-        <button class="btn btn-outline-dark" @click="closeEditCover">Cancel</button>
-        <button class="btn btn-dark" @click="HandleEditCover">Save Changes</button>
-      </template>
+            <div class="mt-3">
+                <label for="imageUpload" class="btn">
+                    Choose Image
+                </label>
+                <input id="imageUpload" type="file" class="d-none" accept="image/*" @change="handleFileSelect" />
+            </div>
+
+            <template #footer>
+               <base-button @click="cancelCrop" variant="secondary">Cancel</base-button>
+                <base-button @click="applyCrop" variant="dark" style="color:var(--color-surface)">Apply</base-button>
+            </template>
     </BaseModal>
 
     <!-- Profile Content -->
@@ -29,28 +36,28 @@
           <img class="avatar" src="../../assets/avatar.jpg" alt="Profile" />
 
           <!-- Edit Avatar Button -->
-          <button class="avatar-edit" @click="showImageCropper">
+          <button class="avatar-edit" @click="showImageCropper=true">
             <i class="bi bi-camera"></i>
           </button>
         </div>
 
-        <!-- Crop Modal -->
-        <BaseModal v-if="showImageCropper" title="Crop Profile Image" size="lg" @close="cancelCrop">
+        <!-- Crop Modal update avatar-->
+        <BaseModal v-if="showImageCropper" title="Crop Profile Image" @close="cancelCrop">
             <div class="cropper-container">
                 <Cropper v-if="uploadedImage" ref="cropperRef" :src="uploadedImage" :stencil-props="{ aspectRatio: 1 }"
                     :stencil-component="CircleStencil" />
             </div>
 
             <div class="mt-3">
-                <label for="imageUpload" class="btn btn-outline-secondary w-100">
+                <label for="imageUpload" class="btn">
                     Choose Image
                 </label>
                 <input id="imageUpload" type="file" class="d-none" accept="image/*" @change="handleFileSelect" />
             </div>
 
             <template #footer>
-                <button @click="cancelCrop" class="btn btn-secondary">Cancel</button>
-                <button @click="applyCrop" class="btn btn-primary">Apply</button>
+               <base-button @click="cancelCrop" variant="secondary">Cancel</base-button>
+                <base-button @click="applyCrop" variant="dark" style="color:var(--color-surface)">Apply</base-button>
             </template>
         </BaseModal>
 
@@ -172,6 +179,28 @@ onMounted(async () => {
 const image = ref(null)
 const cropperRef = ref()
 const croppedImage = ref(null)
+const showImageCropper = ref(false);
+const showDeleteAvatarModal = ref(false);
+const uploadedImage = ref(null);
+
+const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (ev) => (uploadedImage.value = ev.target.result);
+    reader.readAsDataURL(file);
+};
+
+const applyCrop = async () => {
+    const canvas = cropperRef.value.getResult().canvas;
+    const avatar = canvas.toDataURL("image/jpeg", 0.9);
+    console.log(avatar)
+    await profileStore.uploadAvatarBase64(avatar);
+    showImageCropper.value = false;
+    uploadedImage.value = null;
+};
+
 // const formData=new FormData()
 const onFileChange = (e) => {
   const file = e.target.files[0]
