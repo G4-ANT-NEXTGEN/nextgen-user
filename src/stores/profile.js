@@ -39,8 +39,25 @@ export const useProfileStore = defineStore("profile", () => {
     } finally {
       isProcessing.value = false;
     }
+  }; const uploadCover = async (file) => {
+    isProcessing.value = true;
+    try {
+      const formData = new FormData();
+      formData.append("cover", file);
+      const res = await api.post("/api/profile/cover", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      await fetchProfile();
+      return res.data;
+    } catch (error) {
+      console.error("Failed to upload cover:", error);
+      throw error;
+    } finally {
+      isProcessing.value = false;
+    }
   };
-
   const removeAvatar = async () => {
     isProcessing.value = true;
     try {
@@ -117,7 +134,7 @@ export const useProfileStore = defineStore("profile", () => {
       isProcessing.value = false;
     }
   };
-const uploadAvatarBase64 = async (myImage) => {
+  const uploadAvatarBase64 = async (myImage) => {
     try {
       const response = await fetch(myImage);
       const blob = await response.blob();
@@ -126,7 +143,17 @@ const uploadAvatarBase64 = async (myImage) => {
     } catch (err) {
       console.log("Failed to upload avatar (base64):", err);
     }
-  };
+  }
+  const uploadCoverBase64 = async (myImage) => {
+    try {
+      const response = await fetch(myImage);
+      const blob = await response.blob();
+      const file = new File([blob], "cover.jpg", { type: "image/jpeg" });
+      return await uploadCover(file);
+    } catch (err) {
+      console.log("Failed to upload cover (base64):", err);
+    }
+  }
   return {
     user,
     isLoading,
@@ -137,6 +164,8 @@ const uploadAvatarBase64 = async (myImage) => {
     updatePersonalInfo,
     updateProfessionalInfo,
     changePassword,
-    uploadAvatarBase64
+    uploadAvatarBase64,
+    uploadCoverBase64,
+    uploadCover
   };
 });
