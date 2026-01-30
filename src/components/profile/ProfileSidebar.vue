@@ -244,7 +244,7 @@
 <script setup>
 import InfoCard from '@/components/profile/InfoCard.vue'
 import TomSelect from '@/components/ui/base/BaseTomSelect.vue'
-import { onMounted, useProfileStore } from '@/stores/profile'
+import { useProfileStore } from '@/stores/profile'
 import { ref, onMounted } from 'vue'
 
 const profileStore = useProfileStore()
