@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import api from "@/api/api";
+import {showSuccess,showError,showWarning} from '@/utils/toast'
 
 export const useProfileStore = defineStore("profile", () => {
   const user = ref(null);
@@ -24,6 +25,7 @@ export const useProfileStore = defineStore("profile", () => {
   const uploadAvatar = async (file) => {
     isProcessing.value = true;
     try {
+
       const formData = new FormData();
       formData.append("avatar", file);
       const res = await api.post("/api/profile/avatar", formData, {
@@ -31,16 +33,19 @@ export const useProfileStore = defineStore("profile", () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      showSuccess('Avatar Upload Successful')
       await fetchProfile();
       return res.data;
     } catch (error) {
       console.error("Failed to upload avatar:", error);
+      showError('Fail to Upload Avatar!')
       throw error;
     } finally {
       isProcessing.value = false;
     }
   }; const uploadCover = async (file) => {
     isProcessing.value = true;
+
     try {
       const formData = new FormData();
       formData.append("cover", file);
@@ -50,19 +55,44 @@ export const useProfileStore = defineStore("profile", () => {
         },
       });
       await fetchProfile();
+      showSuccess('Avatar Upload Successful')
       return res.data;
     } catch (error) {
       console.error("Failed to upload cover:", error);
+      showError('Fail to upload avatar!')
       throw error;
     } finally {
       isProcessing.value = false;
     }
   };
+  const uploadCv = async(paylaod) => {
+    isLoading.value=true
+    try{
+      const formData = new FormData()
+      formData.append('cv',paylaod)
+      const res = await api.post(`/api/profile/cv`,formData,{
+        headers:{
+          'Accept':'application/pdf'
+        }
+      })
+      showSuccess('CV Upload Successful')
+      return res
+    }
+    catch(e){
+      showError('Only *.pdf file!')
+      console.log(e)
+    }
+    finally
+    {
+      isLoading.value=false
+    }
+  }
   const removeAvatar = async () => {
     isProcessing.value = true;
     try {
       const res = await api.delete("/api/profile/avatar");
       await fetchProfile();
+      showSuccess('Avatar Deleted')
       return res.data;
     } catch (error) {
       console.error("Failed to remove avatar:", error);
@@ -71,7 +101,21 @@ export const useProfileStore = defineStore("profile", () => {
       isProcessing.value = false;
     }
   };
-
+  const removeCover = async() => {
+    try{
+      isLoading.value=true
+      await api.delete(`/api/profile/cover`)
+      await fetchProfile()
+      showSuccess('Cover Deleted')
+    }
+    catch(e){
+      console.log(e)
+      showError('can not delete')
+    }
+    finally{
+      isLoading.value=false
+    }
+  }
   const updatePersonalInfo = async (payload) => {
     isProcessing.value = true;
     try {
@@ -166,6 +210,8 @@ export const useProfileStore = defineStore("profile", () => {
     changePassword,
     uploadAvatarBase64,
     uploadCoverBase64,
-    uploadCover
+    uploadCover,
+    removeCover,
+    uploadCv
   };
 });
