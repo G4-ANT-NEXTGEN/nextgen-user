@@ -1,9 +1,9 @@
 <template>
   <div class="profile-header-wrapper">
     <!-- Cover -->
-    <div class="cover">
-      <img class="" :src="profileStore.user?.cover" alt="" />
-      <button class="btn btn-light btn-sm edit-cover" @click="editCover = true">
+    <div class="cover position-relative">
+      <img :src="profileStore.user?.cover" alt="Profile Cover" class="cover-img " />
+      <button class="btn btn-light btn-sm edit-cover" @click="openEditCover">
         <i class="bi bi-pencil-square"></i>
         Edit Cover Photo
       </button>
@@ -96,8 +96,10 @@
         <!-- Info and Actions -->
         <div class="info-section">
           <div class="user-info">
-            <h4 class="user-name">Sim Vin</h4>
-            <small class="user-role">Web Developer • Freelancer</small>
+            <h4 class="user-name">{{ profileStore.user?.full_name || 'Loading...' }}</h4>
+            <small class="user-role">
+              {{ profileStore.user?.positions?.[0]?.name || 'Web Developer • Freelancer' }}
+            </small>
           </div>
 
           <div class="actions">
@@ -213,6 +215,20 @@ defineProps({
 
 defineEmits(['change-tab'])
 
+const avatarUrl = computed(() => {
+  const image = profileStore.user?.profile_image || profileStore.user?.avatar
+  if (!image) return new URL('../../assets/avatar.jpg', import.meta.url).href
+  if (image.startsWith('http')) return image
+  return `${import.meta.env.VITE_API_BASE_URL}/${image.replace(/^\//, '')}`
+})
+
+const coverUrl = computed(() => {
+  const image = profileStore.user?.cover_image
+  if (!image) return new URL('../../assets/R.png', import.meta.url).href
+  if (image.startsWith('http')) return image
+  return `${import.meta.env.VITE_API_BASE_URL}/${image.replace(/^\//, '')}`
+})
+
 const tabs = [
   { key: 'overview', label: 'Overview' },
   { key: 'professional', label: 'Professional' },
@@ -288,13 +304,16 @@ function closeAvatarModal() {
   editAvatar.value = false
 }
 
-function handleAvatarUpload(event) {
+async function handleAvatarUpload(event) {
   const file = event.target.files[0]
   if (!file) return
 
-  // TODO: upload API
-  alert('Avatar uploaded')
-  editAvatar.value = false
+  try {
+    await profileStore.uploadAvatar(file)
+    editAvatar.value = false
+  } catch (error) {
+    console.error('Failed to upload avatar:', error)
+  }
 }
 
 const handleAvatarDelete = async () => {
@@ -350,6 +369,20 @@ function closeSetting() {
 }
 
 const settingTab = ref('password') // 'password' | 'delete'
+
+onMounted(async () => {
+  if (!profileStore.user) {
+    try {
+      const data = await profileStore.fetchProfile()
+      console.log('Fetched Profile Data:', data)
+      console.log(data.full_name)
+    } catch (error) {
+      console.error('Error fetching profile in header:', error)
+    }
+  } else {
+    console.log('Profile Data already in store:', profileStore.user)
+  }
+})
 </script>
 
 <style scoped>
@@ -428,6 +461,14 @@ img {
   background-size: cover;
   background-position: center;
   position: relative;
+  
+}
+
+.cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .edit-cover {

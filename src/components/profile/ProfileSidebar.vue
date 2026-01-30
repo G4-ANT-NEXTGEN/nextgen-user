@@ -9,8 +9,18 @@
       :showDelete="false"
       @update="UpdatePersonal"
     >
-      <p>Email: simvin@mail.com</p>
-      <p>Cambodia</p>
+      <div class="personal-info-data">
+        <p class="mb-2"><i class="bi bi-person me-2"></i>{{ profileStore.user?.full_name }}</p>
+        <p class="mb-2"><i class="bi bi-calendar3 me-2"></i>{{ profileStore.user?.dob }}</p>
+        <p class="mb-2">
+          <i class="bi bi-gender-ambiguous me-2"></i
+          >{{ profileStore.user?.gender === 1 ? 'Male' : 'Female' }}
+        </p>
+        <p class="mb-2"><i class="bi bi-envelope me-2"></i>{{ profileStore.user?.email }}</p>
+        <p class="mb-2"><i class="bi bi-telephone me-2"></i>{{ profileStore.user?.phone }}</p>
+        <p class="mb-2"><i class="bi bi-geo-alt me-2"></i>{{ profileStore.user?.current_city }}</p>
+        <p class="mb-0"><i class="bi bi-house me-2"></i>{{ profileStore.user?.home_town }}</p>
+      </div>
     </InfoCard>
 
     <!-- Modal for Update Personal Info -->
@@ -39,8 +49,17 @@
       :showDelete="false"
       @update="UpdateProfessional"
     >
-      <p>Web Developer</p>
-      <p>Researcher</p>
+      <div class="professional-info-data">
+        <p class="mb-2">
+          <i class="bi bi-person-badge me-2"></i>{{ profileStore.user?.professional.job_title }}
+        </p>
+        <p class="mb-2">
+          <i class="bi bi-building me-2"></i>{{ profileStore.user?.professional.company_name }}
+        </p>
+        <p class="mb-0 text-muted small">
+          <i class="bi bi-card-text me-2"></i>{{ profileStore.user?.professional.responsibility }}
+        </p>
+      </div>
     </InfoCard>
 
     <!-- Modal for Update Professional Info -->
@@ -69,14 +88,22 @@
     <!-- ======== Skills - UPDATE ======== -->
     <InfoCard
       title="Skills"
-      icon="bi bi-lightning"
+      icon="bi bi-lightning-charge"
       :showCreate="false"
       :showUpdate="true"
       :showDelete="false"
       @update="UpdateSkill"
     >
-      <span class="badge bg-secondary me-1">Vue</span>
-      <span class="badge bg-secondary">Nuxt</span>
+      <div class="skills-info-data d-flex flex-wrap gap-2">
+        <span
+          class="badge bg-light text-dark border d-flex align-items-center"
+          v-for="skill in profileStore.user?.skills"
+          :key="skill.id"
+        >
+          <i class="bi bi-patch-check-fill text-primary me-1"></i>
+          {{ skill.name }}
+        </span>
+      </div>
     </InfoCard>
 
     <!-- Modal for Update Skill -->
@@ -99,13 +126,17 @@
     <!-- ======== Projects - CREATE, UPDATE, DELETE ======== -->
     <InfoCard
       title="Projects"
-      icon="bi bi-folder"
+      icon="bi bi-folder2-open"
       :showCreate="true"
       :showUpdate="false"
       :showDelete="false"
       @create="AddProject"
     >
-      <p>8 Projects</p>
+      <div class="projects-info-data">
+        <p v-for="project in profileStore.user?.projects" :key="project.id" class="mb-2">
+          <i class="bi bi-folder2 me-2"></i>{{ project.title }}
+        </p>
+      </div>
     </InfoCard>
 
     <!-- Modal for Project -->
@@ -129,7 +160,11 @@
       :showDelete="false"
       @create="createEducation"
     >
-      <p>Bachelor Degree</p>
+      <div class="education-info-data">
+        <p v-for="education in profileStore.user?.educations" :key="education.id" class="mb-2">
+          <i class="bi bi-book me-2"></i>{{ education.school.name }}
+        </p>
+      </div>
     </InfoCard>
 
     <!-- Modal for Education -->
@@ -194,7 +229,25 @@
 <script setup>
 import InfoCard from '@/components/profile/InfoCard.vue'
 import TomSelect from '@/components/ui/base/BaseTomSelect.vue'
-import { ref } from 'vue'
+import { useProfileStore } from '@/stores/profile'
+import { ref, onMounted } from 'vue'
+
+const profileStore = useProfileStore()
+
+onMounted(async () => {
+  if (!profileStore.user) {
+    try {
+      const data = await profileStore.fetchProfile()
+      console.log('Fetched Profile Data:', data)
+      console.log('edu', await profileStore.user.educations[0].degree.name)
+      // console.log(data.full_name)
+    } catch (error) {
+      console.error('Error fetching profile in header:', error)
+    }
+  } else {
+    console.log('Profile Data already in store:', profileStore.user)
+  }
+})
 
 // Personal Info - Update
 const personalUpdate = ref(false)
