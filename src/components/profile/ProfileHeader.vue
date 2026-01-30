@@ -208,6 +208,12 @@ const tabs = [
   { key: 'cv', label: 'CV' },
 ]
 
+
+onMounted(async () => {
+  await profileStore.fetchProfile()
+  console.table(profileStore.user);
+})
+
 const editAvatar = ref(false)
 
 function openAvatarModal() {

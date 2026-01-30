@@ -1,6 +1,6 @@
 <template>
   <div class="profile-page p-3">
-    <AppNavbar />
+    <Navbar />
 
     <ProfileHeader :activeTab="activeTab" @change-tab="activeTab = $event" />
 
@@ -34,6 +34,7 @@ import ProfessionalInfo from '@/components/profile/sidebar/ProfessionalInfo.vue'
 import ProjectsInfo from '@/components/profile/sidebar/ProjectsInfo.vue'
 import EducationInfo from '@/components/profile/sidebar/EducationInfo.vue'
 import CVInfo from '@/components/profile/sidebar/CVInfo.vue'
+import Navbar from '@/components/Navbar.vue'
 
 
 const activeTab = ref('overview')

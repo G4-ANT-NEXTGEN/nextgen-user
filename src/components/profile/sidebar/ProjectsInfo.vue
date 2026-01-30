@@ -26,10 +26,28 @@
         <p>No projects available</p>
       </div>
     </InfoCard>
+
+    <!-- Modal For Add New Project -->
+    <BaseModal
+      v-if="projectUpdate"
+      title="Update Profession Info"
+      @close="closeProjectUpdate"
+    >
+      <BaseInput label="Project Title" placeholder="e.g Software Engineering" v-model="projectTitle" />
+      <BaseInput label="Project Link" placeholder="e.g www.facebook.com" v-model="projectLink"/>
+
+      <template #footer>
+        <button class="btn btn-outline-dark" @click="closeProjectUpdate">Cancel</button>
+        <button class="btn btn-dark" @click="HandleUpdateProject">Save Changes</button>
+      </template>
+    </BaseModal>
+
+    
   </div>
 </template>
 
 <script setup>
+import BaseModal from '@/components/ui/base/BaseModal.vue'
 import InfoCard from '../InfoCard.vue'
 import { onMounted } from 'vue'
 import { useProfileStore } from '@/stores/profile'
@@ -49,6 +67,50 @@ onMounted(async () => {
     }
   }
 })
+import { ref } from 'vue'
+import { useProjectStore } from '@/stores/project';
+
+const projectStore = useProjectStore()
+
+const projectTitle = ref('');
+const projectLink = ref('');  
+
+const projectUpdate = ref(false);
+function UpdateProject() {
+  projectUpdate.value = true;
+}
+function closeProjectUpdate(){
+  projectUpdate.value = false;
+}
+
+function HandleUpdateProject(){
+  if(projectTitle.value === '' || projectLink.value === ''){
+    alert("Please fill in all fields")
+    return;
+  }
+
+  try{
+    projectStore.UpdateProject({
+      title: projectTitle.value,
+      link: projectLink.value
+    });
+    projectUpdate.value = false;
+    projectTitle.value = '';
+    projectLink.value = '';
+  } catch (error) {
+    console.log('Failed to Update Project:', error.response?.data);
+  }
+
+}
+
+function DeleteProject(){
+  try{
+    projectStore.DeleteProject();
+  } catch (error) {
+    console.log('Failed to Delete Project:', error.response?.data);
+  }
+}
+
 </script>
 
 <style scoped>
@@ -119,3 +181,4 @@ onMounted(async () => {
   font-size: 0.875rem;
 }
 </style>
+

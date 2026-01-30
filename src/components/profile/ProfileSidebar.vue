@@ -142,12 +142,22 @@
     <!-- Modal for Project -->
     <!-- Add New Project -->
     <BaseModal v-if="addNewProject" title="Create New Project" @close="closeAddNewProject">
-      <BaseInput label="Project Title" placeholder="Enter Your Project Title" />
-      <BaseInput label="Project Link " placeholder="Enter Your Project Link" />
+      <BaseInput
+        label="Project Title"
+        placeholder="Enter Your Project Title"
+        v-model="projectTitle"
+      />
+      <BaseInput
+        label="Project Link "
+        placeholder="Enter Your Project Link"
+        v-model="projectLink"
+      />
 
       <template #footer>
         <button class="btn btn-outline-dark" @click="closeAddNewProject">Cancel</button>
-        <button class="btn btn-dark" @click="HandleAddNewProject">Save Changes</button>
+        <button class="btn btn-dark" @click="HandleAddNewProject">
+          {{ isLoading ? 'Adding New' : 'Add New' }}
+        </button>
       </template>
     </BaseModal>
 
@@ -171,56 +181,61 @@
     <!-- Add New Education -->
     <BaseModal v-if="addNewEducation" title="Add New Education" @close="closeAddNewEducation">
       <BaseSelect
-        v-model="level"
+        v-model="school"
         label="School/University"
-        placeholder="Select Sclool"
+        placeholder="Select School"
         :options="[
-          { value: 'rupp', label: 'RUPP' },
-          { value: 'aupp', label: 'AUPP' },
-          { value: 'ict', label: 'ICT' },
+          ...schoolStore.schools.map((school) => ({ value: school.id, label: school.name })),
         ]"
       />
       <div class="d-flex my-2">
         <div class="col-6 me-1">
           <BaseSelect
-            v-model="level"
+            v-model="degree"
             label="Degree"
             placeholder="Select Degree"
             :options="[
-              { value: 'master', label: 'Master' },
-              { value: 'bachelor', label: 'Bachelor' },
-              { value: 'phd', label: 'PHD' },
+              ...degreeStore.degrees.map((degree) => ({ value: degree.id, label: degree.name })),
             ]"
           />
         </div>
         <div class="col-6 ms-1">
           <BaseSelect
-            v-model="level"
+            v-model="subject"
             label="Subject"
             placeholder="Select Subject"
             :options="[
-              { value: 'computer_science', label: 'Computer Science' },
-              { value: 'ITE', label: 'Information Technology And Engineering' },
+              ...subjectStore.subjects.map((subject) => ({
+                value: subject.id,
+                label: subject.name,
+              })),
             ]"
           />
         </div>
       </div>
       <div class="d-flex my-2">
         <div class="col-6 me-1">
-          <BaseInput label="Start Date" />
+          <BaseInput label="Start Date" placeholder="Year-Month" v-model="start_date" />
         </div>
         <div class="col-6 ms-1">
-          <BaseInput label="End Date " />
+          <BaseInput label="End Date " placeholder="Year-Month" v-model="end_date" />
         </div>
       </div>
       <div class="mb-2">
         <label class="mb-2 fw-semibold">Description</label>
-        <textarea class="form-control" placeholder="Description" style="height: 100px"></textarea>
+        <textarea
+          class="form-control"
+          placeholder="Description"
+          style="height: 100px"
+          v-model="description"
+        ></textarea>
       </div>
 
       <template #footer>
         <button class="btn btn-outline-dark" @click="closeAddNewEducation">Cancel</button>
-        <button class="btn btn-dark" @click="HandleAddNewEducation">Save Changes</button>
+        <button class="btn btn-dark" @click="HandleAddNewEducation">
+          {{ isLoading ? 'Adding New' : 'Add New' }}
+        </button>
       </template>
     </BaseModal>
   </aside>
@@ -229,7 +244,7 @@
 <script setup>
 import InfoCard from '@/components/profile/InfoCard.vue'
 import TomSelect from '@/components/ui/base/BaseTomSelect.vue'
-import { useProfileStore } from '@/stores/profile'
+import { onMounted, useProfileStore } from '@/stores/profile'
 import { ref, onMounted } from 'vue'
 
 const profileStore = useProfileStore()
@@ -248,6 +263,11 @@ onMounted(async () => {
     console.log('Profile Data already in store:', profileStore.user)
   }
 })
+import { useProjectStore } from '@/stores/project'
+import { useEducationStore } from '@/stores/education'
+import { useSchoolStore } from '@/stores/schools'
+import { useDegreeStore } from '@/stores/degrees'
+import { useSubjectStore } from '@/stores/subjects'
 
 // Personal Info - Update
 const personalUpdate = ref(false)
@@ -301,6 +321,12 @@ const HandleUpdateSkill = () => {
 }
 
 // Projects Add New
+const projectStore = useProjectStore()
+
+const projectTitle = ref('')
+const projectLink = ref('')
+
+const isLoading = ref(false)
 const addNewProject = ref(false)
 function closeAddNewProject() {
   addNewProject.value = false
@@ -310,12 +336,51 @@ function AddProject() {
   addNewProject.value = true
 }
 
-const HandleAddNewProject = () => {
-  alert('Successfully')
-  addNewProject.value = false
+const HandleAddNewProject = async () => {
+  if (!projectTitle.value || !projectLink.value) {
+    alert('Please fill all fields!')
+    return
+  }
+  isLoading.value = true
+
+  try {
+    const payload = {
+      title: projectTitle.value,
+      link: projectLink.value,
+    }
+
+    await projectStore.CreateProject(payload)
+
+    addNewProject.value = false
+    projectTitle.value = ''
+    projectLink.value = ''
+  } catch (error) {
+    console.log('Fail to Create Prooject')
+  } finally {
+    isLoading.value = false
+  }
 }
 
 // Education Add New
+const educationStore = useEducationStore()
+
+const schoolStore = useSchoolStore()
+const degreeStore = useDegreeStore()
+const subjectStore = useSubjectStore()
+
+onMounted(() => {
+  schoolStore.fetchSchools()
+  degreeStore.fetchDegrees()
+  subjectStore.fetchSubjects()
+})
+
+const school = ref('')
+const degree = ref('')
+const subject = ref('')
+const start_date = ref('')
+const end_date = ref('')
+const description = ref('')
+
 const addNewEducation = ref(false)
 const closeAddNewEducation = () => {
   addNewEducation.value = false
@@ -325,8 +390,44 @@ function createEducation() {
   addNewEducation.value = true
 }
 
-const HandleAddNewEducation = () => {
-  alert('Successfully')
-  addNewEducation.value = false
+const HandleAddNewEducation = async () => {
+  if (!school.value || !degree.value || !subject.value) {
+    alert('Please select all fields!')
+    return
+  }
+
+  if (!start_date.value || !end_date.value) {
+    alert('Please enter start and end date!')
+    return
+  }
+
+  isLoading.value = true
+
+  const payload = {
+    school_id: school.value,
+    degree_id: degree.value,
+    subject_id: subject.value,
+    start_date: start_date.value,
+    end_date: end_date.value,
+    description: description.value,
+  }
+
+  console.log('Education Payload:', payload)
+
+  try {
+    await educationStore.CreateEducation(payload)
+
+    addNewEducation.value = false
+
+    school.value = ''
+    degree.value = ''
+    subject.value = ''
+    start_date.value = ''
+    end_date.value = ''
+    description.value = ''
+  } catch (error) {
+    console.log('Failed to Create Education:', error.response?.data)
+    isLoading.value = true
+  }
 }
 </script>

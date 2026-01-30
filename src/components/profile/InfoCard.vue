@@ -22,7 +22,7 @@
             class="action-item"
           >
             <i class="bi bi-plus-lg"></i>
-            <span>Create</span>
+            <span>Add</span>
           </button>
           
           <button 
