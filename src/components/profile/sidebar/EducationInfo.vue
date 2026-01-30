@@ -1,52 +1,50 @@
 <template>
-  <div>
+  <div class="education-section">
+    <!-- Education Cards -->
+    <template v-if="educations.length">
+      <div v-for="edu in educations" :key="edu.id" class="education-item">
+        <InfoCard
+          :title="edu.school?.name || 'Education'"
+          icon="bi bi-mortarboard"
+          @create="onCreate"
+          @update="onUpdate(edu)"
+          @delete="onDelete(edu.id)"
+        >
+          <div class="edu-content">
+            <div class="info-row">
+              <i class="bi bi-mortarboard icon"></i>
+              <span class="text-medium">{{ edu.degree?.name }}</span>
+            </div>
+
+            <div v-if="edu.subject?.name" class="info-row">
+              <i class="bi bi-book icon"></i>
+              <span class="text-regular">{{ edu.subject?.name }}</span>
+            </div>
+
+            <div class="info-row">
+              <i class="bi bi-calendar3 icon"></i>
+              <span class="text-muted">{{ edu.start_date }} - {{ edu.end_date || 'Present' }}</span>
+            </div>
+
+            <div v-if="edu.description" class="info-row description">
+              <i class="bi bi-info-circle icon"></i>
+              <p class="description-text">{{ edu.description }}</p>
+            </div>
+          </div>
+        </InfoCard>
+      </div>
+    </template>
+
+    <!-- Placeholder for Empty State -->
     <InfoCard
+      v-else
       title="Education"
       icon="bi bi-mortarboard"
-      :showCreate="false"
-      :showUpdate="true"
-      :showDelete="true"
-      @update="UpdateEducation"
+      :showUpdate="false"
+      :showDelete="false"
+      @create="onCreate"
     >
-      <div
-        v-for="education in profileStore.user?.educations"
-        :key="education.id"
-        class="education-card mb-3"
-      >
-        <!-- School Name -->
-        <div class="info-row school">
-          <i class="bi bi-building icon"></i>
-          <h4 class="school-name">{{ education.school?.name }}</h4>
-        </div>
-
-        <!-- Degree -->
-        <div class="info-row">
-          <i class="bi bi-mortarboard icon"></i>
-          <span class="degree-text">{{ education.degree?.name }}</span>
-        </div>
-
-        <!-- Subject -->
-        <div v-if="education.subject?.name" class="info-row">
-          <i class="bi bi-book icon"></i>
-          <span class="subject-text">{{ education.subject?.name }}</span>
-        </div>
-
-        <!-- Date Range -->
-        <div class="info-row">
-          <i class="bi bi-calendar3 icon"></i>
-          <span class="date-text"
-            >{{ education.start_date }} - {{ education.end_date || 'Present' }}</span
-          >
-        </div>
-
-        <!-- Description -->
-        <div v-if="education.description" class="info-row description-row">
-          <i class="bi bi-info-circle icon"></i>
-          <p class="description-text">{{ education.description }}</p>
-        </div>
-      </div>
-
-      <div v-if="!profileStore.user?.educations?.length" class="no-data">
+      <div class="no-data">
         <p>No education info available</p>
       </div>
     </InfoCard>
@@ -54,15 +52,17 @@
 </template>
 
 <script setup>
-import InfoCard from '../InfoCard.vue'
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useProfileStore } from '@/stores/profile'
+import InfoCard from '../InfoCard.vue'
 
 const profileStore = useProfileStore()
+const educations = computed(() => profileStore.user?.educations || [])
 
-const UpdateEducation = () => {
-  console.log('Update education triggered')
-}
+// Handlers
+const onCreate = () => console.log('Create education triggered')
+const onUpdate = (edu) => console.log('Update education triggered', edu)
+const onDelete = (id) => console.log('Delete education triggered', id)
 
 onMounted(async () => {
   if (!profileStore.user) {
@@ -76,11 +76,12 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.education-card {
-  padding: 16px;
-  background: #f9fafb;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
+.education-item {
+  margin-bottom: 1rem;
+}
+
+.education-item:last-child {
+  margin-bottom: 0;
 }
 
 .info-row {
@@ -94,59 +95,52 @@ onMounted(async () => {
   margin-bottom: 0;
 }
 
-.info-row.school {
-  margin-bottom: 14px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
 .icon {
-  font-size: 1rem;
-  color: #000;
   width: 20px;
   text-align: center;
+  font-size: 1rem;
+  color: var(--color-text-muted, #64748b);
   flex-shrink: 0;
 }
 
-.school-name {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #000;
-  margin: 0;
-}
-
-.degree-text {
-  font-size: 0.9rem;
+.text-medium {
+  font-size: 0.95rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--color-text, #334155);
 }
 
-.subject-text {
+.text-regular {
   font-size: 0.875rem;
-  color: #4b5563;
+  color: var(--color-text-muted, #475569);
 }
 
-.date-text {
+.text-muted {
   font-size: 0.8rem;
-  color: #6b7280;
   font-weight: 500;
+  color: var(--color-text-muted, #64748b);
 }
 
-.description-row {
+.info-row.description {
   align-items: flex-start;
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--border-color, #e5e7eb);
 }
 
-.description-row .icon {
+.description .icon {
   margin-top: 2px;
 }
 
 .description-text {
   font-size: 0.875rem;
-  color: #4b5563;
-  margin: 0;
   line-height: 1.6;
+  color: var(--color-text-muted, #475569);
+  margin: 0;
+}
+
+.no-data {
+  text-align: center;
+  padding: 1rem;
+  color: var(--color-text-muted, #64748b);
 }
 </style>
