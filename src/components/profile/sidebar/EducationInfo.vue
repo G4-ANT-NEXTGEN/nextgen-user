@@ -48,21 +48,76 @@
         <p>No education info available</p>
       </div>
     </InfoCard>
+
+    <BaseModal v-if="educationUpdate" title="Update Education Info" @close="closeEducationUpdate">
+      <BaseSelect
+        v-model="school"
+        label="School/University"
+        placeholder="Select School"
+        :options="[
+          ...schoolStore.schools.map((school) => ({ value: school.id, label: school.name })),
+        ]"
+      />
+      <div class="d-flex my-2">
+        <div class="col-6 me-1">
+          <BaseSelect
+            v-model="degree"
+            label="Degree"
+            placeholder="Select Degree"
+            :options="[
+              ...degreeStore.degrees.map((degree) => ({ value: degree.id, label: degree.name })),
+            ]"
+          />
+        </div>
+        <div class="col-6 ms-1">
+          <BaseSelect
+            v-model="subject"
+            label="Subject"
+            placeholder="Select Subject"
+            :options="[
+              ...subjectStore.subjects.map((subject) => ({
+                value: subject.id,
+                label: subject.name,
+              })),
+            ]"
+          />
+        </div>
+      </div>
+      <div class="d-flex my-2">
+        <div class="col-6 me-1">
+          <BaseInput label="Start Date" placeholder="2023/02" v-model="start_date" />
+        </div>
+        <div class="col-6 ms-1">
+          <BaseInput label="End Date " placeholder="2023/02" v-model="end_date" />
+        </div>
+      </div>
+      <div class="mb-2">
+        <label class="mb-2 fw-semibold">Description</label>
+        <textarea
+          class="form-control"
+          placeholder="Description"
+          style="height: 100px"
+          v-model="description"
+        ></textarea>
+      </div>
+
+      <template #footer>
+        <button class="btn btn-outline-dark" @click="closeEducationUpdate">Cancel</button>
+        <button class="btn btn-dark" @click="HandleUpdateEducation">Save Changes</button>
+      </template>
+    </BaseModal>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import BaseModal from '@/components/ui/base/BaseModal.vue'
+import InfoCard from '../InfoCard.vue'
+import { onMounted, ref } from 'vue'
 import { useProfileStore } from '@/stores/profile'
 import InfoCard from '../InfoCard.vue'
 
 const profileStore = useProfileStore()
 const educations = computed(() => profileStore.user?.educations || [])
-
-// Handlers
-const onCreate = () => console.log('Create education triggered')
-const onUpdate = (edu) => console.log('Update education triggered', edu)
-const onDelete = (id) => console.log('Delete education triggered', id)
 
 onMounted(async () => {
   if (!profileStore.user) {
@@ -73,6 +128,23 @@ onMounted(async () => {
     }
   }
 })
+const educationUpdate = ref(false)
+function UpdateEducation() {
+  educationUpdate.value = true
+}
+
+function closeEducationUpdate() {
+  educationUpdate.value = false
+}
+
+function HandleUpdateEducation() {
+  alert('Successfully')
+  educationUpdate.value = false
+}
+
+function DeleteEducation() {
+  alert('Are you want to delete this shit?')
+}
 </script>
 
 <style scoped>
@@ -144,3 +216,4 @@ onMounted(async () => {
   color: var(--color-text-muted, #64748b);
 }
 </style>
+
