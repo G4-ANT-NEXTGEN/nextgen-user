@@ -10,15 +10,27 @@
     </div>
 
     <!-- Update Cover -->
-    <BaseModal v-if="editCover" title="Update Your Cover" @close="closeEditCover">
-      <div class="mb-3">
-        <label for="formFile" class="form-label">Update Your Cover</label>
-        <input class="form-control" type="file" id="formFile" />
+    <BaseModal v-if="editCover" title="Update Your Cover" size="lg" @close="closeEditCover">
+      <div class="cropper-container">
+        <Cropper v-if="uploadedImage" ref="cropperCoverRef" :src="uploadedImage"
+          :stencil-props="{ aspectRatio: null, resizable: true }" :stencil-component="CircleStencil" />
+      </div>
+
+      <div class="mt-3">
+        <label for="imageUpload" class="btn"> Choose Image </label>
+        <input id="imageUpload" type="file" class="d-none" accept="image/*" @change="handleFileSelect" />
+      </div>
+      <div class="mt-3">
+        <label for="deleteCover" class="btn" style="color: var(--color-danger)" @click="deleteCover = true">
+          Delete Cover
+        </label>
       </div>
 
       <template #footer>
-        <button class="btn btn-outline-dark" @click="closeEditCover">Cancel</button>
-        <button class="btn btn-dark" @click="HandleEditCover">Save Changes</button>
+        <base-button @click="cancelCrop" variant="secondary">Cancel</base-button>
+        <base-button @click="applyChageCover" :isLoading="profileStore.isLoading" variant="dark"
+          style="color: var(--color-surface)"><span>{{ profileStore.isLoading ? 'Saving...' : 'Save'
+            }}</span></base-button>
       </template>
     </BaseModal>
 
@@ -27,29 +39,59 @@
       <div class="profile-content px-3">
         <!-- Avatar positioned to overlap cover -->
         <div class="avatar-wrapper">
-          <img class="avatar" :src="avatarUrl" alt="Profile" />
+          <img class="avatar" :src="profileStore.user?.avatar" alt="Profile" />
 
           <!-- Edit Avatar Button -->
-          <button class="avatar-edit" @click="openAvatarModal">
+          <button class="avatar-edit" @click="showImageCropper = true">
             <i class="bi bi-camera"></i>
           </button>
         </div>
 
-        <!-- Modal for Update and Delete Avatar -->
-        <BaseModal v-if="editAvatar" title="Profile Photo" @close="closeAvatarModal">
-          <div class="avatar-actions">
-            <label class="avatar-action upload">
-              <i class="bi bi-upload"></i>
-              Upload New Photo
-              <input type="file" hidden @change="handleAvatarUpload" />
-            </label>
-
-            <button class="avatar-action delete" @click="handleAvatarDelete">
-              <i class="bi bi-trash"></i>
-              Remove Photo
-            </button>
+        <!-- Crop Modal update avatar-->
+        <BaseModal v-if="showImageCropper" title="Crop Profile Image" @close="showImageCropper = false">
+          <div class="cropper-container">
+            <Cropper v-if="uploadedImage" ref="cropperRef" :src="uploadedImage" :stencil-props="{ aspectRatio: 1 }"
+              :stencil-component="CircleStencil" />
           </div>
+
+          <div class="mt-3">
+            <label for="imageUpload" class="btn"> Choose Image </label>
+            <input id="imageUpload" type="file" class="d-none" accept="image/*" @change="handleFileSelect" />
+          </div>
+          <div class="mt-3">
+            <label for="imageDelete" class="btn" style="color: var(--color-danger)" @click="deleteAvatar = true">
+              Delete Avatar
+            </label>
+            <!-- <input id="imageUpload" type="file" class="d-none" accept="image/*" @change="handleFileSelect" /> -->
+          </div>
+
+          <template #footer>
+            <base-button @click="showImageCropper = false" variant="secondary">Cancel</base-button>
+            <base-button @click="applyCrop" :isLoading="profileStore.isLoading" variant="dark"
+              style="background-color: var(--color-surface)"><span>{{ profileStore.isLoading ? 'Saving...' : 'Save'
+                }}</span></base-button>
+          </template>
         </BaseModal>
+        <!-- delete avatar modal  -->
+        <base-modal v-if="deleteAvatar" title="Delete Avatar">
+          <p>Are you sure!</p>
+          <template #footer>
+            <base-button @click="deleteAvatar = false" variant="secondary">Cancel</base-button>
+            <base-button @click="handleAvatarDelete" variant="dark" :isLoading="profileStore.isLoading"
+              style="background-color: var(--color-danger)"><span>{{ profileStore.isLoading ? 'Saving...' : 'Save'
+                }}</span></base-button>
+          </template>
+        </base-modal>
+        <!-- delete cover modal  -->
+        <base-modal v-if="deleteCover" title="Delete Cover" @close="deleteCover = false">
+          <p>Are you sure!</p>
+          <template #footer>
+            <base-button @click="deleteCover = false" variant="secondary">Cancel</base-button>
+            <base-button @click="handleDeleteCover" variant="dark" :isLoading="profileStore.isLoading"
+              style="background-color: var(--color-danger)"><span>{{ profileStore.isLoading ? 'Saving...' : 'Save'
+                }}</span></base-button>
+          </template>
+        </base-modal>
 
         <!-- Info and Actions -->
         <div class="info-section">
@@ -67,15 +109,18 @@
             </button>
 
             <!-- Update CV -->
-            <BaseModal v-if="editCV" title="Upload Your CV" @close="closeEditCV">
+            <BaseModal v-if="editCV" title="Upload Your CV" @close="editCV = false">
               <div class="mb-3">
                 <label for="formFile" class="form-label">Upload Your CV</label>
-                <input class="form-control" type="file" id="formFile" />
+                <input class="form-control" type="file" id="formFile" @change="cvOnChangeFile" accept="application/pdf"
+                  multiple />
               </div>
 
               <template #footer>
                 <button class="btn btn-outline-dark" @click="closeEditCV">Cancel</button>
-                <button class="btn btn-dark" @click="HandleEditCV">Save Changes</button>
+                <base-button class="btn btn-dark" @click="handleSaveCv" :isLoading="profileStore.isLoading" style="background-color: var(--color-danger)">
+                  <span>{{ profileStore.isLoading ? 'Saving...' : 'Save' }}</span>
+                </base-button>
               </template>
             </BaseModal>
 
@@ -85,11 +130,7 @@
             </button>
 
             <!-- Update Collaboration -->
-            <BaseModal
-              v-if="editCollaboration"
-              title="Upload Your Collaboration"
-              @close="closeEditCollaboration"
-            >
+            <BaseModal v-if="editCollaboration" title="Upload Your Collaboration" @close="closeEditCollaboration">
               <div class="mb-3">
                 <label for="formFile" class="form-label">Upload Your Collaboration</label>
                 <input class="form-control" type="file" id="formFile" />
@@ -110,16 +151,10 @@
             <BaseModal v-if="openSetting" title="Account Settings" @close="closeSetting">
               <!-- Tabs -->
               <div class="setting-tabs">
-                <button
-                  :class="['tab', { active: settingTab === 'password' }]"
-                  @click="settingTab = 'password'"
-                >
+                <button :class="['tab', { active: settingTab === 'password' }]" @click="settingTab = 'password'">
                   Change Password
                 </button>
-                <button
-                  :class="['tab danger', { active: settingTab === 'delete' }]"
-                  @click="settingTab = 'delete'"
-                >
+                <button :class="['tab danger', { active: settingTab === 'delete' }]" @click="settingTab = 'delete'">
                   Delete Account
                 </button>
               </div>
@@ -158,12 +193,8 @@
 
       <!-- Tabs -->
       <div class="profile-tabs">
-        <button
-          v-for="tab in tabs"
-          :key="tab.key"
-          :class="['tab-btn', { active: activeTab === tab.key }]"
-          @click="$emit('change-tab', tab.key)"
-        >
+        <button v-for="tab in tabs" :key="tab.key" :class="['tab-btn', { active: activeTab === tab.key }]"
+          @click="$emit('change-tab', tab.key)">
           {{ tab.label }}
         </button>
       </div>
@@ -172,9 +203,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useProfileStore } from '@/stores/profile'
-
+import { Cropper } from 'vue-advanced-cropper'
 defineProps({
   activeTab: {
     type: String,
@@ -183,8 +214,6 @@ defineProps({
 })
 
 defineEmits(['change-tab'])
-
-const profileStore = useProfileStore()
 
 const avatarUrl = computed(() => {
   const image = profileStore.user?.profile_image || profileStore.user?.avatar
@@ -207,6 +236,64 @@ const tabs = [
   { key: 'project', label: 'Project' },
   { key: 'cv', label: 'CV' },
 ]
+const profileStore = useProfileStore()
+const image = ref(null)
+const cropperRef = ref()
+const cropperCoverRef = ref(null)
+const showImageCropper = ref(false)
+const deleteAvatar = ref(false)
+const deleteCover = ref(false)
+const uploadedImage = ref(null)
+
+onMounted(async () => {
+  await profileStore.fetchProfile()
+})
+const handleFileSelect = (e) => {
+  const file = e.target.files[0]
+  if (!file) return
+
+  const reader = new FileReader()
+  reader.onload = (ev) => (uploadedImage.value = ev.target.result)
+  reader.readAsDataURL(file)
+}
+
+const applyCrop = async () => {
+  const canvas = cropperRef.value.getResult().canvas
+  const avatar = canvas.toDataURL('image/jpeg', 0.9)
+  console.log(avatar)
+  await profileStore.uploadAvatarBase64(avatar)
+  showImageCropper.value = false
+  uploadedImage.value = null
+}
+const applyChageCover = async () => {
+  const canvas = cropperCoverRef.value.getResult().canvas
+  const cover = canvas.toDataURL('image/jpeg', 0.9)
+  console.log(cover)
+  await profileStore.uploadCoverBase64(cover)
+  editCover.value = false
+  uploadedImage.value = null
+}
+
+const handleDeleteCover = async () => {
+  editCover.value = false
+  await profileStore.removeCover()
+  if (!(await profileStore.isLoading)) deleteCover.value = false
+}
+const cvFile = ref()
+const cvOnChangeFile = (e) => {
+  const cv = e.target.files[0]
+  if (!cv) return
+  if (cv.type !== 'application/pdf') {
+    alert('Only PDF allowed')
+    return
+  }
+  cvFile.value = cv
+}
+const handleSaveCv = async () => {
+  if (!cvFile.value) return
+  await profileStore.uploadCv(cvFile.value)
+  editCV.value = false
+}
 
 
 onMounted(async () => {
@@ -235,14 +322,11 @@ async function handleAvatarUpload(event) {
   }
 }
 
-async function handleAvatarDelete() {
-  if (confirm('Remove profile photo?')) {
-    try {
-      await profileStore.removeAvatar()
-      editAvatar.value = false
-    } catch (error) {
-      console.error('Failed to remove avatar:', error)
-    }
+const handleAvatarDelete = async () => {
+  showImageCropper.value = false
+  await profileStore.removeAvatar()
+  if (!(await profileStore.isLoading)) {
+    deleteAvatar.value = false
   }
 }
 
@@ -315,6 +399,7 @@ onMounted(async () => {
   border-radius: 10px;
   overflow: hidden;
 }
+
 .avatar-wrapper {
   position: relative;
   width: fit-content;
@@ -373,8 +458,14 @@ onMounted(async () => {
   background: rgba(239, 68, 68, 0.12);
 }
 
-.cover {
+.cover,
+img {
+  width: 100%;
   height: 400px;
+  /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+  /* background-image: url('../../assets/R.png'); */
+  background-size: cover;
+  background-position: center;
   position: relative;
   
 }
