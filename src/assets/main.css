@@ -20,6 +20,7 @@ body {
   --color-text-secondary: #4a4a4a;
   --color-text-tertiary: #717171;
   --color-close: #030307;
+  --color-icon: #030307;
 
   /* Navbar Specific */
   --nav-bg: #ffffff;
@@ -67,7 +68,7 @@ body {
   --about-hero-bg: linear-gradient(135deg, rgba(10, 10, 10, 0.9) 0%, rgba(10, 10, 10, 0.6) 100%);
   --hero-grid-color: rgba(255, 255, 255, 0.03);
   --about-stats-bg: #0a0a0a;
-  --font-display: 'Playfair Display', serif;
+  --font-display: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   --font-body: 'Noto Sans Khmer', 'Roboto', sans-serif;
   --transition: cubic-bezier(0.4, 0, 0.2, 1);
 }

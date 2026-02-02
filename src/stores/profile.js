@@ -87,6 +87,25 @@ export const useProfileStore = defineStore("profile", () => {
       isLoading.value = false
     }
   }
+  const addCollaboration = async (payload) =>{
+    isLoading.value = true
+    try{
+      const res = api.post(`/api/profile/collaboration`,payload,{
+         headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      showSuccess('Collaboration Upload Successful')
+      return res
+    }
+    catch(e){
+      console.log(e)
+      showError('Can not Upload Collaboration!')
+    }
+    finally{
+      isLoading.value=false
+    }
+  }
   const removeAvatar = async () => {
     isProcessing.value = true;
     try {

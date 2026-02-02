@@ -1,5 +1,5 @@
 <template>
-  <div class="about-page">
+  <div class="about-page p-4">
     <!-- Hero Section -->
     <section class="hero-section">
       <div class="hero-gradient"></div>
@@ -12,7 +12,7 @@
         </swiper-slide>
       </swiper>
 
-      <div class="container hero-content">
+      <div class="container-fluid px-4 hero-content">
         <div class="row align-items-center min-vh-100">
           <div class="col-lg-6 mb-5 mb-lg-0">
             <div class="hero-badge reveal-scroll reveal-up">Since 2018</div>
@@ -53,7 +53,7 @@
 
     <!-- Stats Banner -->
     <section class="stats-section">
-      <div class="container">
+      <div class="container-fluid px-4">
         <div class="stats-grid">
           <div v-for="(stat, idx) in stats" :key="stat.id" class="stat-item reveal-scroll reveal-up"
             :style="{ transitionDelay: idx * 0.1 + 's' }">
@@ -69,7 +69,7 @@
 
     <!-- About Section -->
     <section class="about-section">
-      <div class="container">
+      <div class="container-fluid px-4">
         <div class="row align-items-center g-5">
           <div class="col-lg-6 reveal-scroll reveal-up">
             <div class="about-image-wrapper">
@@ -104,7 +104,7 @@
 
     <!-- Features Section -->
     <section class="features-section">
-      <div class="container">
+      <div class="container-fluid px-4">
         <div class="section-header text-center">
           <div class="section-label">Capabilities</div>
           <h2 class="section-title">Powerful Features</h2>
@@ -130,7 +130,7 @@
 
     <!-- Technology Section -->
     <section class="tech-section">
-      <div class="container">
+      <div class="container-fluid px-4">
         <div class="row align-items-center g-5">
           <div class="col-lg-6 order-lg-2 reveal-scroll reveal-up">
             <div class="section-label">Technology</div>
@@ -158,7 +158,7 @@
 
     <!-- Team Section -->
     <section class="team-section">
-      <div class="container">
+      <div class="container-fluid px-4">
         <div class="section-header text-center">
           <div class="section-label">Our Team</div>
           <h2 class="section-title">Meet the People Behind Next Gen</h2>
@@ -189,93 +189,8 @@
       </div>
     </section>
 
-    <!-- Contact Section -->
-    <section class="contact-section">
-      <div class="container">
-        <div class="section-header text-center">
-          <div class="section-label">Get in Touch</div>
-          <h2 class="section-title">Let's Start a Conversation</h2>
-        </div>
 
-        <div class="row g-5">
-          <div class="col-lg-5 reveal-scroll reveal-up">
-            <div class="contact-info">
-              <h4 class="contact-heading">Contact Information</h4>
-              <p class="contact-lead">
-                Have questions or need assistance? Our team is here to help you get
-                the most out of Next Gen.
-              </p>
 
-              <div class="contact-items">
-                <div v-for="(info, idx) in contactInfo" :key="idx" class="contact-item">
-                  <div class="contact-icon">
-                    <i :class="['bi', `bi-${info.icon}`]"></i>
-                  </div>
-                  <div class="contact-details">
-                    <div class="contact-title">{{ info.title }}</div>
-                    <div class="contact-value">{{ info.detail }}</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="contact-social">
-                <h6 class="contact-social-title">Connect With Us</h6>
-                <div class="social-links">
-                  <a v-for="social in socialLinks" :key="social" href="#" :aria-label="social" class="social-link">
-                    <i :class="['bi', `bi-${social}`]"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-7 reveal-scroll reveal-scale">
-            <div class="map-wrapper">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31271.187661578433!2d104.8814725!3d11.5583626!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31095105b4d7f8a1%3A0xe54955b4105470d9!2z4Z6Y4Z6S4Z-S4Z6B4Z-S4Z6A4Z6A4Z-S4Z6f4Z-S4Z6T!5e0!3m2!1skm!2skh!4v1706024321234!5m2!1skm!2skh"
-                allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer-section">
-      <div class="container">
-        <div class="footer-main">
-          <div class="row g-5">
-            <div class="col-lg-4">
-              <div class="footer-brand">
-                <img src="/logo.jpg" alt="Next Gen Logo" class="footer-logo" />
-                <span class="footer-brand-name">Next Gen</span>
-              </div>
-              <p class="footer-tagline">
-                The collaborative interface design tool for teams.
-              </p>
-            </div>
-
-            <div v-for="(links, title) in footerLinks" :key="title" class="col-6 col-md-3 col-lg-2">
-              <h6 class="footer-heading">{{ title }}</h6>
-              <ul class="footer-links">
-                <li v-for="link in links" :key="link">
-                  <a href="#">{{ link }}</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="footer-bottom">
-          <p class="footer-copyright">&copy; 2026 Next Gen, Inc. All rights reserved.</p>
-          <div class="footer-social">
-            <a v-for="social in ['twitter-x', 'github', 'linkedin']" :key="social" href="#" :aria-label="social">
-              <i :class="['bi', `bi-${social}`]"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-    </footer>
   </div>
 </template>
 
@@ -357,19 +272,11 @@ const teamMembers = [
   { name: 'Chin Damrey', role: 'CTO & Co-Founder', image: '/AboutVie/Damrey.jpg', delay: '0.5s' },
 ]
 
-const contactInfo = [
-  { icon: 'geo-alt-fill', title: 'Our Location', detail: 'Phnom Penh, Cambodia' },
-  { icon: 'envelope-fill', title: 'Email Us', detail: 'support@nextgen.com' },
-  { icon: 'telephone-fill', title: 'Call Us', detail: '+855 12 345 678' },
-]
-
 const footerLinks = {
   Product: ['Design', 'Prototype', 'Whiteboard', 'Plugins'],
   Resources: ['Learn', 'Community', 'Best Practices', 'Support'],
   Legal: ['Privacy', 'Terms', 'Cookie Policy', 'Licenses'],
 }
-
-const socialLinks = ['facebook', 'twitter-x', 'instagram', 'linkedin']
 
 let hasAnimated = false
 const animateNumbers = () => {
@@ -425,17 +332,17 @@ onMounted(() => {
 
 <style scoped>
 .about-page {
-  font-family: var(--font-body);
-  color: var(--color-text);
-  background: var(--color-background);
-  overflow-x: hidden;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Hero Section */
 .hero-section {
   position: relative;
+  border-radius: 20px;
+  overflow: hidden;
   height: 100vh;
   min-height: 700px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -460,7 +367,7 @@ onMounted(() => {
 
 .hero-swiper {
   position: absolute;
-  border-radius: 20px ;
+  border-radius: 20px;
   inset: 0;
   z-index: 1;
 }
@@ -485,7 +392,7 @@ onMounted(() => {
 
 .hero-content {
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.1);
+  /* background: rgba(255, 255, 255, 0.1); */
   overflow: hidden;
   position: relative;
   z-index: 10;
@@ -506,7 +413,7 @@ onMounted(() => {
 }
 
 .hero-title {
-  font-family: var(--font-display);
+
   font-size: clamp(3rem, 8vw, 5.5rem);
   font-weight: 900;
   line-height: 1.1;
@@ -645,6 +552,7 @@ onMounted(() => {
 /* Stats Section */
 .stats-section {
   padding: 8rem 0;
+  border-radius: 20px;
   background: var(--about-stats-bg);
   position: relative;
   overflow: hidden;
@@ -672,7 +580,7 @@ onMounted(() => {
 }
 
 .stat-number {
-  font-family: var(--font-display);
+
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 900;
   color: #ffffff;
@@ -718,7 +626,7 @@ section {
 }
 
 .section-title {
-  font-family: var(--font-display);
+
   font-size: clamp(2.5rem, 5vw, 3.75rem);
   font-weight: 900;
   line-height: 1.2;
@@ -805,7 +713,7 @@ section {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--color-accent), #8b5cf6);
+  background: var(--color-text);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.4s var(--transition);
@@ -824,12 +732,12 @@ section {
 .feature-icon {
   width: 64px;
   height: 64px;
-  background: linear-gradient(135deg, var(--color-accent), #8b5cf6);
+  background-color: var(--color-text);
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
+  color: var(--color-background);
   font-size: 1.75rem;
   margin-bottom: 2rem;
   transition: transform 0.4s var(--transition);
@@ -840,7 +748,7 @@ section {
 }
 
 .feature-title {
-  font-family: var(--font-display);
+
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
@@ -1004,7 +912,7 @@ section {
 }
 
 .team-name {
-  font-family: var(--font-display);
+
   font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
@@ -1017,121 +925,7 @@ section {
   margin: 0;
 }
 
-/* Contact Section */
-.contact-section {
-  background: var(--color-surface);
-}
 
-.contact-info {
-  padding: 3rem;
-  background: var(--color-background);
-  border-radius: 24px;
-  border: 1px solid var(--color-border);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.contact-heading {
-  font-family: var(--font-display);
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: var(--color-text);
-}
-
-.contact-lead {
-  font-size: 1.0625rem;
-  line-height: 1.7;
-  color: var(--color-text-secondary);
-  margin-bottom: 2.5rem;
-}
-
-.contact-items {
-  margin-bottom: 3rem;
-}
-
-.contact-item {
-  display: flex;
-  gap: 1.25rem;
-  margin-bottom: 2rem;
-}
-
-.contact-icon {
-  width: 56px;
-  height: 56px;
-  background: linear-gradient(135deg, var(--color-accent), #8b5cf6);
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  font-size: 1.25rem;
-  flex-shrink: 0;
-}
-
-.contact-title {
-  font-weight: 600;
-  font-size: 0.9375rem;
-  color: var(--color-text);
-  margin-bottom: 0.25rem;
-}
-
-.contact-value {
-  font-size: 1rem;
-  color: var(--color-text-secondary);
-}
-
-.contact-social {
-  margin-top: auto;
-  padding-top: 2rem;
-  border-top: 1px solid var(--color-border);
-}
-
-.contact-social-title {
-  font-weight: 600;
-  font-size: 0.9375rem;
-  color: var(--color-text);
-  margin-bottom: 1rem;
-}
-
-.social-links {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.social-link {
-  width: 44px;
-  height: 44px;
-  background: var(--color-surface);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text);
-  font-size: 1.125rem;
-  transition: all 0.3s var(--transition);
-}
-
-.social-link:hover {
-  background: var(--about-stats-bg);
-  color: var(--social-link-hover, #ffffff);
-  transform: translateY(-3px);
-}
-
-.map-wrapper {
-  border-radius: 24px;
-  overflow: hidden;
-  height: 100%;
-  min-height: 500px;
-  border: 1px solid var(--color-border);
-}
-
-.map-wrapper iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-}
 
 /* Footer */
 .footer-section {
@@ -1161,7 +955,7 @@ section {
 }
 
 .footer-brand-name {
-  font-family: var(--font-display);
+
   font-size: 1.5rem;
   font-weight: 700;
 }

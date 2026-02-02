@@ -4,13 +4,18 @@
     <header class="post-header">
       <div class="author-info">
         <div class="avatar-wrapper" @click="handleAvatarClick">
-          <img class="avatar-image" :src="post.creator.avatar" :alt="post.creator.full_name" />
+          <img class="avatar-image" :src="post.creator.avatar" :alt="post.creator.full_name">
+          <span class="online-status"></span>
         </div>
         <div class="author-details">
-          <h3 class="author-name" @click="handleAvatarClick">{{ post.creator.full_name }}</h3>
+          <div class="name-row">
+            <h3 class="author-name" @click="handleAvatarClick">{{ post.creator.full_name }}</h3>
+            <i class="bi bi-patch-check-fill verified-badge"></i>
+          </div>
           <div class="post-meta">
-            <i class="bi bi-globe-americas"></i>
             <time class="post-date">{{ formatDate(post.created_at) }}</time>
+            <span class="meta-dot">•</span>
+            <span class="meta-scope">Public</span>
           </div>
         </div>
       </div>
@@ -71,7 +76,22 @@
       </div>
     </div>
 
-    <!-- Engagement Section -->
+    <!-- Engagement Stats Row -->
+    <div class="engagement-stats">
+      <div class="reactions-display">
+        <div class="reaction-icons">
+          <span class="reaction-icon bg-danger text-white"><i class="bi bi-heart-fill"></i></span>
+          <span class="reaction-icon bg-primary text-white"><i class="bi bi-hand-thumbs-up-fill"></i></span>
+        </div>
+        <span class="reaction-count">{{ likeCount }} reactions</span>
+      </div>
+      <div class="comment-share-stats">
+        <span>32 comments</span>
+        <span>18 shares</span>
+      </div>
+    </div>
+
+    <!-- Footer Actions -->
     <footer class="post-footer">
       <div class="engagement-actions">
         <button
@@ -85,21 +105,19 @@
           <span class="engagement-label">Like</span>
         </button>
 
-        <button class="engagement-btn">
-          <i class="bi bi-chat"></i>
-          <span class="engagement-count">12</span>
-          <span class="engagement-label">Comment</span>
-        </button>
+      <button class="action-btn">
+        <i class="bi bi-chat"></i>
+        <span>Comment</span>
+      </button>
 
-        <button class="engagement-btn">
-          <i class="bi bi-share"></i>
-          <span class="engagement-count">3</span>
-          <span class="engagement-label">Share</span>
-        </button>
-      </div>
+      <button class="action-btn">
+        <i class="bi bi-share"></i>
+        <span>Share</span>
+      </button>
 
-      <button class="bookmark-btn" aria-label="Bookmark post">
+      <button class="action-btn bookmark-btn">
         <i class="bi bi-bookmark"></i>
+        <span>Save</span>
       </button>
     </footer>
   </article>
@@ -159,20 +177,17 @@ const handleCardClick = (e) => {
 <style scoped>
 /* Post Card Container */
 .post-card {
-  background: var(--color-accent, #ffffff);
-  border: 1px solid var(--color-border, #f0f0f0);
-  border-radius: 16px;
-  box-shadow: var(--shadow-sm);
+  background: var(--color-accent);
+  border: none !important;
+  outline: none !important;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 20px;
   padding: 24px;
   margin-bottom: 24px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   animation: fadeInUp 0.5s ease-out;
 }
 
-.post-card:hover {
-  box-shadow: var(--shadow-md);
-  /* transform: translateY(-2px); */
-}
 
 @keyframes fadeInUp {
   from {
@@ -191,7 +206,7 @@ const handleCardClick = (e) => {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .author-info {
@@ -202,25 +217,30 @@ const handleCardClick = (e) => {
 }
 
 .avatar-wrapper {
+  position: relative;
   width: 48px;
   height: 48px;
-  border-radius: 50%;
-  overflow: hidden;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
-}
-
-.avatar-wrapper:hover {
-  /* transform: scale(1.05); */
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .avatar-image {
   width: 100%;
   height: 100%;
+  border-radius: 50%;
+  /* Ensuring full circle */
   object-fit: cover;
+}
+
+.online-status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  background-color: #22c55e;
+  border: 2px solid var(--color-accent);
+  border-radius: 50%;
 }
 
 .author-details {
@@ -228,16 +248,25 @@ const handleCardClick = (e) => {
   min-width: 0;
 }
 
-.author-name {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--color-text, #1a1a1a);
-  margin: 0 0 4px 0;
-  line-height: 1.4;
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
 }
 
-.author-name:hover {
+.author-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text, #1a1a1a);
+  margin: 0;
+  line-height: 1.2;
   cursor: pointer;
+}
+
+.verified-badge {
+  color: #1d9bf0;
+  font-size: 14px;
 }
 
 .post-meta {
@@ -248,12 +277,8 @@ const handleCardClick = (e) => {
   color: var(--color-muted, #6b7280);
 }
 
-.post-meta i {
-  font-size: 12px;
-}
-
-.post-date {
-  font-weight: 400;
+.meta-dot {
+  font-weight: bold;
 }
 
 /* Post Actions Dropdown */
@@ -262,14 +287,14 @@ const handleCardClick = (e) => {
 }
 
 .action-trigger {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
   background: transparent;
-  border-radius: 8px;
+  border-radius: 50%;
   color: #6b7280;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -280,29 +305,25 @@ const handleCardClick = (e) => {
   color: var(--color-text);
 }
 
-.action-trigger i {
-  font-size: 20px;
-}
-
 .action-dropdown {
   position: absolute;
   top: 100%;
   right: 0;
-  z-index: 999999;
+  z-index: 100;
   min-width: 180px;
   background-color: var(--color-accent);
   border: 1px solid var(--color-border);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
-  padding: 8px;
+  padding: 6px;
 }
 
 .action-item {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
+  gap: 10px;
+  padding: 8px 12px;
   border: none;
   background: transparent;
   border-radius: 8px;
@@ -316,12 +337,6 @@ const handleCardClick = (e) => {
 
 .action-item:hover {
   background: var(--color-secondary);
-  color: var(--color-text);
-}
-
-.action-item i {
-  font-size: 16px;
-  color: var(--color-text);
 }
 
 .action-item--danger {
@@ -329,8 +344,7 @@ const handleCardClick = (e) => {
 }
 
 .action-item--danger:hover {
-  background: rgba(220, 38, 38, 0.1);
-  color: #dc2626;
+  background: rgba(220, 38, 38, 0.05);
 }
 
 /* Content Section */
@@ -343,17 +357,18 @@ const handleCardClick = (e) => {
   line-height: 1.6;
   color: var(--color-text);
   margin: 0;
-  word-wrap: break-word;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 /* Media Section */
 .post-media {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .media-container {
   width: 100%;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
   background: var(--color-border, #f0f0f0);
 }
@@ -362,31 +377,66 @@ const handleCardClick = (e) => {
   width: 100%;
   height: auto;
   display: block;
-  object-fit: cover;
-  transition: all 0.2s ease;
 }
 
-.media-image:hover {
-  transform: scale(1.02);
+/* Engagement Stats */
+.engagement-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 14px;
+  color: var(--color-muted);
 }
 
-/* Footer / Engagement Section */
+.reactions-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reaction-icons {
+  display: flex;
+  align-items: center;
+}
+
+.reaction-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-accent);
+  margin-right: -6px;
+  font-size: 10px;
+}
+
+.reaction-icons .reaction-icon:first-child {
+  z-index: 2;
+}
+
+.reaction-count {
+  margin-left: 8px;
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.comment-share-stats {
+  display: flex;
+  gap: 12px;
+}
+
+/* Footer / Action Buttons */
 .post-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 16px;
-  border-top: 1px solid var(--color-border, #e5e7eb);
 }
 
-.engagement-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-}
-
-.engagement-btn {
+.action-btn {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -394,27 +444,29 @@ const handleCardClick = (e) => {
   border: none;
   background: transparent;
   border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
   color: var(--color-muted, #6b7280);
   cursor: pointer;
   transition: all 0.2s ease;
+  flex: 1;
+  justify-content: center;
 }
 
-.engagement-btn:hover {
+.action-btn:hover {
   background: var(--color-secondary, rgba(0, 0, 0, 0.05));
-  color: var(--color-text, #1a1a1a);
+  color: var(--color-text);
 }
 
-.engagement-btn i {
-  font-size: 18px;
+.action-btn i {
+  font-size: 20px;
 }
 
-.engagement-btn--like.is-active {
+.action-btn.is-active {
   color: #ef4444;
 }
 
-.engagement-btn--like.is-active i {
+.action-btn.is-active i {
   animation: heartBeat 0.4s ease-in-out;
 }
 
@@ -433,73 +485,34 @@ const handleCardClick = (e) => {
   }
 }
 
-.engagement-count {
-  font-weight: 600;
-  color: var(--color-text, #1a1a1a);
-}
-
-.engagement-label {
-  font-weight: 500;
-}
-
-.bookmark-btn {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent;
-  border-radius: 8px;
-  color: var(--color-muted, #6b7280);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.bookmark-btn:hover {
-  background: var(--color-secondary, rgba(0, 0, 0, 0.05));
-  color: #2563eb;
-}
-
-.bookmark-btn i {
-  font-size: 20px;
-}
-
 /* Responsive Design */
 @media (max-width: 640px) {
   .post-card {
-    padding: 20px;
+    padding: 16px;
     border-radius: 12px;
   }
 
   .avatar-wrapper {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
   }
 
   .author-name {
-    font-size: 14px;
+    font-size: 15px;
   }
 
-  .post-meta {
-    font-size: 12px;
-  }
-
-  .engagement-actions {
-    gap: 4px;
-  }
-
-  .engagement-btn {
-    padding: 6px 12px;
+  .engagement-stats {
     font-size: 13px;
   }
 
-  .engagement-label {
-    display: none;
+  .action-btn {
+    padding: 8px;
+    font-size: 14px;
+    gap: 6px;
   }
 
-  .engagement-btn i {
-    font-size: 16px;
+  .action-btn i {
+    font-size: 18px;
   }
 }
 </style>

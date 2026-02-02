@@ -3,12 +3,17 @@
     <div class="container-fluid px-4">
       <div class="d-flex align-items-center gap-4">
         <div class="d-flex align-items-center gap-2">
-          <div class="logo-box">
+          <!-- Mobile Sidebar Toggle -->
+          <button class="theme-btn d-lg-none me-2" @click="$emit('toggle-menu')" aria-label="Toggle menu">
+            <i class="bi bi-list fs-4"></i>
+          </button>
+
+          <div @click="$router.push('/home')" class="logo-box d-none d-lg-flex">
             <div class="logo-inner">
               <img class="img-fluid" src="../../../public/logo.jpg" alt="" />
             </div>
           </div>
-          <span class="fs-5 fw-bold nav-brand">NextGen</span>
+          <span class="fs-5 fw-bold nav-brand d-none d-lg-block">NextGen</span>
         </div>
       </div>
 
@@ -16,6 +21,10 @@
         <i class="bi bi-search search-icon"></i>
         <input type="text" class="search-box" placeholder="Search..." v-model="postStore.search"
           @keyup.enter="handleSearch" />
+        <button class="filter-btn" :aria-label="postStore.search ? 'Clear' : 'Filter'"
+          @click="postStore.search ? postStore.search = '' : null">
+          <i :class="postStore.search ? 'bi bi-x-lg' : ' '"></i>
+        </button>
       </div>
 
       <div class="d-flex align-items-center gap-3">
@@ -95,6 +104,8 @@ const router = useRouter()
 const isSearchActive = ref(false)
 const isLoading = ref(false)
 
+defineEmits(['toggle-menu'])
+
 const toggleSearch = () => {
   isSearchActive.value = !isSearchActive.value
 }
@@ -120,6 +131,9 @@ authStore.fetchProfile()
 
 <style scoped>
 /* Navbar-only styles */
+.navbar {
+  z-index: 1030;
+}
 
 .theme-btn {
   background: var(--nav-surface);
@@ -158,6 +172,10 @@ authStore.fetchProfile()
   box-shadow: 0 2px 8px rgba(10, 10, 10, 0.15);
 }
 
+.logo-box:hover{
+  cursor: pointer;
+}
+
 .logo-box img {
   width: 100%;
   height: 100%;
@@ -180,9 +198,32 @@ authStore.fetchProfile()
   border: 1px solid var(--color-border);
   color: var(--color-text);
   border-radius: 12px;
-  padding: 10px 16px 10px 42px;
+  padding: 10px 40px 10px 42px;
   width: 100%;
   transition: all 0.3s ease;
+}
+
+.filter-btn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--color-muted);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  color: var(--color-text);
+  background: rgba(0, 0, 0, 0.05);
 }
 
 @media (max-width: 991px) {

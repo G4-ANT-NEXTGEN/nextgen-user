@@ -2,30 +2,19 @@
   <div class="sidebar-right">
     <div class="sidebar-content">
       <!-- Messages -->
-      <div class="card-custom mb-3">
+      <div class="card-custom">
         <!-- Header -->
         <div class="messages-header">
           <h6 class="messages-title">Messages</h6>
-          <button class="icon-btn" aria-label="New message">
-            <i class="bi bi-plus-lg"></i>
-          </button>
         </div>
 
         <!-- Search Bar -->
         <div class="search-container">
           <i class="bi bi-search search-icon"></i>
           <input type="text" class="search-input" placeholder="Search messages..." v-model="searchQuery">
-          <button class="filter-btn" aria-label="Filter">
-            <i class="bi bi-funnel"></i>
-          </button>
-        </div>
-
-        <!-- Tabs -->
-        <div class="tabs-container">
-          <button v-for="tab in tabs" :key="tab.id" :class="['tab-btn', { active: activeTab === tab.id }]"
-            @click="activeTab = tab.id">
-            {{ tab.label }}
-            <span v-if="tab.count" class="tab-badge">{{ tab.count }}</span>
+          <button class="filter-btn" :aria-label="searchQuery ? 'Clear' : 'Filter'"
+            @click="searchQuery ? searchQuery = '' : null">
+            <i :class="searchQuery ? 'bi bi-x-lg' : ' '"></i>
           </button>
         </div>
 
@@ -67,39 +56,6 @@
         </button>
       </div>
 
-      <!-- Events -->
-      <!-- <div class="card-custom">
-        <div class="sidebar-header-row mb-3">
-          <h6 class="sidebar-section-title mb-0">Events</h6>
-          <i class="bi bi-three-dots icon-btn"></i>
-        </div>
-        <div class="event-item">
-          <i class="bi bi-calendar3 event-icon"></i>
-          <div>
-            <small class="event-title">10 Events Invites</small>
-          </div>
-        </div>
-        <div class="event-item">
-          <i class="bi bi-calendar3 event-icon"></i>
-          <div>
-            <small class="event-title">Design System Collaboration</small>
-            <small class="event-detail">Thu - Harpoon Mall, YK</small>
-          </div>
-        </div>
-        <div class="event-item">
-          <i class="bi bi-calendar3 event-icon"></i>
-          <div>
-            <small class="event-title">Web Dev 2.0 Meetup</small>
-            <small class="event-detail">Yoshkar-Ola, Russia</small>
-          </div>
-        </div>
-        <div class="event-item">
-          <i class="bi bi-calendar3 event-icon"></i>
-          <div>
-            <small class="event-title">Prada's Invitation Birthday</small>
-          </div>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>
@@ -114,11 +70,6 @@ const router = useRouter();
 const chatStore = useChatStore();
 
 const searchQuery = ref('');
-const activeTab = ref('primary');
-const tabs = [
-  { id: 'primary', label: 'Primary' },
-  { id: 'general', label: 'General' }
-];
 
 const filteredChats = computed(() => {
   let chats = chatStore.chatList;
@@ -197,8 +148,10 @@ defineOptions({
   background: var(--sidebar-bg);
   border-radius: 16px;
   padding: 24px;
-  border: 1px solid var(--sidebar-border);
-  box-shadow: var(--shadow-sm);
+  /* border: 1px solid var(--sidebar-border); */
+  outline: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  /* box-shadow: var(--shadow-sm); */
   transition: all 0.3s ease;
 }
 
@@ -336,7 +289,7 @@ defineOptions({
 .messages-list {
   max-height: 400px;
   overflow-y: auto;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .message-item {

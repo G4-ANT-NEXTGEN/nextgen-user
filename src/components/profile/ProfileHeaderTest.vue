@@ -253,7 +253,7 @@ const handleDeleteCover= async()=>{
     deleteCover.value=false
 
 }
-const cvFile= async  (e) => {
+const cvFile = async  (e) => {
   const cv = e.target.files[0]
   if(!cv) return
   profileStore.uploadCv(cvFile)

@@ -17,7 +17,7 @@
         <div class="d-flex flex-wrap justify-content-evenly state-post mb-2">
           <div class="btn-tag" @click="openCreatePostModal">
             <i class="bi bi-image icon-image"></i>
-            <span>Image/Video</span>
+            <span>Image</span>
           </div>
           <div class="btn-tag" @click="openCreatePostModal">
             <i class="bi bi-paperclip icon-attachment"></i>
@@ -42,6 +42,9 @@
       <template v-if="postStore.loading && postStore.posts.length === 0">
         <ArticleCardSkeleton v-for="n in 3" :key="n" />
       </template>
+
+      <!-- No Data State -->
+      <NoData v-if="!postStore.loading && visiblePosts.length === 0" />
 
       <!-- Post -->
       <ArticleCard v-for="post in visiblePosts" :key="post.id" :post="post" :currentUserId="authStore.user?.id"
@@ -138,6 +141,7 @@ import { useRequiredValidator } from '@/composables/useRequiredValidator';
 import { showSuccess, showInfo } from '@/utils/toast';
 import ArticleCard from '@/components/common/ArticleCard.vue';
 import ArticleCardSkeleton from '@/components/common/ArticleCardSkeleton.vue';
+import NoData from '@/components/common/NoData.vue';
 
 const authStore = useAuthStore();
 const categoryStore = useCategoryStore();
@@ -437,8 +441,8 @@ defineOptions({
   background: var(--sidebar-bg);
   border-radius: 20px;
   padding: 24px;
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-sm);
+  /* border: 1px solid var(--color-border); */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .avatar-post {

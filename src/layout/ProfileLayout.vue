@@ -1,6 +1,7 @@
 <template>
   <div class="profile-page p-3">
-    <AppNavbar />
+    <AppNavbar @toggle-menu="toggleMobileMenu" />
+    <NavigationMenu :isOpen="isMobileMenuOpen" @close="isMobileMenuOpen = false" />
 
     <ProfileHeader :activeTab="activeTab" @change-tab="activeTab = $event" />
 
@@ -26,6 +27,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 
+import AppNavbar from '@/components/layout/AppNavbar.vue'
+import NavigationMenu from '@/components/layout/NavigationMenu.vue'
 import ProfileHeader from '@/components/profile/ProfileHeader.vue'
 import ProfileSidebar from '@/components/profile/ProfileSidebar.vue'
 
@@ -38,6 +41,11 @@ import AppNavbar from '@/components/layout/AppNavbar.vue'
 
 
 const activeTab = ref('overview')
+const isMobileMenuOpen = ref(false)
+
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
 
 const map = {
   overview: PersonalInfo,
