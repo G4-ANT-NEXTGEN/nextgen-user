@@ -14,7 +14,7 @@
       >
         <div v-if="project.link" class="info-row">
           <i class="bi bi-link-45deg icon"></i>
-          <a :href="project.link" target="_blank" class="project-link">{{ project.link }}</a>
+          <router-link :to="project.link" target="_blank" class="project-link">{{ project.link }}</router-link>
         </div>
       </InfoCard>
     </template>
