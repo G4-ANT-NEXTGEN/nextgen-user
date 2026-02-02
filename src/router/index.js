@@ -23,6 +23,7 @@ import ProfileDetailView from '@/views/profile/ProfileDetailView.vue'
 import profileUserDetailView from '@/views/profile/profileUserDetailView.vue'
 
 import ProfileHeaderTest from '@/components/profile/ProfileHeaderTest.vue'
+import UserProfileView from '@/views/profile/UserProfileView.vue'
 
 import ChatLayout from '@/layout/ChatLayout.vue'
 import ChatRoomView from '@/views/chat/ChatRoomView.vue'
@@ -157,11 +158,11 @@ const router = createRouter({
       }
     },
     {
-      path: '/profileuser/:id',
-      name: 'profileuser',
-      component: profileUserDetailView,
+      path: '/profile-user/:id',
+      name: 'view-profile',
+      component: UserProfileView,
       meta: {
-        title: 'ProfileDetail',
+        title: 'UserProfile',
         requiresAuth: true
       }
     },

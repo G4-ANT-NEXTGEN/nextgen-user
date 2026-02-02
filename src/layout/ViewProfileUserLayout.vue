@@ -1,15 +1,18 @@
 <template>
   <div class="profile-page p-3">
-    <AppNavbar @toggle-menu="toggleMobileMenu" />
-    <NavigationMenu :isOpen="isMobileMenuOpen" @close="isMobileMenuOpen = false" />
+    <Navbar />
 
-    <ProfileHeader :activeTab="activeTab" @change-tab="activeTab = $event" />
+    <ViewProfileUserHeader
+      :activeTab="activeTab"
+      :userData="userData"
+      @change-tab="activeTab = $event"
+    />
 
     <div class="profile-container">
       <div class="profile-layout">
-        <!-- Sidebar -->
+        <!-- Sidebar - Read Only Version -->
         <aside class="profile-sidebar">
-          <ProfileSidebar />
+          <ViewProfileUserSidebar :userData="userData" />
         </aside>
 
         <!-- Main content -->
@@ -27,10 +30,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-import AppNavbar from '@/components/layout/AppNavbar.vue'
-import NavigationMenu from '@/components/layout/NavigationMenu.vue'
-import ProfileHeader from '@/components/profile/ProfileHeader.vue'
-import ProfileSidebar from '@/components/profile/ProfileSidebar.vue'
+import ViewProfileUserHeader from '@/components/profile/ViewProfileUserHeader.vue'
+import ViewProfileUserSidebar from '@/components/profile/ViewProfileUserSidebar.vue'
 
 import PersonalInfo from '@/components/profile/sidebar/PersonalInfo.vue'
 import ProfessionalInfo from '@/components/profile/sidebar/ProfessionalInfo.vue'
@@ -39,13 +40,14 @@ import EducationInfo from '@/components/profile/sidebar/EducationInfo.vue'
 import CVInfo from '@/components/profile/sidebar/CVInfo.vue'
 import Navbar from '@/components/Navbar.vue'
 
+defineProps({
+  userData: {
+    type: Object,
+    required: true,
+  },
+})
 
 const activeTab = ref('overview')
-const isMobileMenuOpen = ref(false)
-
-const toggleMobileMenu = () => {
-  isMobileMenuOpen.value = !isMobileMenuOpen.value
-}
 
 const map = {
   overview: PersonalInfo,
@@ -57,6 +59,49 @@ const map = {
 
 const currentComponent = computed(() => map[activeTab.value])
 </script>
+
+<style scoped>
+.profile-page {
+  background: var(--color-background);
+  min-height: 100vh;
+  margin-top: 77px;
+}
+
+.profile-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem 0;
+}
+
+.profile-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.profile-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.profile-content {
+  min-height: 300px;
+}
+
+@media (max-width: 968px) {
+  .profile-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 1rem;
+  }
+}
+</style>
 
 <style scoped>
 .profile-page {

@@ -65,15 +65,15 @@ export const useProfileStore = defineStore("profile", () => {
       isProcessing.value = false;
     }
   };
-  const uploadCv = async(paylaod) => {
+  const uploadCv = async(payload) => {
     isLoading.value=true
     try{
       const formData = new FormData()
-      formData.append('cv',paylaod)
+      formData.append('cv',payload)
       const res = await api.post(`/api/profile/cv`,formData,{
-        headers:{
-          'Accept':'application/pdf'
-        }
+         headers: {
+          "Content-Type": "multipart/form-data",
+        },
       })
       showSuccess('CV Upload Successful')
       return res
@@ -84,6 +84,25 @@ export const useProfileStore = defineStore("profile", () => {
     }
     finally
     {
+      isLoading.value=false
+    }
+  }
+  const addCollaboration = async (payload) =>{
+    isLoading.value = true
+    try{
+      const res = api.post(`/api/profile/collaboration`,payload,{
+         headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      showSuccess('Collaboration Upload Successful')
+      return res
+    }
+    catch(e){
+      console.log(e)
+      showError('Can not Upload Collaboration!')
+    }
+    finally{
       isLoading.value=false
     }
   }
