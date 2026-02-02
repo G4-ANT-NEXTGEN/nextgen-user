@@ -1,16 +1,18 @@
 <template>
   <div class="education-section">
-    <!-- Education Cards -->
-    <template v-if="educations.length">
+    <!-- Education Cards - Own Profile -->
+    <template v-if="isOwnProfile && educations.length">
       <div v-for="edu in educations" :key="edu.id" class="education-item">
         <InfoCard
           :title="edu.school?.name || 'Education'"
           icon="bi bi-mortarboard"
-          @create="onCreate"
-          @update="onUpdate(edu)"
-          @delete="onDelete(edu.id)"
+          :showCreate="false"
+          :showUpdate="true"
+          :showDelete="true"
+          @update="() => onUpdate(edu)"
+          @delete="() => onDelete(edu.id)"
         >
-          <div class="edu-content">
+          <div claInfoCardss="edu-content">
             <div class="info-row">
               <i class="bi bi-mortarboard icon"></i>
               <span class="text-medium">{{ edu.degree?.name }}</span>
@@ -23,7 +25,9 @@
 
             <div class="info-row">
               <i class="bi bi-calendar3 icon"></i>
-              <span class="text-muted">{{ edu.start_date }} - {{ edu.end_date || 'Present' }}</span>
+              <span class="text-muted">
+                {{ edu.start_date }} - {{ edu.end_date || 'Present' }}
+              </span>
             </div>
 
             <div v-if="edu.description" class="info-row description">
@@ -35,11 +39,12 @@
       </div>
     </template>
 
-    <!-- Placeholder for Empty State -->
+    <!-- Empty State - Own Profile -->
     <InfoCard
-      v-else
+      v-else-if="isOwnProfile"
       title="Education"
       icon="bi bi-mortarboard"
+      :showCreate="true"
       :showUpdate="false"
       :showDelete="false"
       @create="onCreate"
@@ -49,24 +54,78 @@
       </div>
     </InfoCard>
 
-    <BaseModal v-if="educationUpdate" title="Update Education Info" @close="closeEducationUpdate">
+    <!-- Education Cards - Viewing Other User's Profile (Read-Only) -->
+    <template v-else-if="!isOwnProfile && viewEducations.length">
+      <div v-for="edu in viewEducations" :key="edu.id" class="education-item">
+        <InfoCard
+          :title="edu.school?.name || 'Education'"
+          icon="bi bi-mortarboard"
+          :showCreate="false"
+          :showUpdate="false"
+          :showDelete="false"
+        >
+          <div claInfoCardss="edu-content">
+            <div class="info-row">
+              <i class="bi bi-mortarboard icon"></i>
+              <span class="text-medium">{{ edu.degree?.name }}</span>
+            </div>
+
+            <div v-if="edu.subject?.name" class="info-row">
+              <i class="bi bi-book icon"></i>
+              <span class="text-regular">{{ edu.subject?.name }}</span>
+            </div>
+
+            <div class="info-row">
+              <i class="bi bi-calendar3 icon"></i>
+              <span class="text-muted">
+                {{ edu.start_date }} - {{ edu.end_date || 'Present' }}
+              </span>
+            </div>
+
+            <div v-if="edu.description" class="info-row description">
+              <i class="bi bi-info-circle icon"></i>
+              <p class="description-text">{{ edu.description }}</p>
+            </div>
+          </div>
+        </InfoCard>
+      </div>
+    </template>
+
+    <!-- Empty State - Viewing Other User's Profile -->
+    <InfoCard
+      v-else
+      title="Education"
+      icon="bi bi-mortarboard"
+      :showCreate="false"
+      :showUpdate="false"
+      :showDelete="false"
+    >
+      <div class="no-data">
+        <p>No education info available</p>
+      </div>
+    </InfoCard>
+
+    <!-- Update Modal -->
+    <!-- UPDATE MODAL -->
+    <BaseModal
+      v-if="addNewEducation"
+      :title="isEditMode ? 'Update Education' : 'Add New Education'"
+      @close="closeAddNewEducation"
+    >
       <BaseSelect
         v-model="school"
         label="School/University"
         placeholder="Select School"
-        :options="[
-          ...schoolStore.schools.map((school) => ({ value: school.id, label: school.name })),
-        ]"
+        :options="schoolStore.schools.map((s) => ({ value: s.id, label: s.name }))"
       />
+
       <div class="d-flex my-2">
         <div class="col-6 me-1">
           <BaseSelect
             v-model="degree"
             label="Degree"
             placeholder="Select Degree"
-            :options="[
-              ...degreeStore.degrees.map((degree) => ({ value: degree.id, label: degree.name })),
-            ]"
+            :options="degreeStore.degrees.map((d) => ({ value: d.id, label: d.name }))"
           />
         </div>
         <div class="col-6 ms-1">
@@ -74,23 +133,20 @@
             v-model="subject"
             label="Subject"
             placeholder="Select Subject"
-            :options="[
-              ...subjectStore.subjects.map((subject) => ({
-                value: subject.id,
-                label: subject.name,
-              })),
-            ]"
+            :options="subjectStore.subjects.map((s) => ({ value: s.id, label: s.name }))"
           />
         </div>
       </div>
+
       <div class="d-flex my-2">
         <div class="col-6 me-1">
-          <BaseInput label="Start Date" placeholder="2023/02" v-model="start_date" />
+          <BaseInput label="Start Date" placeholder="Year-Month" v-model="start_date" />
         </div>
         <div class="col-6 ms-1">
-          <BaseInput label="End Date " placeholder="2023/02" v-model="end_date" />
+          <BaseInput label="End Date" placeholder="Year-Month" v-model="end_date" />
         </div>
       </div>
+
       <div class="mb-2">
         <label class="mb-2 fw-semibold">Description</label>
         <textarea
@@ -102,50 +158,170 @@
       </div>
 
       <template #footer>
-        <button class="btn btn-outline-dark" @click="closeEducationUpdate">Cancel</button>
-        <button class="btn btn-dark" @click="HandleUpdateEducation">Save Changes</button>
+        <button class="btn btn-outline-dark" @click="closeAddNewEducation">Cancel</button>
+        <button class="btn btn-dark" @click="HandleAddNewEducation" :disabled="isLoading">
+          {{
+            isLoading
+              ? isEditMode
+                ? 'Updating...'
+                : 'Adding...'
+              : isEditMode
+              ? 'Update'
+              : 'Add New'
+          }}
+        </button>
+      </template>
+    </BaseModal>
+
+    <!-- DELETE CONFIRMATION MODAL -->
+    <BaseModal v-if="deleteModal" title="Delete Education" @close="closeDeleteModal">
+      <p class="mb-0">
+        Are you sure you want to delete
+        <strong>{{ selectedEducationForDelete?.school?.name }}</strong
+        >? This action cannot be undone.
+      </p>
+
+      <template #footer>
+        <button class="btn btn-outline-dark" @click="closeDeleteModal">Cancel</button>
+        <button class="btn btn-danger" @click="confirmDeleteEducation">Delete</button>
       </template>
     </BaseModal>
   </div>
 </template>
 
 <script setup>
+import { ref, computed, onMounted } from 'vue'
 import BaseModal from '@/components/ui/base/BaseModal.vue'
 import InfoCard from '../InfoCard.vue'
-import { onMounted, ref } from 'vue'
 import { useProfileStore } from '@/stores/profile'
-import InfoCard from '../InfoCard.vue'
+import { useEducationStore } from '@/stores/education'
+import { useSchoolStore } from '@/stores/schools'
+import { useDegreeStore } from '@/stores/degrees'
+import { useSubjectStore } from '@/stores/subjects'
 
 const profileStore = useProfileStore()
+const educationStore = useEducationStore()
+const schoolStore = useSchoolStore()
+const degreeStore = useDegreeStore()
+const subjectStore = useSubjectStore()
+
+const isOwnProfile = computed(() => {
+  return profileStore.viewUser === null
+})
+
 const educations = computed(() => profileStore.user?.educations || [])
+const viewEducations = computed(() => profileStore.viewUser?.educations || [])
+
+const addNewEducation = ref(false)
+const isEditMode = ref(false)
+const isLoading = ref(false)
+const selectedEducation = ref(null)
+const deleteModal = ref(false)
+const selectedEducationForDelete = ref(null)
+
+const school = ref(null)
+const degree = ref(null)
+const subject = ref(null)
+const start_date = ref('')
+const end_date = ref('')
+const description = ref('')
+
+const onCreate = () => {
+  resetForm()
+  isEditMode.value = false
+  addNewEducation.value = true
+}
+
+const onUpdate = (edu) => {
+  isEditMode.value = true
+  selectedEducation.value = edu
+
+  school.value = edu.school?.id || null
+  degree.value = edu.degree?.id || null
+  subject.value = edu.subject?.id || null
+  start_date.value = edu.start_date || ''
+  end_date.value = edu.end_date || ''
+  description.value = edu.description || ''
+
+  addNewEducation.value = true
+}
+
+const onDelete = (id) => {
+  const edu = educations.value.find((e) => e.id === id)
+  selectedEducationForDelete.value = edu
+  deleteModal.value = true
+}
+
+const closeDeleteModal = () => {
+  deleteModal.value = false
+  selectedEducationForDelete.value = null
+}
+
+const confirmDeleteEducation = async () => {
+  try {
+    await educationStore.DeleteEducation(selectedEducationForDelete.value.id)
+    await profileStore.fetchProfile()
+    closeDeleteModal()
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const HandleAddNewEducation = async () => {
+  isLoading.value = true
+
+  const payload = {
+    school_id: school.value,
+    degree_id: degree.value,
+    subject_id: subject.value,
+    start_date: start_date.value,
+    end_date: end_date.value,
+    description: description.value,
+  }
+
+  try {
+    if (isEditMode.value && selectedEducation.value) {
+      await educationStore.UpdateEducation(selectedEducation.value.id, payload)
+    } else {
+      await educationStore.CreateEducation(payload)
+    }
+
+    await profileStore.fetchProfile()
+    closeAddNewEducation()
+  } catch (error) {
+    console.error(error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const closeAddNewEducation = () => {
+  addNewEducation.value = false
+  isEditMode.value = false
+  selectedEducation.value = null
+  resetForm()
+}
+
+const resetForm = () => {
+  school.value = null
+  degree.value = null
+  subject.value = null
+  start_date.value = ''
+  end_date.value = ''
+  description.value = ''
+}
 
 onMounted(async () => {
   if (!profileStore.user) {
-    
-    try {
-      await profileStore.fetchProfile()
-    } catch (error) {
-      console.error('Error fetching profile:', error)
-    }
+    await profileStore.fetchProfile()
   }
+
+  await Promise.all([
+    schoolStore.fetchSchools?.(),
+    degreeStore.fetchDegrees?.(),
+    subjectStore.fetchSubjects?.(),
+  ])
 })
-const educationUpdate = ref(false)
-function UpdateEducation() {
-  educationUpdate.value = true
-}
-
-function closeEducationUpdate() {
-  educationUpdate.value = false
-}
-
-function HandleUpdateEducation() {
-  alert('Successfully')
-  educationUpdate.value = false
-}
-
-function DeleteEducation() {
-  alert('Are you want to delete this shit?')
-}
 </script>
 
 <style scoped>
@@ -217,4 +393,3 @@ function DeleteEducation() {
   color: var(--color-text-muted, #64748b);
 }
 </style>
-

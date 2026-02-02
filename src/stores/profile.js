@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import api from "@/api/api";
-import {showSuccess,showError,showWarning} from '@/utils/toast'
+import { showSuccess, showError, showWarning } from '@/utils/toast'
 
 export const useProfileStore = defineStore("profile", () => {
   const user = ref(null);
+  const viewUser = ref(null);
   const isLoading = ref(false);
   const isProcessing = ref(false);
 
@@ -65,26 +66,25 @@ export const useProfileStore = defineStore("profile", () => {
       isProcessing.value = false;
     }
   };
-  const uploadCv = async(payload) => {
-    isLoading.value=true
-    try{
+  const uploadCv = async (paylaod) => {
+    isLoading.value = true
+    try {
       const formData = new FormData()
-      formData.append('cv',payload)
-      const res = await api.post(`/api/profile/cv`,formData,{
-         headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      formData.append('cv', paylaod)
+      const res = await api.post(`/api/profile/cv`, formData, {
+        headers: {
+          'Accept': 'application/pdf'
+        }
       })
       showSuccess('CV Upload Successful')
       return res
     }
-    catch(e){
+    catch (e) {
       showError('Only *.pdf file!')
       console.log(e)
     }
-    finally
-    {
-      isLoading.value=false
+    finally {
+      isLoading.value = false
     }
   }
   const addCollaboration = async (payload) =>{
@@ -120,19 +120,19 @@ export const useProfileStore = defineStore("profile", () => {
       isProcessing.value = false;
     }
   };
-  const removeCover = async() => {
-    try{
-      isLoading.value=true
+  const removeCover = async () => {
+    try {
+      isLoading.value = true
       await api.delete(`/api/profile/cover`)
       await fetchProfile()
       showSuccess('Cover Deleted')
     }
-    catch(e){
+    catch (e) {
       console.log(e)
       showError('can not delete')
     }
-    finally{
-      isLoading.value=false
+    finally {
+      isLoading.value = false
     }
   }
   const updatePersonalInfo = async (payload) => {
@@ -217,8 +217,23 @@ export const useProfileStore = defineStore("profile", () => {
       console.log("Failed to upload cover (base64):", err);
     }
   }
+
+  const userProfile = async (id) => {
+    isLoading.value = true;
+    try {
+      const res = await api.get(`/api/profile/users/${id}`);
+      viewUser.value = res.data.data;
+      return res.data.data;
+    } catch (error) {
+      console.error("Failed to fetch user profile:", error);
+      throw error;
+    } finally {
+      isLoading.value = false;
+    }
+  }
   return {
     user,
+    viewUser,
     isLoading,
     isProcessing,
     fetchProfile,
@@ -231,6 +246,7 @@ export const useProfileStore = defineStore("profile", () => {
     uploadCoverBase64,
     uploadCover,
     removeCover,
-    uploadCv
+    uploadCv,
+    userProfile
   };
 });

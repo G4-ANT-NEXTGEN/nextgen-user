@@ -1,6 +1,8 @@
 <template>
   <div>
+    <!-- Own Profile - CV with Edit Button -->
     <InfoCard
+      v-if="isOwnProfile"
       title="CV / Resume"
       icon="bi bi-file-earmark-person"
       :showCreate="false"
@@ -41,6 +43,51 @@
       </div>
     </InfoCard>
 
+    <!-- Viewing Other User - CV Read Only -->
+    <InfoCard
+      v-else
+      title="CV / Resume"
+      icon="bi bi-file-earmark-person"
+      :showCreate="false"
+      :showUpdate="false"
+      :showDelete="false"
+    >
+      <div v-if="profileStore.viewUser?.cv" class="cv-post-card">
+        <!-- CV Preview Section -->
+        <div class="cv-preview">
+          <div class="bg-pattern"></div>
+          <img :src="cvDataView.image" class="cv-image" alt="CV Preview" />
+          <div class="cv-overlay">
+            <button @click="showModal = true" class="view-btn">
+              <i class="bi bi-eye"></i> View Full CV
+            </button>
+          </div>
+        </div>
+
+        <!-- CV Info Section -->
+        <div class="cv-details">
+          <div class="header-info">
+            <h5 class="file-name">{{ cvDataView.name }}</h5>
+            <span class="status-badge">Active</span>
+          </div>
+
+          <div class="meta-row">
+            <div class="meta-item">
+              <i class="bi bi-calendar3 meta-icon"></i>
+              <span>{{ cvDataView.updated_at }}</span>
+            </div>
+            <div class="meta-item">
+              <i class="bi bi-file-earmark-pdf meta-icon"></i>
+              <span>PDF Document</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-else class="no-cv">
+        <p>No CV available</p>
+      </div>
+    </InfoCard>
+
     <!-- Modal for PDF Viewing -->
     <Teleport to="body">
       <div v-if="showModal" class="pdf-modal-overlay" @click.self="showModal = false">
@@ -52,8 +99,14 @@
 
           <div class="modal-content-wrapper">
             <iframe
-              v-if="cvData?.file"
+              v-if="isOwnProfile && cvData?.file"
               :src="cvData.file + '#toolbar=0&navpanes=0&scrollbar=0'"
+              class="pdf-viewer-clean"
+              frameborder="0"
+            ></iframe>
+            <iframe
+              v-else-if="!isOwnProfile && cvDataView?.file"
+              :src="cvDataView.file + '#toolbar=0&navpanes=0&scrollbar=0'"
               class="pdf-viewer-clean"
               frameborder="0"
             ></iframe>
@@ -80,18 +133,40 @@ watch(showModal, (value) => {
   }
 })
 
+const isOwnProfile = computed(() => {
+  return profileStore.viewUser === null
+})
+
+const getCleanName = (url) => {
+  if (!url) return 'My_Resume.pdf'
+  const filename = url.split('/').pop()
+  return filename && filename.length < 30 ? filename : 'Professional_CV.pdf'
+}
+
 const cvData = computed(() => {
   const cv = profileStore.user?.cv
   if (!cv) return null
 
-  // Helper to extract clean filename
-  const getCleanName = (url) => {
-    if (!url) return 'My_Resume.pdf'
-    const filename = url.split('/').pop()
-    // If it looks like a hash (e.g. NP4a...), we could potentially just return "My_Resume.pdf"
-    // or keep it but for "Fix Data" let's just use a clean name if it's too long.
-    return filename && filename.length < 30 ? filename : 'Professional_CV.pdf'
+  if (typeof cv === 'string') {
+    return {
+      file: cv,
+      image: 'https://cdn-icons-png.flaticon.com/512/337/337946.png',
+      name: getCleanName(cv),
+      updated_at: 'Recently Updated',
+    }
   }
+
+  return {
+    file: cv.file_url || '#',
+    image: cv.image_url || 'https://cdn-icons-png.flaticon.com/512/337/337946.png',
+    name: cv.name || getCleanName(cv.file_url),
+    updated_at: cv.updated_at || 'Recently Updated',
+  }
+})
+
+const cvDataView = computed(() => {
+  const cv = profileStore.viewUser?.cv
+  if (!cv) return null
 
   if (typeof cv === 'string') {
     return {

@@ -1,5 +1,5 @@
 <template>
-  <article class="post-card">
+  <article class="post-card" @click="handleCardClick">
     <!-- Header Section -->
     <header class="post-header">
       <div class="author-info">
@@ -21,8 +21,13 @@
       </div>
 
       <div class="post-actions" v-if="post.creator.id == currentUserId">
-        <button @click="$emit('get-id', post.id)" class="action-trigger" type="button" data-bs-toggle="dropdown"
-          aria-expanded="false">
+        <button
+          @click="$emit('get-id', post.id)"
+          class="action-trigger"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
           <i class="bi bi-three-dots"></i>
         </button>
         <ul class="action-dropdown dropdown-menu">
@@ -33,13 +38,21 @@
             </button>
           </li>
           <li>
-            <button @click="$emit('delete', post.id)" type="button" class="action-item action-item--danger">
+            <button
+              @click="$emit('delete', post.id)"
+              type="button"
+              class="action-item action-item--danger"
+            >
               <i class="bi bi-trash"></i>
               <span>Delete Post</span>
             </button>
           </li>
           <li>
-            <button @click="$emit('hide', post.id)" type="button" class="action-item action-item--danger">
+            <button
+              @click="$emit('hide', post.id)"
+              type="button"
+              class="action-item action-item--danger"
+            >
               <i class="bi bi-eye-slash"></i>
               <span>Hide Post</span>
             </button>
@@ -54,9 +67,12 @@
     </div>
 
     <!-- Image Section -->
-    <div class="post-media" v-if="post.image && post.image !== 'http://novia2.csm.linkpc.net/storage/posts'">
+    <div
+      class="post-media"
+      v-if="post.image && post.image !== 'http://novia2.csm.linkpc.net/storage/posts'"
+    >
       <div class="media-container">
-        <img class="media-image" :src="post.image" alt="Post image">
+        <img class="media-image" :src="post.image" alt="Post image" />
       </div>
     </div>
 
@@ -77,11 +93,17 @@
 
     <!-- Footer Actions -->
     <footer class="post-footer">
-      <button @click="$emit('like', post.id)" class="action-btn" :class="{ 'is-active': isLiked }">
-        <i v-if="isLiked" class="bi bi-heart-fill"></i>
-        <i v-else class="bi bi-heart"></i>
-        <span>Like</span>
-      </button>
+      <div class="engagement-actions">
+        <button
+          @click="$emit('like', post.id)"
+          class="engagement-btn engagement-btn--like"
+          :class="{ 'is-active': isLiked }"
+        >
+          <i v-if="isLiked" class="bi bi-heart-fill"></i>
+          <i v-else class="bi bi-heart"></i>
+          <span class="engagement-count">{{ likeCount }}</span>
+          <span class="engagement-label">Like</span>
+        </button>
 
       <button class="action-btn">
         <i class="bi bi-chat"></i>
@@ -102,37 +124,53 @@
 </template>
 
 <script setup>
-import router from '@/router';
-import moment from 'moment-timezone';
+import router from '@/router'
+import moment from 'moment-timezone'
 
 const props = defineProps({
   post: {
     type: Object,
-    required: true
+    required: true,
   },
   currentUserId: {
     type: Number,
-    required: false
+    required: false,
   },
   isLiked: {
     type: Boolean,
-    default: false
+    default: false,
   },
   likeCount: {
     type: Number,
-    default: 0
-  }
-});
+    default: 0,
+  },
+})
 
-defineEmits(['edit', 'delete', 'like', 'get-id', 'hide']);
+defineEmits(['edit', 'delete', 'like', 'get-id', 'hide'])
 
 const formatDate = (date) => {
-  return moment.utc(date).local().fromNow();
+  return moment.utc(date).local().fromNow()
 }
 
 const handleAvatarClick = () => {
   // alert(props.post.creator.id)
-  router.push({ name: 'profileuser', params: { id: props.post.creator.id } });
+  router.push({ name: 'view-profile', params: { id: props.post.creator.id } })
+}
+
+const handleCardClick = (e) => {
+  // Ignore clicks on interactive elements (buttons, links, dropdowns, avatar)
+  if (
+    e.target.closest('button') ||
+    e.target.closest('a') ||
+    e.target.closest('.action-dropdown') ||
+    e.target.closest('.engagement-btn') ||
+    e.target.closest('.avatar-wrapper') ||
+    e.target.closest('.action-trigger')
+  ) {
+    return
+  }
+
+  router.push({ name: 'view-profile', params: { id: props.post.creator.id } })
 }
 </script>
 
@@ -433,7 +471,6 @@ const handleAvatarClick = () => {
 }
 
 @keyframes heartBeat {
-
   0%,
   100% {
     transform: scale(1);

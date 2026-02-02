@@ -9,9 +9,9 @@
       :showDelete="false"
     >
       <p v-if="userData?.email">Email: {{ userData.email }}</p>
-      <p v-if="userData?.city">{{ userData.city }}</p>
-      <p v-if="userData?.country">{{ userData.country }}</p>
-      <p v-if="!userData?.email && !userData?.city && !userData?.country">
+      <p v-if="userData?.current_city">City: {{ userData.current_city }}</p>
+      <p v-if="userData?.home_town">Hometown: {{ userData.home_town }}</p>
+      <p v-if="!userData?.email && !userData?.current_city && !userData?.home_town">
         No personal information available
       </p>
     </InfoCard>
@@ -24,10 +24,18 @@
       :showUpdate="false"
       :showDelete="false"
     >
-      <p v-if="userData?.job_title">{{ userData.job_title }}</p>
-      <p v-if="userData?.company_name">{{ userData.company_name }}</p>
-      <p v-if="userData?.responsibilities">{{ userData.responsibilities }}</p>
-      <p v-if="!userData?.job_title && !userData?.company_name && !userData?.responsibilities">
+      <p v-if="userData?.professional?.job_title">{{ userData.professional.job_title }}</p>
+      <p v-if="userData?.professional?.company_name">{{ userData.professional.company_name }}</p>
+      <p v-if="userData?.professional?.responsibility">
+        {{ userData.professional.responsibility }}
+      </p>
+      <p
+        v-if="
+          !userData?.professional?.job_title &&
+          !userData?.professional?.company_name &&
+          !userData?.professional?.responsibility
+        "
+      >
         No professional information available
       </p>
     </InfoCard>
@@ -70,8 +78,8 @@
       :showUpdate="false"
       :showDelete="false"
     >
-      <p v-if="userData?.education && userData.education.length > 0">
-        {{ userData.education.length }} Degree(s)
+      <p v-if="userData?.educations && userData.educations.length > 0">
+        {{ userData.educations.length }} Degree(s)
       </p>
       <p v-else>No education information</p>
     </InfoCard>

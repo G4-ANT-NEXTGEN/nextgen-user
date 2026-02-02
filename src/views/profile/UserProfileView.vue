@@ -11,9 +11,10 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import ViewProfileUserLayout from '@/layout/ViewProfileUserLayout.vue'
-import api from '@/api/api'
+import { useProfileStore } from '@/stores/profile'
 
 const route = useRoute()
+const profileStore = useProfileStore()
 const userProfile = ref(null)
 const isLoading = ref(true)
 
@@ -21,8 +22,8 @@ const fetchUserProfile = async () => {
   try {
     isLoading.value = true
     const userId = route.params.id
-    const res = await api.get(`/api/profile/${userId}`)
-    userProfile.value = res.data.data
+    await profileStore.userProfile(userId)
+    userProfile.value = profileStore.viewUser
   } catch (error) {
     console.error('Failed to fetch user profile:', error)
   } finally {

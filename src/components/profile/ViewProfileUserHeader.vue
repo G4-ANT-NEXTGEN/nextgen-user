@@ -10,7 +10,7 @@
       <div class="profile-content px-3">
         <!-- Avatar - Read Only -->
         <div class="avatar-wrapper">
-          <img class="avatar" src="@/assets/avatar.jpg" alt="Profile" />
+          <img class="avatar" :src="userData?.avatar || ''" alt="Profile" />
           <!-- No edit button for read-only view -->
         </div>
 
@@ -19,8 +19,8 @@
           <div class="user-info">
             <h4 class="user-name">{{ userData?.full_name || 'User Name' }}</h4>
             <small class="user-role"
-              >{{ userData?.job_title || 'Position' }} •
-              {{ userData?.company_name || 'Company' }}</small
+              >{{ userData?.professional?.job_title || 'Position' }} •
+              {{ userData?.professional?.company_name || 'Company' }}</small
             >
           </div>
 
@@ -46,6 +46,9 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useProfileStore } from '@/stores/profile'
+
+const profileStore = useProfileStore()
 
 defineProps({
   activeTab: {

@@ -1,6 +1,8 @@
 <template>
   <div>
+    <!-- Card When view own profile -->
     <InfoCard
+      v-if="isOwnProfile"
       title="Professional"
       icon="bi bi-briefcase"
       :showCreate="false"
@@ -39,15 +41,60 @@
         <p>No professional information available</p>
       </div>
     </InfoCard>
+
+    <!-- Card When view other user's profile -->
+    <InfoCard
+      v-else
+      title="Professional"
+      icon="bi bi-briefcase"
+      :showCreate="false"
+      :showUpdate="false"
+      :showDelete="false"
+    >
+      <div v-if="profileStore.viewUser?.professional" class="professional-card">
+        <!-- Job Title -->
+        <div class="info-row job-title-row">
+          <i class="bi bi-person-workspace icon"></i>
+          <h4 class="job-title">Job Title: {{ profileStore.viewUser.professional.job_title }}</h4>
+        </div>
+
+        <!-- Company Name -->
+        <div class="info-row">
+          <i class="bi bi-building icon"></i>
+          <span class="company-text"
+            >Company: {{ profileStore.viewUser.professional.company_name }}</span
+          >
+        </div>
+
+        <!-- Responsibility -->
+        <div
+          v-if="profileStore.viewUser.professional.responsibility"
+          class="info-row responsibility-row"
+        >
+          <i class="bi bi-list-check icon"></i>
+          <p class="responsibility-text">
+            Responsibility: {{ profileStore.viewUser.professional.responsibility }}
+          </p>
+        </div>
+      </div>
+
+      <div v-else class="no-data">
+        <p>No professional information available</p>
+      </div>
+    </InfoCard>
   </div>
 </template>
 
 <script setup>
 import InfoCard from '../InfoCard.vue'
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useProfileStore } from '@/stores/profile'
 
 const profileStore = useProfileStore()
+
+const isOwnProfile = computed(() => {
+  return profileStore.viewUser === null
+})
 
 const UpdateProfessional = () => {
   console.log('Update professional triggered')
