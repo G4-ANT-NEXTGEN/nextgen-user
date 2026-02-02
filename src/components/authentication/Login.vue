@@ -5,7 +5,7 @@
       <div class="row g-0 h-100">
         <div class="col-lg-6">
           <div class="left-panel h-100">
-            <ShootingStars>
+            <!-- <ShootingStars> -->
               <div class="h-100 d-flex flex-column justify-content-between p-4 relative z-10">
                 <div>
                   <div class="logo">
@@ -27,7 +27,7 @@
                   <span>Back to Website</span>
                 </router-link>
               </div>
-            </ShootingStars>
+            <!-- </ShootingStars> -->
           </div>
         </div>
 

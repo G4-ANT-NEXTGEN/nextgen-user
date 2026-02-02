@@ -77,6 +77,10 @@ const sizeClass = computed(() => (props.size ? `modal-${props.size}` : ''))
   
 }
 
+.btn-close-dark{
+  color: var(--color-text) !important;
+}
+
 .modal-body {
   padding: 24px;
   max-height: 70vh;

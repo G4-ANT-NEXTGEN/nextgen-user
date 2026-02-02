@@ -25,47 +25,14 @@
           <div class="profile-info">
             <h6 class="profile-name">
               {{ authStore.user?.full_name }}
-              <i class="bi bi-check-circle-fill verified-badge"></i>
+              <i class="bi bi-patch-check-fill verified-badge"></i>
             </h6>
             <small class="profile-handle">
               @{{ authStore.user?.full_name?.toLowerCase().replace(/ /g, '.') }}
             </small>
           </div>
 
-          <!-- Stats -->
-          <div class="profile-stats">
-            <div class="stat-item">
-              <div class="stat-value">2.3k</div>
-              <div class="stat-label">Followers</div>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-              <div class="stat-value">235</div>
-              <div class="stat-label">Following</div>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-              <div class="stat-value">80</div>
-              <div class="stat-label">Posts</div>
-            </div>
-          </div>
         </div>
-      </div>
-
-      <!-- Navigation Menu -->
-      <div class="nav-menu mb-3">
-        <router-link :to="{ name: 'home' }" class="nav-item" active-class="active">
-          <i class="bi bi-house-door-fill"></i>
-          <span>Feed</span>
-        </router-link>
-        <router-link :to="{ name: 'about' }" class="nav-item" active-class="active">
-          <i class="bi bi-info-circle-fill"></i>
-          <span>About us</span>
-        </router-link>
-        <router-link :to="{ name: 'help' }" class="nav-item" active-class="active">
-          <i class="bi bi-question-circle-fill"></i>
-          <span>help</span>
-        </router-link>
       </div>
     </div>
   </div>
@@ -83,33 +50,17 @@ defineOptions({
 <style scoped>
 .sidebar-left {
   width: 100%;
-  height: 100%;
 }
 
 .sidebar-content {
-  height: 100%;
   overflow-y: auto;
   padding-right: 4px;
-}
-
-.sidebar-content::-webkit-scrollbar {
-  width: 4px;
-}
-
-.sidebar-content::-webkit-scrollbar-thumb {
-  background: var(--sidebar-border);
-  border-radius: 10px;
-}
-
-.sidebar-content:hover::-webkit-scrollbar-thumb {
-  background: var(--sidebar-muted);
 }
 
 .profile-card {
   background: var(--sidebar-bg);
   border-radius: 20px;
   overflow: hidden;
-  border: 1px solid var(--sidebar-border, #e5e7eb);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   margin-bottom: 28px;
@@ -118,7 +69,7 @@ defineOptions({
 /* Cover Background */
 .profile-cover {
   position: relative;
-  height: 120px;
+  height: 160px;
   background: var(--profile-cover-bg);
   overflow: hidden;
 }
@@ -144,6 +95,11 @@ defineOptions({
   }
 }
 
+.verified-badge {
+  color: #1d9bf0 !important;
+  font-size: 14px;
+}
+
 /* Cover Overlay */
 .cover-overlay {
   width: 100%;
@@ -155,7 +111,7 @@ defineOptions({
 
 /* Profile Content */
 .profile-content {
-  padding: 0 24px 24px;
+  padding: 0 40px 24px;
   position: relative;
 }
 
@@ -293,109 +249,5 @@ defineOptions({
   .profile-stats {
     padding: 12px;
   }
-}
-
-.nav-menu {
-  background: var(--sidebar-bg);
-  border-radius: 16px;
-  padding: 16px;
-  border: 1px solid var(--sidebar-border);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  color: var(--sidebar-text);
-  margin-bottom: 4px;
-}
-
-.nav-item:hover {
-  background: var(--sidebar-hover);
-  color: var(--color-primary);
-  transform: translateX(4px);
-}
-
-.nav-item.active {
-  background: var(--sidebar-active);
-  color: var(--color-primary) !important;
-  box-shadow: var(--shadow-sm);
-}
-
-.nav-item.active i {
-  color: var(--color-primary) !important;
-}
-
-.nav-item i {
-  font-size: 20px;
-  color: var(--sidebar-muted);
-  transition: all 0.2s ease;
-}
-
-.section-title {
-  font-weight: 700;
-  font-size: 0.8rem;
-  color: var(--color-muted);
-  letter-spacing: 0.5px;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-}
-
-.page-item-custom {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 0;
-  cursor: pointer;
-}
-
-.page-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white !important;
-  font-weight: 700;
-  font-size: 13px;
-}
-
-.page-icon--ui {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-}
-
-.page-icon--wd {
-  background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
-}
-
-.page-icon--d {
-  background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
-}
-
-.page-icon--b {
-  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-}
-
-.page-name {
-  font-weight: 500;
-  font-size: 0.95rem;
-  color: var(--color-text);
-}
-
-.text-primary-custom {
-  color: var(--color-primary);
-}
-
-.link-custom {
-  color: var(--color-primary);
-  text-decoration: none;
-  font-weight: 600;
 }
 </style>
