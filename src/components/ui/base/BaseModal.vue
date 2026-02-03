@@ -5,7 +5,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">{{ title }}</h5>
-            <button type="button" class="btn-close btn-close-dark" @click="close"></button>
+            <button type="button" class="btn-close" @click="close"></button>
           </div>
           <div class="modal-body">
             <slot />
@@ -41,10 +41,6 @@ const sizeClass = computed(() => (props.size ? `modal-${props.size}` : ''))
   transition: all 0.3s ease;
 }
 
-.modal-dialog {
-  margin-top: 5vh;
-}
-
 .modal-content {
   background-color: var(--sidebar-bg);
   border: 1px solid var(--color-border);
@@ -68,17 +64,13 @@ const sizeClass = computed(() => (props.size ? `modal-${props.size}` : ''))
   border-radius: 50%;
   padding: 8px;
   opacity: 0.8;
-  color: var(--color-close) !important;
+  filter: var(--filter);
   transition: all 0.2s ease;
 }
 
 .btn-close:hover {
   opacity: 1;
-  
-}
-
-.btn-close-dark{
-  color: var(--color-text) !important;
+  background-color: var(--bg-hover);
 }
 
 .modal-body {
@@ -109,5 +101,9 @@ const sizeClass = computed(() => (props.size ? `modal-${props.size}` : ''))
 
 .modal-body::-webkit-scrollbar-thumb:hover {
   background: var(--color-muted);
+}
+.btn-close:hover {
+  opacity: 1;
+  background-color: none !important;
 }
 </style>

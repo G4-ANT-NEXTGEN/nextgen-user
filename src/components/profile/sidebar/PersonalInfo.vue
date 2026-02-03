@@ -1,35 +1,25 @@
 <template>
-  <div>
-    <!-- Post Skeleton (copied from FeedView) -->
+  <div class="overview-container">
+    <div class="section-title-wrapper mb-4">
+      <h2 class="section-title">Recent Activity</h2>
+      <p class="section-subtitle">Catch up on the latest updates and publications</p>
+    </div>
+
+    <!-- Post Skeleton -->
     <template v-if="postStore.loading && postStore.posts.length === 0">
       <ArticleCardSkeleton v-for="n in 3" :key="n" />
     </template>
 
-    <!-- No Data State (copied from FeedView) -->
+    <!-- No Data State -->
     <NoData v-if="!postStore.loading && posts.length === 0" />
 
     <!-- ArticleCard list (only user's own posts) -->
-    <ArticleCard
-      v-for="post in visiblePosts"
-      :key="post.id"
-      :post="post"
-      :currentUserId="authStore.user?.id"
-      :isLiked="likedSet.has(post.id)"
-      :likeCount="post.likes_count ?? 0"
-      @get-id="activePostId = $event"
-      @like="toggleLike"
-      @edit="openEditModal"
-      @delete="openDeleteModal"
-      @hide="hidePost"
-    />
+    <ArticleCard v-for="post in visiblePosts" :key="post.id" :post="post" :currentUserId="authStore.user?.id"
+      :isLiked="likedSet.has(post.id)" :likeCount="post.likes_count ?? 0" @get-id="activePostId = $event"
+      @like="toggleLike" @edit="openEditModal" @delete="openDeleteModal" @hide="hidePost" />
 
     <!-- Edit/Create Modal -->
-    <BaseModal
-      v-if="showModal"
-      :title="PostId ? 'Edit Post' : 'Create Post'"
-      size="lg"
-      @close="closeModal"
-    >
+    <BaseModal v-if="showModal" :title="PostId ? 'Edit Post' : 'Create Post'" size="lg" @close="closeModal">
       <div class="p-2">
         <div class="d-flex align-items-center gap-3 mb-4">
           <div class="avatar-post overflow-hidden rounded-circle">
@@ -44,60 +34,32 @@
           </div>
         </div>
         <div class="my-3">
-          <textarea
-            v-model="titlePost"
-            class="title-post form-control"
-            :class="{ 'is-invalid': errorTitle }"
-            rows="4"
-            placeholder="What's on your mind?"
-            @input="validateTitle"
-          ></textarea>
+          <textarea v-model="titlePost" class="title-post form-control" :class="{ 'is-invalid': errorTitle }" rows="4"
+            placeholder="What's on your mind?" @input="validateTitle"></textarea>
           <div v-if="errorTitle" class="invalid-feedback d-block">{{ errorTitle }}</div>
-          <small v-if="titlePost" class="text-muted d-block mt-2"
-            >{{ titlePost.length }}/500 characters</small
-          >
+          <small v-if="titlePost" class="text-muted d-block mt-2">{{ titlePost.length }}/500 characters</small>
         </div>
         <div class="category-selection">
           <p class="text-category fw-semibold">Select Category</p>
         </div>
         <div>
           <div class="pill-container">
-            <div
-              v-for="category in categoryStore.categories"
-              :key="category.id"
-              :class="['category', { active: category.id == selected?.id }]"
-              @click="selectPill(category)"
-            >
+            <div v-for="category in categoryStore.categories" :key="category.id"
+              :class="['category', { active: category.id == selected?.id }]" @click="selectPill(category)">
               {{ category.name }}
             </div>
           </div>
         </div>
       </div>
-      <div
-        class="w-100 category-selection d-flex justify-content-between align-items-center mb-3 px-2"
-      >
+      <div class="w-100 category-selection d-flex justify-content-between align-items-center mb-3 px-2">
         <p class="text-category fw-semibold">Add to your post</p>
         <div class="text-category d-flex gap-3">
-          <input
-            type="file"
-            ref="fileInput"
-            class="d-none"
-            accept="image/jpeg,image/png,image/jpg"
-            @change="handleFileChange"
-          />
-          <input
-            type="file"
-            ref="attachmentInput"
-            class="d-none"
-            accept=".jpeg,.png,.jpg,.pdf,.mp4,.mp3,.zip"
-            @change="handleAttachmentChange"
-          />
+          <input type="file" ref="fileInput" class="d-none" accept="image/jpeg,image/png,image/jpg"
+            @change="handleFileChange" />
+          <input type="file" ref="attachmentInput" class="d-none" accept=".jpeg,.png,.jpg,.pdf,.mp4,.mp3,.zip"
+            @change="handleAttachmentChange" />
           <i class="bi bi-image icon-post" @click="openFilePicker" title="Add image"></i>
-          <i
-            class="bi bi-paperclip icon-post"
-            @click="openAttachmentPicker"
-            title="Add attachment"
-          ></i>
+          <i class="bi bi-paperclip icon-post" @click="openAttachmentPicker" title="Add attachment"></i>
         </div>
       </div>
       <div class="post-img position-relative" v-if="imgPost">
@@ -110,12 +72,7 @@
       <!-- FOOTER -->
       <template #footer>
         <div class="group-btn-modal d-flex justify-content-end gap-3 align-items-center">
-          <BaseButton
-            variant="primary"
-            @click="publishPost"
-            :disabled="isLoading"
-            :isLoading="isLoading"
-          >
+          <BaseButton variant="primary" @click="publishPost" :disabled="isLoading" :isLoading="isLoading">
             {{ PostId ? 'Update' : 'Publish' }}
           </BaseButton>
         </div>
@@ -123,24 +80,14 @@
     </BaseModal>
 
     <!-- Delete Modal -->
-    <BaseModal
-      v-if="showModalDelete"
-      title="Delete Post"
-      size="md"
-      @close="showModalDelete = false"
-    >
+    <BaseModal v-if="showModalDelete" title="Delete Post" size="md" @close="showModalDelete = false">
       <div class="p-2">
         <p>Are you sure you want to delete this post?</p>
       </div>
       <template #footer>
         <div class="group-btn-modal d-flex justify-content-end gap-3 align-items-center">
-          <BaseButton
-            variant="primary"
-            @click="deletePost"
-            :disabled="isLoading"
-            :isLoading="isLoading"
-            >Delete</BaseButton
-          >
+          <BaseButton variant="primary" @click="deletePost" :disabled="isLoading" :isLoading="isLoading">Delete
+          </BaseButton>
         </div>
       </template>
     </BaseModal>
@@ -158,6 +105,8 @@ import { useRequiredValidator } from '@/composables/useRequiredValidator'
 import ArticleCardSkeleton from '@/components/common/ArticleCardSkeleton.vue'
 import ArticleCard from '@/components/common/ArticleCard.vue'
 import NoData from '@/components/common/NoData.vue'
+import BaseButton from '@/components/ui/base/BaseButton.vue'
+import BaseModal from '@/components/ui/base/BaseModal.vue'
 
 const profileStore = useProfileStore()
 const authStore = useAuthStore()
@@ -165,7 +114,6 @@ const postStore = usePostStore()
 const categoryStore = useCategoryStore()
 const { errors: validationErrors, validateField } = useRequiredValidator()
 
-// ─── Route / identity helpers ───────────────────────
 const route = useRoute()
 const routeUserId = computed(() => {
   const raw = route.params.id ?? null
@@ -173,41 +121,23 @@ const routeUserId = computed(() => {
   return Number.isInteger(n) ? n : null
 })
 
-// ─── Is viewing own profile or someone else's ───────
-const isOwnProfile = computed(() => {
-  // If URL contains an id, compare it to the logged-in user id
-  if (routeUserId.value !== null) {
-    return authStore.user?.id === routeUserId.value
-  }
-  // Fallback to previous heuristic (viewUser === null)
-  return profileStore.viewUser === null
-})
-
-// ─── Local UI state: hidden posts for temporary hide
 const hiddenPosts = ref(new Set())
 
-// ─── Pull posts based on URL param or authenticated user
-// If URL has an `id` param show posts for that id; otherwise show own posts.
 const posts = computed(() => {
   const targetId = routeUserId.value ?? authStore.user?.id ?? profileStore.viewUser?.id
   if (!targetId) return []
   return postStore.posts.filter((p) => p?.creator?.id === targetId)
 })
 
-// ─── Visible posts after applying hides
 const visiblePosts = computed(() => {
   return posts.value.filter((p) => !hiddenPosts.value.has(p.id))
 })
 
-// fetch initial data used by this component
 authStore.fetchProfile()
 postStore.fetchPosts()
 categoryStore.fetchCategorys()
 
-// ─── Track which post the dropdown is open on ───────
 const activePostId = ref(null)
-
-// ─── Modal + edit state
 const PostId = ref(null)
 const showModal = ref(false)
 const showModalDelete = ref(false)
@@ -223,7 +153,6 @@ const errorTitle = ref(null)
 const fileInput = ref(null)
 const attachmentInput = ref(null)
 
-// ─── Like toggle (local state until you wire up an API) ─
 const likedSet = ref(new Set())
 
 const toggleLike = (postId) => {
@@ -232,10 +161,8 @@ const toggleLike = (postId) => {
   } else {
     likedSet.value.add(postId)
   }
-  // TODO: call your like/unlike API here
 }
 
-// ----------------- Edit / Delete / Hide handlers -----------------
 const openEditModal = async (postId) => {
   try {
     PostId.value = postId
@@ -257,8 +184,8 @@ const openEditModal = async (postId) => {
     }
     errorTitle.value = null
     showModal.value = true
-  } catch (error) {
-    console.error('Error loading post for edit:', error)
+  } catch {
+    // Error loading post for edit, no specific action needed for UI, console.error removed for linting
   }
 }
 
@@ -349,13 +276,11 @@ const publishPost = async () => {
       return
     }
     const data = prepareFormData()
-
     if (PostId.value) {
       await postStore.updatePost(PostId.value, data)
     } else {
       await postStore.createPost(data)
     }
-
     closeModal()
     await postStore.fetchPosts()
   } catch (error) {
@@ -378,7 +303,27 @@ const closeModal = () => {
 </script>
 
 <style scoped>
-/* ─── Empty State ──────────────────────────────── */
+.overview-container {
+  padding-bottom: 2rem;
+}
+
+.section-title-wrapper {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+
+.section-subtitle {
+  font-size: 0.95rem;
+  color: var(--color-muted);
+  margin: 0;
+}
+
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -419,5 +364,71 @@ const closeModal = () => {
   margin: 0;
   text-align: center;
   max-width: 280px;
+}
+
+.avatar-post {
+  width: 45px;
+  height: 45px;
+}
+
+.creator-name {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.creator-position {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+.pill-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.category {
+  padding: 0.4rem 1rem;
+  background: var(--color-accent);
+  border: 1px solid var(--color-border);
+  border-radius: 50px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.category.active {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+.icon-post {
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: var(--color-muted);
+}
+
+.icon-post:hover {
+  color: var(--color-primary);
+}
+
+.post-img {
+  margin-top: 1rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.btn-remove-img {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
 }
 </style>

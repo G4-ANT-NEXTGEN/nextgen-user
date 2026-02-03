@@ -233,6 +233,9 @@ export const useProfileStore = defineStore("profile", () => {
       isLoading.value = false;
     }
   }
+
+  
+
   return {
     user,
     viewUser,

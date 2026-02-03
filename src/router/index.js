@@ -20,9 +20,6 @@ import HelpView from '@/views/HelpView.vue'
 import FeedView from '@/views/feed/FeedView.vue'
 import ContactView from '@/views/ContactView.vue'
 import ProfileDetailView from '@/views/profile/ProfileDetailView.vue'
-import profileUserDetailView from '@/views/profile/profileUserDetailView.vue'
-
-import ProfileHeaderTest from '@/components/profile/ProfileHeaderTest.vue'
 import UserProfileView from '@/views/profile/UserProfileView.vue'
 
 import ChatLayout from '@/layout/ChatLayout.vue'
@@ -70,18 +67,28 @@ const router = createRouter({
           name: 'contact',
           component: ContactView,
           meta: { title: 'Contact' }
+        },
+        {
+          path: '/profile/:id',
+          name: 'profile-detail',
+          component: ProfileDetailView,
+          meta: { title: 'ProfileDetail' }
+        },
+        {
+          path: '/profile',
+          name: 'profile',
+          component: ProfileDetailView,
+          meta: { title: 'ProfileDetail' }
+        },
+        {
+          path: '/profile-user/:id',
+          name: 'view-profile',
+          component: UserProfileView,
+          meta: { title: 'UserProfile' }
         }
       ]
     },
-    {
-      path: '/profile/:id',
-      name: 'profile',
-      component: ProfileDetailView,
-      meta: {
-        title: 'ProfileDetail',
-        requiresAuth: true
-      }
-    },
+
     {
       path: '/',
       name: 'login',
@@ -143,28 +150,6 @@ const router = createRouter({
           }
         }
       ]
-    },
-    {
-      path: '/profile-test',
-      component: ProfileHeaderTest
-    },
-    {
-      path: '/profile',
-      name: 'profile',
-      component: ProfileDetailView,
-      meta: {
-        title: 'ProfileDetail',
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/profile-user/:id',
-      name: 'view-profile',
-      component: UserProfileView,
-      meta: {
-        title: 'UserProfile',
-        requiresAuth: true
-      }
     },
     {
       path: '/reset-password',

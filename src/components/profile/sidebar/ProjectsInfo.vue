@@ -2,19 +2,9 @@
   <section class="projects-section">
     <!-- Own Profile - Projects with Edit/Delete -->
     <template v-if="isOwnProfile && projects.length">
-      <InfoCard
-        v-for="project in projects"
-        :key="project.id"
-        :title="project.title || 'Project'"
-        icon="bi bi-folder"
-        class="project-card"
-        :showCreate="false"
-        :showUpdate="true"
-        :showDelete="true"
-        @create="onCreate"
-        @update="() => onUpdate(project)"
-        @delete="() => openDeleteModal(project)"
-      >
+      <InfoCard v-for="project in projects" :key="project.id" :title="project.title || 'Project'" icon="bi bi-folder"
+        class="project-card" :showCreate="false" :showUpdate="true" :showDelete="true" @create="onCreate"
+        @update="() => onUpdate(project)" @delete="() => openDeleteModal(project)">
         <div v-if="project.link" class="info-row">
           <i class="bi bi-link-45deg icon"></i>
           <a :href="project.link" target="_blank" class="project-link">
@@ -25,32 +15,17 @@
     </template>
 
     <!-- Own Profile - Empty State -->
-    <InfoCard
-      v-else-if="isOwnProfile"
-      title="Projects"
-      icon="bi bi-folder"
-      :showCreate="true"
-      :showUpdate="false"
-      :showDelete="false"
-      @create="onCreate"
-    >
-      <div class="no-data">
+    <InfoCard v-else-if="isOwnProfile" title="Projects" icon="bi bi-folder" :showCreate="true" :showUpdate="false"
+      :showDelete="false" @create="onCreate">
+      <div class="no-data text-center">
         <p>No projects available</p>
       </div>
     </InfoCard>
 
     <!-- Viewing Other User - Projects Read-Only -->
     <template v-else-if="!isOwnProfile && viewProjects.length">
-      <InfoCard
-        v-for="project in viewProjects"
-        :key="project.id"
-        :title="project.title || 'Project'"
-        icon="bi bi-folder"
-        class="project-card"
-        :showCreate="false"
-        :showUpdate="false"
-        :showDelete="false"
-      >
+      <InfoCard v-for="project in viewProjects" :key="project.id" :title="project.title || 'Project'"
+        icon="bi bi-folder" class="project-card" :showCreate="false" :showUpdate="false" :showDelete="false">
         <div v-if="project.link" class="info-row">
           <i class="bi bi-link-45deg icon"></i>
           <a :href="project.link" target="_blank" class="project-link">
@@ -61,15 +36,8 @@
     </template>
 
     <!-- Viewing Other User - Empty State -->
-    <InfoCard
-      v-else
-      title="Projects"
-      icon="bi bi-folder"
-      :showCreate="false"
-      :showUpdate="false"
-      :showDelete="false"
-    >
-      <div class="no-data">
+    <InfoCard v-else title="Projects" icon="bi bi-folder" :showCreate="false" :showUpdate="false" :showDelete="false">
+      <div class="no-data text-center">
         <p>No projects available</p>
       </div>
     </InfoCard>
@@ -89,8 +57,7 @@
     <BaseModal v-if="deleteModal" title="Delete Project" @close="closeDeleteModal">
       <p class="mb-0">
         Are you sure you want to delete
-        <strong>{{ selectedProjectForDelete?.title }}</strong
-        >? This action cannot be undone.
+        <strong>{{ selectedProjectForDelete?.title }}</strong>? This action cannot be undone.
       </p>
 
       <template #footer>
@@ -130,7 +97,7 @@ const selectedProjectForDelete = ref(null)
 
 /* ===== HANDLERS ===== */
 const onCreate = () => {
-  console.log('Create project triggered')
+  projectUpdate.value = true
 }
 
 const onUpdate = (project) => {
