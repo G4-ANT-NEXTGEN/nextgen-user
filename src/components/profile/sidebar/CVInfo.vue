@@ -425,7 +425,7 @@ onMounted(async () => {
               <h2 class="document-title">CV / Resume</h2>
             </div>
           </div>
-          
+
           <div class="header-actions">
             <button class="action-btn secondary" @click="UpdateCV" v-if="isOwnProfile">
               <i class="bi bi-pencil"></i>
@@ -445,7 +445,7 @@ onMounted(async () => {
           <!-- Decorative Elements -->
           <div class="deco-grid"></div>
           <div class="deco-gradient"></div>
-          
+
           <!-- PDF Preview Card -->
           <div class="pdf-preview-card">
             <div class="pdf-icon-bg">
@@ -535,10 +535,10 @@ onMounted(async () => {
       <h3>No CV Available</h3>
       <p v-if="isOwnProfile">Upload your CV to showcase your professional experience</p>
       <p v-else>This user hasn't uploaded their CV yet</p>
-      <button v-if="isOwnProfile" class="upload-cv-btn" @click="UpdateCV">
+      <BaseButton v-if="isOwnProfile" variant="primary" class="d-flex align-item-center gap-2" @click="UpdateCV">
         <i class="bi bi-cloud-upload"></i>
         <span>Upload CV</span>
-      </button>
+      </BaseButton>
     </div>
 
     <!-- Full Screen PDF Modal -->
@@ -570,12 +570,8 @@ onMounted(async () => {
 
             <!-- PDF Viewer -->
             <div class="modal-pdf-viewer">
-              <iframe
-                v-if="currentCvData?.file"
-                :src="currentCvData.file + '#toolbar=0&navpanes=0&scrollbar=0'"
-                class="pdf-iframe"
-                frameborder="0"
-              ></iframe>
+              <iframe v-if="currentCvData?.file" :src="currentCvData.file + '#toolbar=0&navpanes=0&scrollbar=0'"
+                class="pdf-iframe" frameborder="0"></iframe>
             </div>
           </div>
         </div>
@@ -587,6 +583,7 @@ onMounted(async () => {
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
 import { useProfileStore } from '@/stores/profile'
+import BaseButton from '@/components/ui/base/BaseButton.vue'
 
 const profileStore = useProfileStore()
 const showModal = ref(false)
@@ -793,7 +790,7 @@ onMounted(async () => {
 .deco-grid {
   position: absolute;
   inset: -30px;
-  background-image: 
+  background-image:
     linear-gradient(var(--color-border) 1px, transparent 1px),
     linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
   background-size: 20px 20px;
@@ -820,7 +817,6 @@ onMounted(async () => {
 }
 
 .pdf-preview-card:hover {
-  transform: translateY(-4px);
   box-shadow: var(--shadow-md);
 }
 
@@ -1002,10 +998,13 @@ onMounted(async () => {
 }
 
 @keyframes pulse-dot {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.5;
     transform: scale(0.8);
@@ -1093,9 +1092,12 @@ onMounted(async () => {
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-8px);
   }
@@ -1191,7 +1193,7 @@ onMounted(async () => {
   min-width: 0;
 }
 
-.modal-title-section > i {
+.modal-title-section>i {
   font-size: 20px;
   color: var(--color-text);
   flex-shrink: 0;

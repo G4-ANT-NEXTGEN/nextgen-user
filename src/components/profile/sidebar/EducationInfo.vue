@@ -1,189 +1,152 @@
 <template>
-  <div class="education-section">
+  <div class="education-info-wrapper">
     <!-- Education Cards - Own Profile -->
-    <template v-if="isOwnProfile && educations.length">
-      <div v-for="edu in educations" :key="edu.id" class="education-item">
-        <InfoCard
-          :title="edu.school?.name || 'Education'"
-          icon="bi bi-mortarboard"
-          :showCreate="false"
-          :showUpdate="true"
-          :showDelete="true"
-          @update="() => onUpdate(edu)"
-          @delete="() => onDelete(edu.id)"
-        >
-          <div claInfoCardss="edu-content">
-            <div class="info-row">
-              <i class="bi bi-mortarboard icon"></i>
-              <span class="text-medium">{{ edu.degree?.name }}</span>
-            </div>
+    <template v-if="isOwnProfile">
+      <div v-if="educations.length" class="education-list">
+        <div v-for="edu in educations" :key="edu.id" class="education-item-group">
+          <InfoCard :title="edu.school?.name || 'Education'" icon="bi bi-briefcase-fill" :showCreate="false"
+            :showUpdate="true" :showDelete="true" @update="onUpdate(edu)" @delete="onDelete(edu)">
 
-            <div v-if="edu.subject?.name" class="info-row">
-              <i class="bi bi-book icon"></i>
-              <span class="text-regular">{{ edu.subject?.name }}</span>
-            </div>
+            <div class="education-entry-content">
+              <div class="entry-main-info">
+                <div class="degree-highlight">
+                  <span class="degree-title">{{ edu.degree?.name }}</span>
+                  <span v-if="edu.subject?.name" class="entry-dot"></span>
+                  <span v-if="edu.subject?.name" class="subject-title">{{ edu.subject?.name }}</span>
+                </div>
 
-            <div class="info-row">
-              <i class="bi bi-calendar3 icon"></i>
-              <span class="text-muted">
-                {{ edu.start_date }} - {{ edu.end_date || 'Present' }}
-              </span>
-            </div>
+                <div class="date-badge">
+                  <i class="bi bi-calendar3"></i>
+                  <span>{{ edu.start_date }} — {{ edu.end_date || 'Present' }}</span>
+                </div>
+              </div>
 
-            <div v-if="edu.description" class="info-row description">
-              <i class="bi bi-info-circle icon"></i>
-              <p class="description-text">{{ edu.description }}</p>
+              <!-- This is the professional "Edit" button they asked for -->
+              <div class="entry-actions-row">
+                <button class="professional-edit-btn" @click="onUpdate(edu)">
+                  <div class="btn-icon-square">
+                    <i class="bi bi-pencil-square"></i>
+                  </div>
+                  <span class="btn-label">Edit</span>
+                </button>
+              </div>
+
+              <div v-if="edu.description" class="entry-description">
+                <p>{{ edu.description }}</p>
+              </div>
             </div>
-          </div>
-        </InfoCard>
+          </InfoCard>
+        </div>
+
+        <BaseButton variant="secondary" block class="mt-2 add-edu-action" @click="onCreate">
+          <i class="bi bi-plus-lg me-2"></i>
+          Add Education History
+        </BaseButton>
+      </div>
+
+      <!-- Empty State - Own Profile -->
+      <div v-else class="empty-state-card" @click="onCreate">
+        <div class="empty-icon-circle">
+          <i class="bi bi-mortarboard"></i>
+        </div>
+        <h4>Academic Background</h4>
+        <p>Share your educational journey and achievements here.</p>
+        <BaseButton variant="primary" class="mt-4">Add Education</BaseButton>
       </div>
     </template>
-
-    <!-- Empty State - Own Profile -->
-    <InfoCard
-      v-else-if="isOwnProfile"
-      title="Education"
-      icon="bi bi-mortarboard"
-      :showCreate="true"
-      :showUpdate="false"
-      :showDelete="false"
-      @create="onCreate"
-    >
-      <div class="no-data">
-        <p>No education info available</p>
-      </div>
-    </InfoCard>
 
     <!-- Education Cards - Viewing Other User's Profile (Read-Only) -->
-    <template v-else-if="!isOwnProfile && viewEducations.length">
-      <div v-for="edu in viewEducations" :key="edu.id" class="education-item">
-        <InfoCard
-          :title="edu.school?.name || 'Education'"
-          icon="bi bi-mortarboard"
-          :showCreate="false"
-          :showUpdate="false"
-          :showDelete="false"
-        >
-          <div claInfoCardss="edu-content">
-            <div class="info-row">
-              <i class="bi bi-mortarboard icon"></i>
-              <span class="text-medium">{{ edu.degree?.name }}</span>
+    <template v-else>
+      <div v-if="viewEducations.length" class="education-list">
+        <div v-for="edu in viewEducations" :key="edu.id" class="education-item-group">
+          <InfoCard :title="edu.school?.name || 'Education'" icon="bi bi-mortarboard-fill" :showCreate="false"
+            :showUpdate="false" :showDelete="false">
+            <div class="education-entry-content">
+              <div class="entry-main-info">
+                <div class="degree-highlight">
+                  <span class="degree-title">{{ edu.degree?.name }}</span>
+                  <span v-if="edu.subject?.name" class="entry-dot"></span>
+                  <span v-if="edu.subject?.name" class="subject-title">{{ edu.subject?.name }}</span>
+                </div>
+                <div class="date-badge">
+                  <i class="bi bi-calendar3"></i>
+                  <span>{{ edu.start_date }} — {{ edu.end_date || 'Present' }}</span>
+                </div>
+              </div>
+              <div v-if="edu.description" class="entry-description">
+                <p>{{ edu.description }}</p>
+              </div>
             </div>
-
-            <div v-if="edu.subject?.name" class="info-row">
-              <i class="bi bi-book icon"></i>
-              <span class="text-regular">{{ edu.subject?.name }}</span>
-            </div>
-
-            <div class="info-row">
-              <i class="bi bi-calendar3 icon"></i>
-              <span class="text-muted">
-                {{ edu.start_date }} - {{ edu.end_date || 'Present' }}
-              </span>
-            </div>
-
-            <div v-if="edu.description" class="info-row description">
-              <i class="bi bi-info-circle icon"></i>
-              <p class="description-text">{{ edu.description }}</p>
-            </div>
-          </div>
-        </InfoCard>
+          </InfoCard>
+        </div>
+      </div>
+      
+      <div v-else class="empty-state-card guest">
+        <div class="empty-icon-circle">
+          <i class="bi bi-mortarboard text-muted"></i>
+        </div>
+        <p>No education history available for this user.</p>
       </div>
     </template>
 
-    <!-- Empty State - Viewing Other User's Profile -->
-    <InfoCard
-      v-else
-      title="Education"
-      icon="bi bi-mortarboard"
-      :showCreate="false"
-      :showUpdate="false"
-      :showDelete="false"
-    >
-      <div class="no-data">
-        <p>No education info available</p>
-      </div>
-    </InfoCard>
-
-    <!-- Update Modal -->
     <!-- UPDATE MODAL -->
-    <BaseModal
-      v-if="addNewEducation"
-      :title="isEditMode ? 'Update Education' : 'Add New Education'"
-      @close="closeAddNewEducation"
-    >
-      <BaseSelect
-        v-model="school"
-        label="School/University"
-        placeholder="Select School"
-        :options="schoolStore.schools.map((s) => ({ value: s.id, label: s.name }))"
-      />
+    <BaseModal v-if="addNewEducation" :title="isEditMode ? 'Update Education' : 'Add New Education'"
+      @close="closeAddNewEducation" size="lg">
+      <div class="education-form-container">
+        <div class="mb-4">
+          <BaseSelect v-model="school" label="School / University" placeholder="Search school..."
+            :options="schoolStore.schools.map((s) => ({ value: s.id, label: s.name }))" />
+        </div>
 
-      <div class="d-flex my-2">
-        <div class="col-6 me-1">
-          <BaseSelect
-            v-model="degree"
-            label="Degree"
-            placeholder="Select Degree"
-            :options="degreeStore.degrees.map((d) => ({ value: d.id, label: d.name }))"
-          />
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <BaseSelect v-model="degree" label="Degree" placeholder="Select degree"
+              :options="degreeStore.degrees.map((d) => ({ value: d.id, label: d.name }))" />
+          </div>
+          <div class="col-md-6">
+            <BaseSelect v-model="subject" label="Field of Study" placeholder="Select subject"
+              :options="subjectStore.subjects.map((s) => ({ value: s.id, label: s.name }))" />
+          </div>
         </div>
-        <div class="col-6 ms-1">
-          <BaseSelect
-            v-model="subject"
-            label="Subject"
-            placeholder="Select Subject"
-            :options="subjectStore.subjects.map((s) => ({ value: s.id, label: s.name }))"
-          />
-        </div>
-      </div>
 
-      <div class="d-flex my-2">
-        <div class="col-6 me-1">
-          <BaseInput label="Start Date" placeholder="Year-Month" v-model="start_date" />
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <BaseInput label="Start Date" placeholder="YYYY-MM" v-model="start_date" />
+          </div>
+          <div class="col-md-6">
+            <BaseInput label="End Date" placeholder="YYYY-MM or Present" v-model="end_date" />
+          </div>
         </div>
-        <div class="col-6 ms-1">
-          <BaseInput label="End Date" placeholder="Year-Month" v-model="end_date" />
-        </div>
-      </div>
 
-      <div class="mb-2">
-        <label class="mb-2 fw-semibold form-label">Description</label>
-        <textarea
-          class="form-control"
-          placeholder="Description"
-          style="height: 100px"
-          v-model="description"
-        ></textarea>
+        <div class="mb-0">
+          <label class="form-label d-block mb-2 fw-bold small text-uppercase">Description</label>
+          <textarea class="form-control" placeholder="Describe your achievements, participation or relevant courses..."
+            rows="5" v-model="description"></textarea>
+        </div>
       </div>
 
       <template #footer>
-        <button class="btn btn-outline-dark" @click="closeAddNewEducation">Cancel</button>
-        <button class="btn btn-dark" @click="HandleAddNewEducation" :disabled="isLoading">
-          {{
-            isLoading
-              ? isEditMode
-                ? 'Updating...'
-                : 'Adding...'
-              : isEditMode
-              ? 'Update'
-              : 'Add New'
-          }}
-        </button>
+        <BaseButton variant="secondary" @click="closeAddNewEducation">Cancel</BaseButton>
+        <BaseButton variant="primary" @click="HandleAddNewEducation" :isLoading="isLoading">
+          {{ isEditMode ? 'Update Education' : 'Save Education' }}
+        </BaseButton>
       </template>
     </BaseModal>
 
     <!-- DELETE CONFIRMATION MODAL -->
-    <BaseModal v-if="deleteModal" title="Delete Education" @close="closeDeleteModal">
-      <p class="mb-0">
-        Are you sure you want to delete
-        <strong>{{ selectedEducationForDelete?.school?.name }}</strong
-        >? This action cannot be undone.
-      </p>
+    <BaseModal v-if="deleteModal" title="Confirm Removal" @close="closeDeleteModal">
+      <div class="delete-confirmation-body">
+        <div class="warning-ring">
+          <i class="bi bi-trash3-fill"></i>
+        </div>
+        <h4>Are you sure?</h4>
+        <p>You are about to remove your education details at <strong>{{ selectedEducationForDelete?.school?.name
+        }}</strong>.</p>
+      </div>
 
       <template #footer>
-        <button class="btn btn-outline-dark" @click="closeDeleteModal">Cancel</button>
-        <button class="btn btn-danger" @click="confirmDeleteEducation">Delete</button>
+        <BaseButton variant="secondary" @click="closeDeleteModal">Wait, keep it</BaseButton>
+        <BaseButton variant="danger" @click="confirmDeleteEducation" :isLoading="isDeleting">Yes, Remove</BaseButton>
       </template>
     </BaseModal>
   </div>
@@ -192,12 +155,16 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import BaseModal from '@/components/ui/base/BaseModal.vue'
+import BaseButton from '@/components/ui/base/BaseButton.vue'
+import BaseInput from '@/components/ui/base/BaseInput.vue'
+import BaseSelect from '@/components/ui/base/BaseSelect.vue'
 import InfoCard from '../InfoCard.vue'
 import { useProfileStore } from '@/stores/profile'
 import { useEducationStore } from '@/stores/education'
 import { useSchoolStore } from '@/stores/schools'
 import { useDegreeStore } from '@/stores/degrees'
 import { useSubjectStore } from '@/stores/subjects'
+import { showSuccess, showError } from '@/utils/toast'
 
 const profileStore = useProfileStore()
 const educationStore = useEducationStore()
@@ -215,6 +182,7 @@ const viewEducations = computed(() => profileStore.viewUser?.educations || [])
 const addNewEducation = ref(false)
 const isEditMode = ref(false)
 const isLoading = ref(false)
+const isDeleting = ref(false)
 const selectedEducation = ref(null)
 const deleteModal = ref(false)
 const selectedEducationForDelete = ref(null)
@@ -226,7 +194,7 @@ const start_date = ref('')
 const end_date = ref('')
 const description = ref('')
 
-const onCreate = () => {  
+const onCreate = () => {
   resetForm()
   isEditMode.value = false
   addNewEducation.value = true
@@ -246,8 +214,7 @@ const onUpdate = (edu) => {
   addNewEducation.value = true
 }
 
-const onDelete = (id) => {
-  const edu = educations.value.find((e) => e.id === id)
+const onDelete = (edu) => {
   selectedEducationForDelete.value = edu
   deleteModal.value = true
 }
@@ -259,11 +226,15 @@ const closeDeleteModal = () => {
 
 const confirmDeleteEducation = async () => {
   try {
+    isDeleting.value = true
     await educationStore.DeleteEducation(selectedEducationForDelete.value.id)
     await profileStore.fetchProfile()
+    showSuccess('Education entry removed successfully')
     closeDeleteModal()
-  } catch (error) {
-    console.error(error)
+  } catch {
+    showError('Could not remove education entry')
+  } finally {
+    isDeleting.value = false
   }
 }
 
@@ -282,14 +253,17 @@ const HandleAddNewEducation = async () => {
   try {
     if (isEditMode.value && selectedEducation.value) {
       await educationStore.UpdateEducation(selectedEducation.value.id, payload)
+      showSuccess('Education details updated successfully')
     } else {
       await educationStore.CreateEducation(payload)
+      showSuccess('New education entry added successfully')
     }
 
     await profileStore.fetchProfile()
     closeAddNewEducation()
   } catch (error) {
     console.error(error)
+    showError('Operation failed. Please check your data.')
   } finally {
     isLoading.value = false
   }
@@ -312,7 +286,7 @@ const resetForm = () => {
 }
 
 onMounted(async () => {
-  if (!profileStore.user) {
+  if (isOwnProfile.value && !profileStore.user) {
     await profileStore.fetchProfile()
   }
 
@@ -325,79 +299,222 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.education-item {
-  margin-bottom: 1rem;
+.education-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.education-item:last-child {
-  margin-bottom: 0;
+.education-entry-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
-.info-row {
+.entry-main-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.degree-highlight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.degree-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.entry-dot {
+  width: 5px;
+  height: 5px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+.subject-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.date-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--color-accent);
+  border-radius: 10px;
+  font-size: 0.825rem;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  width: fit-content;
+}
+
+.date-badge i {
+  color: var(--color-primary);
+}
+
+/* THE PROFESSIONAL EDIT BUTTON */
+.entry-actions-row {
+  margin-top: 0.5rem;
+}
+
+.professional-edit-btn {
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 8px 16px 8px 8px;
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #ffffff;
 }
 
-.info-row:last-child {
-  margin-bottom: 0;
+.professional-edit-btn:hover {
+  background: #252525;
+  border-color: var(--color-primary);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-.icon {
-  width: 20px;
-  text-align: center;
+.btn-icon-square {
+  width: 36px;
+  height: 36px;
+  background: #333333;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1rem;
-  color: var(--color-text-muted, #64748b);
-  flex-shrink: 0;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
 }
 
-.form-label{
-  color: var(--color-text);
+.btn-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
-.form-control{
-  background: var(--color-surface)
+.entry-description {
+  background: var(--color-accent);
+  padding: 1.25rem;
+  border-radius: 16px;
+  border-left: 4px solid var(--color-primary);
 }
 
-.text-medium {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--color-text, #334155);
-}
-
-.text-regular {
-  font-size: 0.875rem;
-  color: var(--color-text-muted, #475569);
-}
-
-.text-muted {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--color-text-muted, #64748b);
-}
-
-.info-row.description {
-  align-items: flex-start;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border-color, #e5e7eb);
-}
-
-.description .icon {
-  margin-top: 2px;
-}
-
-.description-text {
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: var(--color-text-muted, #475569);
+.entry-description p {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
   margin: 0;
+  white-space: pre-line;
 }
 
-.no-data {
+.empty-state-card {
   text-align: center;
-  padding: 1rem;
-  color: var(--color-text-muted, #64748b);
+  padding: 4rem 2rem;
+  background: var(--color-accent);
+  border-radius: 24px;
+  border: 2px dashed var(--color-border);
+  cursor: pointer;
+}
+
+.empty-icon-circle {
+  width: 80px;
+  height: 80px;
+  background: var(--color-surface);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: var(--color-primary);
+  margin: 0 auto 1.5rem;
+  box-shadow: var(--shadow-md);
+}
+
+.empty-state-card h4 {
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state-card p {
+  color: var(--color-muted);
+}
+
+.add-new-edu-btn {
+  border-radius: 16px !important;
+  font-weight: 700 !important;
+  padding: 1.25rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.85rem !important;
+}
+
+.education-form-container textarea {
+  border-radius: 14px;
+  border: 1px solid var(--color-border);
+  padding: 16px;
+  background: var(--color-surface);
+  line-height: 1.6;
+}
+
+/* Delete Modal Styling */
+.delete-confirmation-body {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.warning-ring {
+  width: 72px;
+  height: 72px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.25rem;
+  color: var(--color-danger);
+  margin: 0 auto 1.5rem;
+  animation: pulse-danger 2s infinite;
+}
+
+@keyframes pulse-danger {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+@media (max-width: 768px) {
+  .degree-highlight {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .entry-dot {
+    display: none;
+  }
 }
 </style>

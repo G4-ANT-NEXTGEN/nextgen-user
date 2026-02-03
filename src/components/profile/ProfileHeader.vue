@@ -1,187 +1,53 @@
 <template>
   <ProfileHeaderSkeleton v-if="profileStore.isLoading" />
   <div v-else class="profile-header-wrapper">
-    <!-- Cover Section -->
-    <div class="cover-section">
-      <div class="cover-image-container">
-        <img :src="coverUrl" alt="Profile Cover" class="cover-img" />
+    <!-- Cover & Identity Section -->
+    <div class="header-main">
+      <div class="cover-area">
+        <div v-if="!profileStore.user?.cover" class="cover-grid"></div>
+        <img v-else-if="profileStore.user?.cover" :src="profileStore.user?.cover" alt="Profile Cover"
+          class="cover-image" />
         <div class="cover-overlay"></div>
-      </div>
 
-      <button class="edit-cover-btn" @click="openEditCover">
-        <i class="bi bi-camera"></i>
-        <span>Edit Cover</span>
-      </button>
+        <button class="cover-edit-trigger" @click="openEditCover">
+          <i class="bi bi-camera-fill"></i>
+          <span>Edit Cover</span>
+        </button>
 
-      <!-- Avatar positioned over cover -->
-      <div class="avatar-container">
-        <div class="avatar-wrapper">
-          <img class="avatar-image" :src="avatarUrl" alt="Profile Avatar" />
-          <button class="avatar-edit-btn" @click="showImageCropper = true">
-            <i class="bi bi-camera"></i>
-          </button>
-        </div>
-      </div>
-    </div>
+        <div class="identity-container">
+          <div class="avatar-box">
+            <div class="avatar-ring">
+              <img :src="profileStore.user?.avatar" alt="Profile Avatar" class="profile-avatar" />
+              <div class="status-indicator"></div>
+            </div>
+            <button class="avatar-edit-trigger" @click="showImageCropper = true">
+              <i class="bi bi-camera-fill"></i>
+            </button>
+          </div>
 
-    <!-- Update Cover Modal -->
-    <BaseModal v-if="editCover" title="Update Cover Photo" size="lg" @close="closeEditCover">
-      <div class="modal-content-wrapper">
-        <div class="cropper-container">
-          <Cropper
-            v-if="uploadedImage"
-            ref="cropperCoverRef"
-            :src="uploadedImage"
-            :stencil-props="{ aspectRatio: 16 / 5, resizable: true }"
-          />
-          <div v-else class="upload-placeholder">
-            <i class="bi bi-image"></i>
-            <p>Select an image to crop</p>
+          <div class="identity-details">
+            <h1 class="display-name">{{ profileStore.user?.full_name || 'Loading...' }}</h1>
+            <p class="role-text">{{ profileStore.user?.positions?.[0]?.name || 'Freelancer' }}</p>
+          </div>
+
+          <div class="identity-actions">
+            <BaseButton @click="openChangePassAndDeleteAcc" variant="primary" class="chat-btn"
+              :isLoading="profileStore.isLoading">
+              <!-- <i class="bi bi-chat-dots-fill"></i> -->
+              <span>Change Password</span>
+            </BaseButton>
           </div>
         </div>
+      </div>
 
-        <div class="modal-actions">
-          <label for="coverUpload" class="upload-btn">
-            <i class="bi bi-upload"></i>
-            Choose Image
-          </label>
-          <input
-            id="coverUpload"
-            type="file"
-            class="d-none"
-            accept="image/*"
-            @change="handleFileSelect"
-          />
-
-          <button class="delete-btn" @click="deleteCover = true">
-            <i class="bi bi-trash"></i>
-            Remove Cover
+      <!-- Navigation Bar -->
+      <div class="header-nav">
+        <div class="nav-links">
+          <button v-for="tab in tabs" :key="tab.key" :class="['nav-link-btn', { active: activeTab === tab.key }]"
+            @click="$emit('change-tab', tab.key)">
+            {{ tab.label }}
           </button>
         </div>
-      </div>
-
-      <template #footer>
-        <base-button @click="closeEditCover" variant="secondary">Cancel</base-button>
-        <base-button @click="applyChageCover" :isLoading="profileStore.isLoading" variant="primary">
-          <span>{{ profileStore.isLoading ? 'Saving...' : 'Save Changes' }}</span>
-        </base-button>
-      </template>
-    </BaseModal>
-
-    <!-- Crop Avatar Modal -->
-    <BaseModal
-      v-if="showImageCropper"
-      title="Update Profile Photo"
-      @close="showImageCropper = false"
-    >
-      <div class="modal-content-wrapper">
-        <div class="cropper-container circle">
-          <Cropper
-            v-if="uploadedImage"
-            ref="cropperRef"
-            :src="uploadedImage"
-            :stencil-props="{ aspectRatio: 1 }"
-            :stencil-component="CircleStencil"
-          />
-          <div v-else class="upload-placeholder">
-            <i class="bi bi-person-circle"></i>
-            <p>Select a photo to crop</p>
-          </div>
-        </div>
-
-        <div class="modal-actions">
-          <label for="avatarUpload" class="upload-btn">
-            <i class="bi bi-upload"></i>
-            Choose Photo
-          </label>
-          <input
-            id="avatarUpload"
-            type="file"
-            class="d-none"
-            accept="image/*"
-            @change="handleFileSelect"
-          />
-
-          <button class="delete-btn" @click="deleteAvatar = true">
-            <i class="bi bi-trash"></i>
-            Remove Photo
-          </button>
-        </div>
-      </div>
-
-      <template #footer>
-        <base-button @click="showImageCropper = false" variant="secondary">Cancel</base-button>
-        <base-button @click="applyCrop" :isLoading="profileStore.isLoading" variant="primary">
-          <span>{{ profileStore.isLoading ? 'Saving...' : 'Save Changes' }}</span>
-        </base-button>
-      </template>
-    </BaseModal>
-
-    <!-- Delete Avatar Confirmation -->
-    <base-modal v-if="deleteAvatar" title="Remove Profile Photo">
-      <div class="confirmation-content">
-        <div class="warning-icon">
-          <i class="bi bi-exclamation-triangle"></i>
-        </div>
-        <p>Are you sure you want to remove your profile photo?</p>
-      </div>
-
-      <template #footer>
-        <base-button @click="deleteAvatar = false" variant="secondary">Cancel</base-button>
-        <base-button
-          @click="handleAvatarDelete"
-          variant="danger"
-          :isLoading="profileStore.isLoading"
-        >
-          <span>{{ profileStore.isLoading ? 'Removing...' : 'Remove' }}</span>
-        </base-button>
-      </template>
-    </base-modal>
-
-    <!-- Delete Cover Confirmation -->
-    <base-modal v-if="deleteCover" title="Remove Cover Photo" @close="deleteCover = false">
-      <div class="confirmation-content">
-        <div class="warning-icon">
-          <i class="bi bi-exclamation-triangle"></i>
-        </div>
-        <p>Are you sure you want to remove your cover photo?</p>
-      </div>
-
-      <template #footer>
-        <base-button @click="deleteCover = false" variant="secondary">Cancel</base-button>
-        <base-button
-          @click="handleDeleteCover"
-          variant="danger"
-          :isLoading="profileStore.isLoading"
-        >
-          <span>{{ profileStore.isLoading ? 'Removing...' : 'Remove' }}</span>
-        </base-button>
-      </template>
-    </base-modal>
-
-    <!-- Profile Info & Actions -->
-    <div class="profile-info-section">
-      <div class="profile-info">
-        <h1 class="user-name">{{ profileStore.user?.full_name || 'Loading...' }}</h1>
-        <p class="user-role">
-          {{ profileStore.user?.positions?.[0]?.name || 'Web Development' }}
-        </p>
-      </div>
-
-      <div class="profile-actions">
-        <button class="profile-btn" @click="openEditCV">
-          <i class="bi bi-file-earmark-arrow-up"></i>
-          <span>Upload CV</span>
-        </button>
-
-        <button class="profile-btn" @click="openEditCollaboration">
-          <i class="bi bi-people"></i>
-          <span>Collaboration</span>
-        </button>
-
-        <button class="profile-btn icon-only" @click="openChangePassAndDeleteAcc">
-          <i class="bi bi-gear"></i>
-        </button>
       </div>
     </div>
 
@@ -189,13 +55,7 @@
     <BaseModal v-if="editCV" title="Upload Your CV" @close="closeEditCV">
       <div class="upload-section">
         <div class="file-upload-area" :class="{ 'has-file': cvFile }">
-          <input
-            class="file-input"
-            type="file"
-            id="cvFile"
-            @change="cvOnChangeFile"
-            accept="application/pdf"
-          />
+          <input class="file-input" type="file" id="cvFile" @change="cvOnChangeFile" accept="application/pdf" />
           <label for="cvFile" class="file-upload-label">
             <div class="upload-icon">
               <i class="bi bi-cloud-arrow-up"></i>
@@ -222,15 +82,10 @@
       </div>
 
       <template #footer>
-        <base-button @click="closeEditCV" variant="secondary">Cancel</base-button>
-        <base-button
-          @click="handleSaveCv"
-          :isLoading="profileStore.isLoading"
-          variant="primary"
-          :disabled="!cvFile"
-        >
+        <BaseButton @click="closeEditCV" variant="secondary" :isLoading="profileStore.isLoading">Cancel</BaseButton>
+        <BaseButton @click="handleSaveCv" :isLoading="profileStore.isLoading" variant="primary" :disabled="!cvFile">
           <span>{{ profileStore.isLoading ? 'Uploading...' : 'Upload CV' }}</span>
-        </base-button>
+        </BaseButton>
       </template>
     </BaseModal>
 
@@ -254,10 +109,11 @@
       </div>
 
       <template #footer>
-        <base-button @click="closeEditCollaboration" variant="secondary">Cancel</base-button>
-        <base-button @click="HandleEditCollaboration" variant="primary">
+        <BaseButton @click="closeEditCollaboration" variant="secondary" :isLoading="profileStore.isLoading">Cancel
+        </BaseButton>
+        <BaseButton @click="HandleEditCollaboration" variant="primary" :isLoading="profileStore.isLoading">
           Add Collaboration
-        </base-button>
+        </BaseButton>
       </template>
     </BaseModal>
 
@@ -266,17 +122,11 @@
       <div class="settings-container">
         <!-- Settings Tabs -->
         <div class="settings-tabs">
-          <button
-            :class="['settings-tab', { active: settingTab === 'password' }]"
-            @click="settingTab = 'password'"
-          >
+          <button :class="['settings-tab', { active: settingTab === 'password' }]" @click="settingTab = 'password'">
             <i class="bi bi-shield-lock"></i>
             <span>Security</span>
           </button>
-          <button
-            :class="['settings-tab danger', { active: settingTab === 'delete' }]"
-            @click="settingTab = 'delete'"
-          >
+          <button :class="['settings-tab danger', { active: settingTab === 'delete' }]" @click="settingTab = 'delete'">
             <i class="bi bi-exclamation-triangle"></i>
             <span>Danger Zone</span>
           </button>
@@ -292,11 +142,7 @@
             </div>
 
             <div class="form-group">
-              <BaseInput
-                label="Current Password"
-                type="password"
-                placeholder="Enter current password"
-              />
+              <BaseInput label="Current Password" type="password" placeholder="Enter current password" />
             </div>
 
             <div class="form-group">
@@ -304,11 +150,7 @@
             </div>
 
             <div class="form-group">
-              <BaseInput
-                label="Confirm New Password"
-                type="password"
-                placeholder="Confirm new password"
-              />
+              <BaseInput label="Confirm New Password" type="password" placeholder="Confirm new password" />
             </div>
 
             <div class="password-requirements">
@@ -321,7 +163,7 @@
             </div>
 
             <div class="form-actions">
-              <base-button variant="primary">Update Password</base-button>
+              <BaseButton variant="primary" :isLoading="profileStore.isLoading">Update Password</BaseButton>
             </div>
           </div>
 
@@ -345,36 +187,149 @@
             </div>
 
             <div class="form-actions">
-              <base-button variant="danger">
+              <BaseButton variant="danger" :isLoading="profileStore.isLoading">
                 <i class="bi bi-trash"></i>
                 <span>Permanently Delete Account</span>
-              </base-button>
+              </BaseButton>
             </div>
           </div>
         </div>
       </div>
     </BaseModal>
 
-    <!-- Navigation Tabs -->
-    <div class="profile-nav-tabs">
-      <button
-        v-for="tab in tabs"
-        :key="tab.key"
-        :class="['nav-tab', { active: activeTab === tab.key }]"
-        @click="$emit('change-tab', tab.key)"
-      >
-        {{ tab.label }}
-      </button>
+    <!-- Original Modal Logic (Restored) -->
+    <div class="modals-container">
+      <!-- Update Cover Modal -->
+      <BaseModal v-if="editCover" title="Update Cover Photo" size="lg" @close="closeEditCover">
+        <div class="modal-content-wrapper">
+          <div class="cropper-container">
+            <Cropper v-if="uploadedImage" ref="cropperCoverRef" :src="uploadedImage"
+              :stencil-props="{ aspectRatio: 16 / 5, resizable: true }" />
+            <div v-else class="upload-placeholder">
+              <div class="placeholder-icon">
+                <i class="bi bi-image"></i>
+              </div>
+              <div class="placeholder-text">
+                <span class="main-msg">Select an image to crop</span>
+                <span class="sub-msg">PNG, JPG or GIF up to 10MB</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <label for="coverUpload" class="upload-btn">
+              <i class="bi bi-upload"></i>
+              Choose Image
+            </label>
+            <input id="coverUpload" type="file" class="d-none" accept="image/*" @change="handleFileSelect" />
+
+            <!-- <button class="delete-btn" @click="deleteCover = true">
+              <i class="bi bi-trash"></i>
+              Remove Cover
+            </button> -->
+            <BaseButton @click="deleteCover = true" variant="danger" class="delete-btn"
+              :isLoading="profileStore.isLoading">
+              <i class="bi bi-trash"></i>
+              <span>Remove Cover</span>
+            </BaseButton>
+          </div>
+        </div>
+
+        <template #footer>
+          <BaseButton @click="closeEditCover" variant="secondary" :isLoading="profileStore.isLoading">Cancel
+          </BaseButton>
+          <BaseButton @click="applyChageCover" :isLoading="profileStore.isLoading" variant="primary">
+            <span>{{ profileStore.isLoading ? 'Saving...' : 'Save Changes' }}</span>
+          </BaseButton>
+        </template>
+      </BaseModal>
+
+      <!-- Crop Avatar Modal -->
+      <BaseModal v-if="showImageCropper" title="Update Profile Photo" @close="showImageCropper = false">
+        <div class="modal-content-wrapper">
+          <div class="cropper-container circle">
+            <Cropper v-if="uploadedImage" ref="cropperRef" :src="uploadedImage" :stencil-props="{ aspectRatio: 1 }"
+              :stencil-component="CircleStencil" />
+            <div v-else class="upload-placeholder">
+              <div class="placeholder-icon">
+                <i class="bi bi-person-circle"></i>
+              </div>
+              <div class="placeholder-text">
+                <span class="main-msg">Select a photo to crop</span>
+                <span class="sub-msg">PNG or JPG up to 5MB</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <label for="avatarUpload" class="upload-btn">
+              <i class="bi bi-upload"></i>
+              Choose Photo
+            </label>
+            <input id="avatarUpload" type="file" class="d-none" accept="image/*" @change="handleFileSelect" />
+
+            <button class="delete-btn" @click="deleteAvatar = true">
+              <i class="bi bi-trash"></i>
+              Remove Photo
+            </button>
+          </div>
+        </div>
+
+        <template #footer>
+          <BaseButton @click="showImageCropper = false" variant="secondary" :isLoading="profileStore.isLoading">Cancel
+          </BaseButton>
+          <BaseButton @click="applyCrop" :isLoading="profileStore.isLoading" variant="primary">
+            <span>{{ profileStore.isLoading ? 'Saving...' : 'Save Changes' }}</span>
+          </BaseButton>
+        </template>
+      </BaseModal>
+
+      <!-- Delete Avatar Confirmation -->
+      <BaseModal v-if="deleteAvatar" title="Remove Profile Photo">
+        <div class="confirmation-content">
+          <div class="warning-icon">
+            <i class="bi bi-exclamation-triangle"></i>
+          </div>
+          <p>Are you sure you want to remove your profile photo?</p>
+        </div>
+
+        <template #footer>
+          <BaseButton @click="deleteAvatar = false" variant="secondary" :isLoading="profileStore.isLoading">Cancel
+          </BaseButton>
+          <BaseButton @click="handleAvatarDelete" variant="danger" :isLoading="profileStore.isLoading">
+            <span>{{ profileStore.isLoading ? 'Removing...' : 'Remove' }}</span>
+          </BaseButton>
+        </template>
+      </BaseModal>
+
+      <!-- Delete Cover Confirmation -->
+      <BaseModal v-if="deleteCover" title="Remove Cover Photo" @close="deleteCover = false">
+        <div class="confirmation-content">
+          <div class="warning-icon">
+            <i class="bi bi-exclamation-triangle"></i>
+          </div>
+          <p>Are you sure you want to remove your cover photo?</p>
+        </div>
+
+        <template #footer>
+          <BaseButton @click="deleteCover = false" variant="secondary" :isLoading="profileStore.isLoading">Cancel
+          </BaseButton>
+          <BaseButton @click="handleDeleteCover" variant="danger" :isLoading="profileStore.isLoading">
+            <span>{{ profileStore.isLoading ? 'Removing...' : 'Remove' }}</span>
+          </BaseButton>
+        </template>
+      </BaseModal>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, computed, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useProfileStore } from '@/stores/profile'
 import { Cropper } from 'vue-advanced-cropper'
 import ProfileHeaderSkeleton from '@/components/profile/ProfileHeaderSkeleton.vue'
 import 'vue-advanced-cropper/dist/style.css'
+import BaseButton from '../ui/base/BaseButton.vue'
 
 defineProps({
   activeTab: {
@@ -469,7 +424,7 @@ const cvOnChangeFile = (e) => {
 const handleSaveCv = async () => {
   if (!cvFile.value) return
   await profileStore.uploadCv(cvFile.value)
-  console.log('this is cv file : ',cvFile.value)
+  console.log('this is cv file : ', cvFile.value)
   editCV.value = false
   cvFile.value = null
 }
@@ -519,288 +474,327 @@ function closeSetting() {
   openSetting.value = false
   settingTab.value = 'password'
 }
+
+defineExpose({
+  openEditCV,
+  openEditCollaboration
+})
 </script>
 
 <style scoped>
 /* ====================================
-   MAIN WRAPPER
+   MAIN HEADER CONTAINER
    ==================================== */
 .profile-header-wrapper {
-  background: var(--color-surface);
-  border-radius: 16px;
+  margin-bottom: 2rem;
+  border-radius: 24px;
   overflow: hidden;
+  background: var(--color-surface);
   box-shadow: var(--shadow-sm);
-  margin-bottom: 24px;
 }
 
 /* ====================================
-   COVER SECTION
+   COVER AREA
    ==================================== */
-.cover-section {
+.cover-area {
   position: relative;
-  height: 240px;
-  background: var(--color-accent);
+  height: 380px;
+  background-color: var(--color-background);
+  overflow: hidden;
 }
 
-.cover-image-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
+.cover-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--color-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.5;
 }
 
-.cover-img {
+.cover-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
+  transition: transform 0.5s ease;
 }
 
 .cover-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 100%);
-  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%);
 }
 
-.edit-cover-btn {
+.cover-edit-trigger {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 1.5rem;
+  right: 1.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--color-background);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: var(--color-text);
+  font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-text);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  z-index: 10;
 }
 
-.edit-cover-btn:hover {
-  background: rgba(255, 255, 255, 1);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.edit-cover-btn i {
-  font-size: 14px;
-}
-
-[data-theme='dark'] .edit-cover-btn {
-  background: rgba(40, 40, 40, 0.95);
-  color: #f8f8fc;
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-[data-theme='dark'] .edit-cover-btn:hover {
-  background: rgba(50, 50, 50, 1);
+.cover-edit-trigger:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
 }
 
 /* ====================================
-   AVATAR
+  IDENTITY OVERLAY
    ==================================== */
-.avatar-container {
+.identity-container {
   position: absolute;
-  bottom: -50px;
-  left: 32px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0 2rem 2.5rem;
+  display: flex;
+  align-items: flex-end;
+  gap: 2rem;
+  z-index: 5;
 }
 
-.avatar-wrapper {
+.avatar-box {
+  position: relative;
+  transform: translateY(2rem);
+}
+
+.avatar-ring {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  padding: 6px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-xl);
   position: relative;
 }
 
-.avatar-image {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 4px solid var(--color-surface);
+.profile-avatar {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  background: var(--color-accent);
-  display: block;
+  border-radius: 50%;
 }
 
-.avatar-edit-btn {
+.status-indicator {
   position: absolute;
-  bottom: 4px;
-  right: 4px;
-  width: 28px;
-  height: 28px;
+  bottom: 12px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  background: #10b981;
+  border: 4px solid var(--color-surface);
   border-radius: 50%;
-  border: none;
-  background: var(--color-surface);
-  color: var(--color-text);
+}
+
+.avatar-edit-trigger {
+  position: absolute;
+  bottom: 0;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  background: var(--color-primary);
+  color: var(--color-surface);
+  border: 4px solid var(--color-surface);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  transition: all 0.2s ease;
-  font-size: 12px;
+  transition: transform 0.3s ease;
 }
 
-.avatar-edit-btn:hover {
+.avatar-edit-trigger:hover {
   transform: scale(1.1);
-  background: var(--color-hover);
 }
 
-/* ====================================
-   PROFILE INFO & ACTIONS
-   ==================================== */
-.profile-info-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 64px 32px 24px;
-  gap: 20px;
-}
-
-.profile-info {
+.identity-details {
   flex: 1;
+  padding-bottom: 0.5rem;
 }
 
-.user-name {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--color-text);
-  margin: 0 0 4px 0;
-  letter-spacing: -0.5px;
+.display-name {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 0.25rem;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.user-role {
-  font-size: 15px;
-  color: var(--color-muted);
-  margin: 0;
+.role-text {
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 1rem;
   font-weight: 500;
 }
 
-.profile-actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.profile-btn {
+.identity-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border-radius: 6px;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+}
+
+.chat-btn {
+  padding: 0.875rem 2rem !important;
+  font-weight: 700 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+}
+
+.settings-trigger {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.2s ease;
-  white-space: nowrap;
 }
 
-.profile-btn:hover {
-  background: var(--color-hover);
-  border-color: var(--color-primary);
-}
-
-.profile-btn i {
-  font-size: 14px;
-}
-
-.profile-btn.icon-only {
-  padding: 8px;
+.settings-trigger:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 /* ====================================
-   NAVIGATION TABS
+   NAVIGATION
    ==================================== */
-.profile-nav-tabs {
-  display: flex;
-  gap: 0;
-  padding: 0 32px;
+.header-nav {
+  padding: 0 2rem;
+  background: var(--color-surface);
   border-top: 1px solid var(--color-border);
-  overflow-x: auto;
-  scrollbar-width: none;
 }
 
-.profile-nav-tabs::-webkit-scrollbar {
-  display: none;
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  margin-left: 220px;
+  /* Offset for avatar */
 }
 
-.nav-tab {
-  padding: 16px 24px;
+.nav-link-btn {
+  padding: 1.5rem 0.5rem;
+  background: none;
   border: none;
-  background: transparent;
-  font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 0.95rem;
   color: var(--color-muted);
-  cursor: pointer;
   position: relative;
-  transition: all 0.2s ease;
-  white-space: nowrap;
+  transition: color 0.3s ease;
 }
 
-.nav-tab:hover {
+.nav-link-btn:hover {
   color: var(--color-text);
 }
 
-.nav-tab.active {
-  color: var(--color-text);
+.nav-link-btn.active {
+  color: var(--color-primary);
 }
 
-.nav-tab.active::after {
+.nav-link-btn.active::after {
   content: '';
   position: absolute;
-  bottom: -1px;
+  bottom: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: var(--color-text);
+  height: 4px;
+  background: var(--color-primary);
+  border-radius: 4px 4px 0 0;
 }
 
 /* ====================================
-   MODAL STYLES
+   RESPONSIVE
    ==================================== */
-.modal-content-wrapper {
-  padding: 8px 0;
-}
+@media (max-width: 991px) {
+  .cover-area {
+    height: 280px;
+  }
 
-.cropper-container {
-  width: 100%;
-  height: 400px;
-  background: var(--color-accent);
-  border-radius: 12px;
-  overflow: hidden;
-  border: 2px solid var(--color-border);
-}
+  .identity-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-bottom: 1.5rem;
+  }
 
-.cropper-container.circle {
-  height: 400px;
+  .avatar-box {
+    transform: translateY(0);
+  }
+
+  .avatar-ring {
+    width: 140px;
+    height: 140px;
+  }
+
+  .nav-links {
+    margin-left: 0;
+    justify-content: center;
+    gap: 1rem;
+  }
 }
 
 .upload-placeholder {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 1.25rem;
+  padding: 3rem 2rem;
+  background: var(--color-accent);
+  border: 2px dashed var(--color-border);
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  min-height: 240px;
+}
+
+.upload-placeholder:hover {
+  background: var(--color-hover);
+  border-color: var(--color-primary);
+  transform: scale(0.99);
+}
+
+.placeholder-icon {
+  width: 64px;
+  height: 64px;
+  background: var(--color-surface);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.placeholder-text {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.placeholder-text .main-msg {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.placeholder-text .sub-msg {
+  font-size: 0.85rem;
   color: var(--color-muted);
-}
-
-.upload-placeholder i {
-  font-size: 64px;
-  opacity: 0.3;
-}
-
-.upload-placeholder p {
-  font-size: 15px;
-  margin: 0;
 }
 
 .modal-actions {
@@ -1191,6 +1185,7 @@ function closeSetting() {
   font-size: 24px;
   color: var(--color-danger);
 }
+
 .upload-container {
   max-width: 600px;
   margin: 0 auto;

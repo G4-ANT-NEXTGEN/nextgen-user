@@ -13,7 +13,7 @@
               <img class="img-fluid" src="../../../public/logo.jpg" alt="" />
             </div>
           </div>
-          <span class="fs-5 fw-bold nav-brand d-none d-lg-block">NextGen</span>
+          <span @click="$router.push('/home')" class="fs-5 fw-bold nav-brand d-none d-lg-block">NextGen</span>
         </div>
       </div>
 
@@ -50,7 +50,7 @@
               <span class="user-name d-none d-md-block">
                 {{ authStore.user?.full_name }}
               </span>
-              <i class="bi bi-chevron-down ms-1 small opacity-50"></i>
+              <i class="text-muted-info bi bi-chevron-down ms-1 small opacity-50"></i>
             </div>
           </button>
 
@@ -146,6 +146,10 @@ authStore.fetchProfile()
 
 .nav-brand {
   color: var(--color-text);
+}
+
+.nav-brand:hover{
+  cursor: pointer;
 }
 
 .text-muted-info {

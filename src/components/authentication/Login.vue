@@ -5,7 +5,6 @@
       <div class="row g-0 h-100">
         <div class="col-lg-6">
           <div class="left-panel h-100">
-            <!-- <ShootingStars> -->
               <div class="h-100 d-flex flex-column justify-content-between p-4 relative z-10">
                 <div>
                   <div class="logo">
@@ -27,7 +26,6 @@
                   <span>Back to Website</span>
                 </router-link>
               </div>
-            <!-- </ShootingStars> -->
           </div>
         </div>
 
@@ -128,9 +126,11 @@ import { showError } from '@/utils/toast';
 import BaseInput from '../ui/base/BaseInput.vue';
 import { useRouter } from 'vue-router';
 import ShootingStars from '../ui/background/ShootingStars.vue';
+import { useTheme } from '@/composables/useTheme';
 
 const authStore = useAuthStore()
 const router = useRouter()
+const { theme } = useTheme()
 const email = ref('')
 const password = ref('')
 const showPass = ref(false)

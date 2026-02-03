@@ -1,7 +1,7 @@
 <template>
   <div class="home-view">
-    <ShootingStars />
-    <BackgroundBeams />
+    <ShootingStars v-if="theme === 'dark'" />
+    <BackgroundBeams v-if="theme === 'dark'" />
     <AppNavbar @toggle-menu="toggleMobileMenu" />
     <NavigationMenu :isOpen="isMobileMenuOpen" @close="isMobileMenuOpen = false" />
 
@@ -54,7 +54,10 @@ import ShootingStars from '@/components/ui/background/ShootingStars.vue';
 import NavigationMenu from '@/components/layout/NavigationMenu.vue';
 import BackgroundBeams from '@/components/ui/background/BackgroundBeams.vue';
 
+import { useTheme } from '@/composables/useTheme';
+
 const route = useRoute();
+const { theme } = useTheme();
 const isHomePage = computed(() => route.name === 'home');
 const isMobileMenuOpen = ref(false);
 

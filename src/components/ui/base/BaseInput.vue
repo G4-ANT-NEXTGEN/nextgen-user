@@ -1,23 +1,15 @@
 <template>
   <div class="mb-3">
     <label :for="id" v-if="label" class="form-label">{{ label }}</label>
-    <input
-      :type="type"
-      :id="id"
-      :value="modelValue"
-      :placeholder="placeholder"
-      :class="['form-control', { 'is-invalid': error }]"
-      :disabled="disabled"
-      :required="required"
-      @input="$emit('update:modelValue', $event.target.value)"
-      v-bind="$attrs"
-    />
+    <input :type="type" :id="id" :value="modelValue" :placeholder="placeholder"
+      :class="['form-control', { 'is-invalid': error }]" :disabled="disabled" :required="required"
+      @input="$emit('update:modelValue', $event.target.value)" v-bind="$attrs" />
     <div v-if="error" class="invalid-feedback">{{ error }}</div>
   </div>
 </template>
 
 <script setup>
-const props = defineProps({
+defineProps({
   modelValue: [String, Number],
   label: String,
   placeholder: String,
@@ -38,7 +30,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:modelValue'], 'blur')
+defineEmits(['update:modelValue', 'blur'])
 </script>
 
 
@@ -52,25 +44,22 @@ const emit = defineEmits(['update:modelValue'], 'blur')
 
 .form-control {
   padding: 16px 18px;
-  border: 2px solid var(--color-border);
+  border: 1px solid var(--input-border);
   border-radius: 12px;
   font-size: 15px;
-  transition: all 0.3s;
-  background: var(--color-surface);
-  color: var(--color-text);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--input-bg);
+  color: var(--input-text);
 }
 
 .form-control::placeholder {
-  color: var(--color-text-tertiary);
+  color: var(--input-placeholder);
 }
 
 .form-control:focus {
-  border-color: var(--color-primary);
-  background: var(--color-surface);
-  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
-}
-
-[data-theme='dark'] .form-control:focus {
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.04);
+  outline: none;
+  border-color: var(--input-focus-border);
+  background: var(--input-bg);
+  box-shadow: 0 0 0 4px var(--input-focus-shadow);
 }
 </style>
