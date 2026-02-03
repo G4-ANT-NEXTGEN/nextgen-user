@@ -1,6 +1,7 @@
 <template>
   <div class="home-view">
     <ShootingStars />
+    <BackgroundBeams />
     <AppNavbar @toggle-menu="toggleMobileMenu" />
     <NavigationMenu :isOpen="isMobileMenuOpen" @close="isMobileMenuOpen = false" />
 
@@ -51,6 +52,7 @@ import RightSidebar from '@/components/layout/RightSidebar.vue';
 import AppNavbar from '@/components/layout/AppNavbar.vue';
 import ShootingStars from '@/components/ui/background/ShootingStars.vue';
 import NavigationMenu from '@/components/layout/NavigationMenu.vue';
+import BackgroundBeams from '@/components/ui/background/BackgroundBeams.vue';
 
 const route = useRoute();
 const isHomePage = computed(() => route.name === 'home');
@@ -72,15 +74,20 @@ defineOptions({
   background-color: var(--color-background);
   display: flex;
   flex-direction: column;
+  position: relative;
+  /* Ensure absolute children like ShootingStars stay within bounds */
 }
 
 .home-container {
   flex: 1;
   margin-top: 70px;
   width: 100%;
-  overflow: hidden;
   position: relative;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Prevent content from leaking during transitions */
 }
 
 .content-padding {
@@ -88,13 +95,17 @@ defineOptions({
   max-width: 1700px;
   margin-left: auto;
   margin-right: auto;
+  width: 100%;
 }
 
 @media (min-width: 992px) {
+  .home-view {
+    padding-left: 280px;
+    /* Offset for fixed sidebar at view level */
+  }
+
   .home-container {
-    margin-left: 280px;
-    width: auto;
-    /* Reset max-width for container if needed, but handled by content-padding */
+    width: 100%;
   }
 }
 
@@ -103,6 +114,8 @@ defineOptions({
   z-index: 10;
   overflow-y: auto;
   height: 100%;
+  min-width: 0;
+  /* Bootstrap default */
 }
 
 /* Custom Scrollbar for Main Content */

@@ -47,9 +47,9 @@
 
       <div class="row justify-content-center">
         <div class="col-lg-12">
-          <div class="row g-4">
-            <div v-for="(faq, index) in filteredFaqs" :key="index" class="col-lg-6">
-              <div class="accordion custom-accordion h-100" :id="'helpAccordion' + index">
+          <div class="accordion custom-accordion" id="helpAccordion">
+            <div class="row g-4">
+              <div v-for="(faq, index) in filteredFaqs" :key="index" class="col-lg-6">
                 <div class="accordion-item h-100 border-0 rounded-3 overflow-hidden shadow-sm">
                   <h2 class="accordion-header" :id="'heading' + index">
                     <button class="accordion-button collapsed fw-semibold h-100 align-items-center" type="button"
@@ -59,7 +59,7 @@
                     </button>
                   </h2>
                   <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index"
-                    :data-bs-parent="'#helpAccordion' + index">
+                    data-bs-parent="#helpAccordion">
                     <div class="accordion-body text-secondary">
                       {{ faq.a }}
                     </div>
@@ -92,6 +92,7 @@
 </template>
 
 <script setup>
+import BaseInput from '@/components/ui/base/BaseInput.vue';
 import { ref, computed } from 'vue';
 
 const searchQuery = ref('');
@@ -160,7 +161,7 @@ const filteredFaqs = computed(() => {
 /* Hero Styles */
 .help-hero {
   background-color: #000;
-  border-radius:30px;
+  border-radius: 30px;
 }
 
 .hero-bg-overlay {
@@ -169,8 +170,6 @@ const filteredFaqs = computed(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%),
-    url('https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80');
   background-size: cover;
   background-position: center;
   opacity: 0.6;
@@ -190,12 +189,15 @@ const filteredFaqs = computed(() => {
 .search-container {
   max-width: 600px;
   width: 100%;
+
 }
 
 .search-input {
-  padding-left: 55px;
+  padding-left: 70px;
+  padding-right: 24px;
+  padding-bottom: 14px;
   height: 60px;
-  border-radius: 30px;
+  border-radius: 20px;
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-text);
@@ -212,6 +214,8 @@ const filteredFaqs = computed(() => {
 
 .search-input::placeholder {
   color: var(--color-muted);
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .search-icon {
@@ -321,7 +325,7 @@ const filteredFaqs = computed(() => {
   left: 0;
   width: 100%;
   height: 4px;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+  background-color: var(--color-primary);
 }
 
 @media (max-width: 768px) {

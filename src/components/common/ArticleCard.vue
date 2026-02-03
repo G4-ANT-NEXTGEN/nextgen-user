@@ -1,5 +1,5 @@
 <template>
-  <article class="post-card" @click="handleCardClick">
+  <article class="post-card">
     <!-- Header Section -->
     <header class="post-header">
       <div class="author-info">
@@ -14,20 +14,13 @@
           </div>
           <div class="post-meta">
             <time class="post-date">{{ formatDate(post.created_at) }}</time>
-            <span class="meta-dot">•</span>
-            <span class="meta-scope">Public</span>
           </div>
         </div>
       </div>
 
       <div class="post-actions" v-if="post.creator.id == currentUserId">
-        <button
-          @click="$emit('get-id', post.id)"
-          class="action-trigger"
-          type="button"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
+        <button @click="$emit('get-id', post.id)" class="action-trigger" type="button" data-bs-toggle="dropdown"
+          aria-expanded="false">
           <i class="bi bi-three-dots"></i>
         </button>
         <ul class="action-dropdown dropdown-menu">
@@ -38,21 +31,13 @@
             </button>
           </li>
           <li>
-            <button
-              @click="$emit('delete', post.id)"
-              type="button"
-              class="action-item action-item--danger"
-            >
+            <button @click="$emit('delete', post.id)" type="button" class="action-item action-item--danger">
               <i class="bi bi-trash"></i>
               <span>Delete Post</span>
             </button>
           </li>
           <li>
-            <button
-              @click="$emit('hide', post.id)"
-              type="button"
-              class="action-item action-item--danger"
-            >
+            <button @click="$emit('hide', post.id)" type="button" class="action-item action-item--danger">
               <i class="bi bi-eye-slash"></i>
               <span>Hide Post</span>
             </button>
@@ -67,21 +52,17 @@
     </div>
 
     <!-- Image Section -->
-    <div
-      class="post-media"
-      v-if="post.image && post.image !== 'http://novia2.csm.linkpc.net/storage/posts'"
-    >
+    <div class="post-media" v-if="post.image && post.image !== 'http://novia2.csm.linkpc.net/storage/posts'">
       <div class="media-container">
         <img class="media-image" :src="post.image" alt="Post image" />
       </div>
     </div>
 
     <!-- Engagement Stats Row -->
-    <div class="engagement-stats">
-      <div class="reactions-display">
+    <div class="engagement-stats ">
+      <div class="reactions-display " v-if="likeCount > 0">
         <div class="reaction-icons">
           <span class="reaction-icon bg-danger text-white"><i class="bi bi-heart-fill"></i></span>
-          <span class="reaction-icon bg-primary text-white"><i class="bi bi-hand-thumbs-up-fill"></i></span>
         </div>
         <span class="reaction-count">{{ likeCount }} reactions</span>
       </div>
@@ -94,31 +75,27 @@
     <!-- Footer Actions -->
     <footer class="post-footer">
       <div class="engagement-actions">
-        <button
-          @click="$emit('like', post.id)"
-          class="engagement-btn engagement-btn--like"
-          :class="{ 'is-active': isLiked }"
-        >
+        <button @click="$emit('like', post.id)" class="action-btn" :class="{ 'is-active': isLiked }">
           <i v-if="isLiked" class="bi bi-heart-fill"></i>
           <i v-else class="bi bi-heart"></i>
-          <span class="engagement-count">{{ likeCount }}</span>
-          <span class="engagement-label">Like</span>
+          <span class="action-label">Like</span>
         </button>
 
-      <button class="action-btn">
-        <i class="bi bi-chat"></i>
-        <span>Comment</span>
-      </button>
+        <button class="action-btn">
+          <i class="bi bi-chat"></i>
+          <span class="action-label">Comment</span>
+        </button>
 
-      <button class="action-btn">
-        <i class="bi bi-share"></i>
-        <span>Share</span>
-      </button>
+        <button class="action-btn">
+          <i class="bi bi-share"></i>
+          <span class="action-label">Share</span>
+        </button>
 
-      <button class="action-btn bookmark-btn">
-        <i class="bi bi-bookmark"></i>
-        <span>Save</span>
-      </button>
+        <button class="action-btn bookmark-btn">
+          <i class="bi bi-bookmark"></i>
+          <span class="action-label">Save</span>
+        </button>
+      </div>
     </footer>
   </article>
 </template>
@@ -157,21 +134,7 @@ const handleAvatarClick = () => {
   router.push({ name: 'view-profile', params: { id: props.post.creator.id } })
 }
 
-const handleCardClick = (e) => {
-  // Ignore clicks on interactive elements (buttons, links, dropdowns, avatar)
-  if (
-    e.target.closest('button') ||
-    e.target.closest('a') ||
-    e.target.closest('.action-dropdown') ||
-    e.target.closest('.engagement-btn') ||
-    e.target.closest('.avatar-wrapper') ||
-    e.target.closest('.action-trigger')
-  ) {
-    return
-  }
 
-  router.push({ name: 'view-profile', params: { id: props.post.creator.id } })
-}
 </script>
 
 <style scoped>
@@ -183,6 +146,7 @@ const handleCardClick = (e) => {
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1) !important;
   border-radius: 20px;
   padding: 24px;
+  padding-bottom: 2px !important;
   margin-bottom: 24px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   animation: fadeInUp 0.5s ease-out;
@@ -384,10 +348,10 @@ const handleCardClick = (e) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 16px;
-  margin-bottom: 16px;
-  border-bottom: 1px solid var(--color-border);
-  font-size: 14px;
+  padding: 12px 4px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(var(--color-border-rgb, 229, 231, 235), 0.5);
+  font-size: 13.5px;
   color: var(--color-muted);
 }
 
@@ -403,15 +367,16 @@ const handleCardClick = (e) => {
 }
 
 .reaction-icon {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 2px solid var(--color-accent);
-  margin-right: -6px;
-  font-size: 10px;
+  margin-right: -8px;
+  font-size: 11px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .reaction-icons .reaction-icon:first-child {
@@ -427,30 +392,60 @@ const handleCardClick = (e) => {
 .comment-share-stats {
   display: flex;
   gap: 12px;
+  align-items: center;
+  margin-left: auto;
+  /* Ensures it stays right when reactions are hidden */
+}
+
+.comment-share-stats span {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.comment-share-stats span:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
 }
 
 /* Footer / Action Buttons */
 .post-footer {
+  margin-top: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 0px;
+}
+
+.engagement-actions {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
 }
 
 .action-btn {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
+  padding: 3px 12px;
   border: none;
   background: transparent;
-  border-radius: 8px;
-  font-size: 15px;
+  border-radius: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--color-muted, #6b7280);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   flex: 1;
   justify-content: center;
+}
+
+.action-btn:hover {
+  background: rgba(var(--color-primary-rgb, 59, 130, 246), 0.08);
+  color: var(--color-primary, #3b82f6);
+  transform: translateY(-1px);
+}
+
+.action-label {
+  font-weight: 600;
 }
 
 .action-btn:hover {
@@ -471,6 +466,7 @@ const handleCardClick = (e) => {
 }
 
 @keyframes heartBeat {
+
   0%,
   100% {
     transform: scale(1);
@@ -506,13 +502,17 @@ const handleCardClick = (e) => {
   }
 
   .action-btn {
-    padding: 8px;
-    font-size: 14px;
-    gap: 6px;
+    padding: 8px 4px;
+    font-size: 13px;
+    gap: 4px;
+  }
+
+  .action-label {
+    display: none;
   }
 
   .action-btn i {
-    font-size: 18px;
+    font-size: 20px;
   }
 }
 </style>

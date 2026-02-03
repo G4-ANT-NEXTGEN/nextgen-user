@@ -253,14 +253,22 @@ onUnmounted(() => {
   height: 200px;
   background: linear-gradient(to bottom,
       rgba(59, 130, 246, 0),
-      rgba(59, 130, 246, 0.8),
-      rgba(37, 99, 235, 0.8));
-  filter: blur(1px);
+      rgba(59, 130, 246, 0.6),
+      var(--color-primary));
+  filter: blur(1.5px);
   top: -200px;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   will-change: transform;
-  opacity: 0.6;
+  opacity: 0.4;
+}
+
+[data-theme="light"] .beam {
+  background: linear-gradient(to bottom,
+      rgba(59, 130, 246, 0),
+      rgba(59, 130, 246, 0.6),
+      rgba(37, 99, 235, 0.8));
+  opacity: 0.5;
 }
 
 .beam.h-6 {
@@ -294,7 +302,7 @@ onUnmounted(() => {
   position: absolute;
   width: 4px;
   height: 4px;
-  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  background: linear-gradient(to right, #3b82f6, var(--color-primary));
   border-radius: 50%;
   animation: explode 0.8s ease-out forwards;
 }

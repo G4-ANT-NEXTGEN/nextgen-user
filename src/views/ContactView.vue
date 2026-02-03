@@ -1,54 +1,73 @@
 <template>
-  <div class="contact-page">
-    <div class="container-fluid px-4 py-5">
-      <div class="row justify-content-center">
-        <div class="col-lg-10 col-xl-8">
-
-          <!-- Header -->
-          <div class="text-center mb-5">
-            <h1 class="display-4 fw-bold mb-3 hero-title">Get in Touch</h1>
-            <p class="lead text-secondary">
+  <div class="contact-page p-4">
+    <!-- Hero Section -->
+    <div class="contact-hero py-5 mb-5 position-relative overflow-hidden">
+      <div class="hero-bg-overlay"></div>
+      <div class="container-fluid px-4 position-relative z-1">
+        <div class="row justify-content-center">
+          <div class="col-lg-8 text-center reveal-up">
+            <h1 class="display-4 fw-bold mb-3 hero-title text-white">Get in Touch</h1>
+            <p class="lead text-white-50 mb-0">
               We'd love to hear from you. Please fill out this form or shoot us an email.
             </p>
           </div>
+        </div>
+      </div>
+    </div>
 
+    <div class="container-fluid px-4 pb-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-10">
           <div class="row g-5">
             <!-- Contact Form -->
             <div class="col-lg-7">
-              <div class="card contact-card border-0 p-4 p-md-5 h-100">
-                <h3 class="fw-bold mb-4">Send us a Message</h3>
+              <div class="card contact-card border-0 p-4 p-md-5 h-100 reveal-left">
+                <div class="card-header-custom mb-4">
+                  <h3 class="fw-bold mb-2">Send us a Message</h3>
+                  <div class="header-line"></div>
+                </div>
                 <form @submit.prevent="submitForm">
-                  <div class="row g-3">
+                  <div class="row g-4">
                     <div class="col-md-6">
-                      <label class="form-label">First Name</label>
-                      <input type="text" class="form-control form-control-lg" placeholder="Jane" required>
+                      <div class="form-group-custom">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-control" placeholder="Jane" required>
+                      </div>
                     </div>
                     <div class="col-md-6">
-                      <label class="form-label">Last Name</label>
-                      <input type="text" class="form-control form-control-lg" placeholder="Doe" required>
+                      <div class="form-group-custom">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-control" placeholder="Doe" required>
+                      </div>
                     </div>
                     <div class="col-12">
-                      <label class="form-label">Email Address</label>
-                      <input type="email" class="form-control form-control-lg" placeholder="jane@example.com" required>
+                      <div class="form-group-custom">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-control" placeholder="jane@example.com" required>
+                      </div>
                     </div>
                     <div class="col-12">
-                      <label class="form-label">Subject</label>
-                      <select class="form-select form-select-lg">
-                        <option selected>General Inquiry</option>
-                        <option>Support</option>
-                        <option>Feedback</option>
-                        <option>Business Partnership</option>
-                      </select>
+                      <div class="form-group-custom">
+                        <label class="form-label">Subject</label>
+                        <select class="form-select">
+                          <option selected>General Inquiry</option>
+                          <option>Support</option>
+                          <option>Feedback</option>
+                          <option>Business Partnership</option>
+                        </select>
+                      </div>
                     </div>
                     <div class="col-12">
-                      <label class="form-label">Message</label>
-                      <textarea class="form-control form-control-lg" rows="5" placeholder="How can we help you?"
-                        required></textarea>
+                      <div class="form-group-custom">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-control" rows="5" placeholder="How can we help you?" required></textarea>
+                      </div>
                     </div>
                     <div class="col-12 pt-2">
                       <button type="submit" class="btn btn-primary btn-lg w-100 send-btn">
                         <span v-if="!isSubmitting">Send Message</span>
                         <div v-else class="spinner-border spinner-border-sm" role="status"></div>
+                        <i class="bi bi-send-fill ms-2"></i>
                       </button>
                     </div>
                   </div>
@@ -58,50 +77,56 @@
 
             <!-- Contact Info -->
             <div class="col-lg-5">
-              <div class="d-flex flex-column gap-4 h-100">
+              <div class="d-flex flex-column gap-4 h-100 reveal-right">
                 <!-- Info Cards -->
                 <div class="info-card p-4 rounded-4">
-                  <div class="d-flex align-items-center gap-3 mb-2">
-                    <div class="icon-circle bg-primary-subtle text-primary">
+                  <div class="d-flex align-items-center gap-4">
+                    <div class="icon-circle bg-primary-gradient text-white">
                       <i class="bi bi-geo-alt-fill"></i>
                     </div>
-                    <h5 class="fw-bold mb-0">Visit Us</h5>
+                    <div>
+                      <h5 class="fw-bold mb-1">Visit Us</h5>
+                      <p class="text-secondary mb-0">
+                        123 Innovation Drive<br>
+                        Tech City, TC 90210
+                      </p>
+                    </div>
                   </div>
-                  <p class="text-secondary mb-0 ps-5">
-                    123 Innovation Drive<br>
-                    Tech City, TC 90210
-                  </p>
                 </div>
 
                 <div class="info-card p-4 rounded-4">
-                  <div class="d-flex align-items-center gap-3 mb-2">
-                    <div class="icon-circle bg-success-subtle text-success">
+                  <div class="d-flex align-items-center gap-4">
+                    <div class="icon-circle bg-secondary-gradient text-white">
                       <i class="bi bi-envelope-fill"></i>
                     </div>
-                    <h5 class="fw-bold mb-0">Email Us</h5>
+                    <div>
+                      <h5 class="fw-bold mb-1">Email Us</h5>
+                      <p class="text-secondary mb-0">
+                        hello@nextgen.com<br>
+                        support@nextgen.com
+                      </p>
+                    </div>
                   </div>
-                  <p class="text-secondary mb-0 ps-5">
-                    hello@nextgen.com<br>
-                    support@nextgen.com
-                  </p>
                 </div>
 
                 <div class="info-card p-4 rounded-4">
-                  <div class="d-flex align-items-center gap-3 mb-2">
-                    <div class="icon-circle bg-info-subtle text-info">
+                  <div class="d-flex align-items-center gap-4">
+                    <div class="icon-circle bg-info-gradient text-white">
                       <i class="bi bi-telephone-fill"></i>
                     </div>
-                    <h5 class="fw-bold mb-0">Call Us</h5>
+                    <div>
+                      <h5 class="fw-bold mb-1">Call Us</h5>
+                      <p class="text-secondary mb-0">
+                        +1 (555) 123-4567<br>
+                        Mon-Fri from 8am to 5pm
+                      </p>
+                    </div>
                   </div>
-                  <p class="text-secondary mb-0 ps-5">
-                    +1 (555) 123-4567<br>
-                    Mon-Fri from 8am to 5pm
-                  </p>
                 </div>
 
                 <!-- Socials -->
                 <div class="social-links mt-auto pt-4 text-center text-lg-start">
-                  <h6 class="fw-bold mb-3 text-uppercase small text-muted letter-spacing-1">Follow Us</h6>
+                  <h6 class="fw-bold mb-4 text-uppercase small letter-spacing-2 text-muted">Follow Our Journey</h6>
                   <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
                     <a href="#" class="social-btn"><i class="bi bi-twitter-x"></i></a>
                     <a href="#" class="social-btn"><i class="bi bi-linkedin"></i></a>
@@ -112,7 +137,6 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -140,27 +164,70 @@ defineOptions({
 
 <style scoped>
 .contact-page {
-  min-height: 100%;
   color: var(--color-text);
-  /* background-color: var(--color-background); */
+  min-height: 100%;
+  padding-bottom: 3rem;
+}
+
+/* Hero Styles */
+.contact-hero {
+  background-color: #000;
+  border-radius: 30px;
+  margin: 0 1rem 3rem 1rem;
+}
+
+.hero-bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.6;
 }
 
 .hero-title {
-  color: var(--color-text);
-  letter-spacing: -1px;
+  letter-spacing: -1.5px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
+.text-white-50 {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Card Styles */
 .contact-card {
   background: var(--color-surface);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-xl);
   border-radius: 24px;
+  border: 1px solid var(--color-border) !important;
+}
+
+.card-header-custom {
+  position: relative;
+}
+
+.header-line {
+  width: 50px;
+  height: 4px;
+  background: var(--color-primary);
+  border-radius: 2px;
+}
+
+/* Form Styles */
+.form-group-custom {
+  margin-bottom: 0.5rem;
 }
 
 .form-label {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-muted);
   margin-bottom: 0.5rem;
-  color: var(--color-text);
+  display: block;
 }
 
 .form-control,
@@ -169,7 +236,9 @@ defineOptions({
   border: 1px solid var(--color-border);
   color: var(--color-text);
   border-radius: 12px;
-  padding: 0.75rem 1rem;
+  padding: 0.85rem 1.25rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
 .form-control:focus,
@@ -183,63 +252,138 @@ defineOptions({
 .send-btn {
   border-radius: 12px;
   padding: 1rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 15px rgba(var(--color-primary-rgb), 0.3);
 }
 
 .send-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.3);
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 8px 25px rgba(var(--color-primary-rgb), 0.4);
 }
 
+/* Info Cards */
 .info-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  transition: transform 0.3s ease;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .info-card:hover {
-  transform: translateY(-5px);
+  transform: translateX(10px);
   border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
 }
 
 .icon-circle {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   flex-shrink: 0;
 }
 
-.text-secondary {
-  color: var(--color-muted) !important;
+.bg-primary-gradient {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
 }
 
+.bg-secondary-gradient {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.bg-info-gradient {
+  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+}
+
+/* Social Buttons */
 .social-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--color-surface);
   color: var(--color-text);
   border: 1px solid var(--color-border);
-  transition: all 0.2s ease;
-  font-size: 1.25rem;
+  transition: all 0.3s ease;
+  font-size: 1.35rem;
 }
 
 .social-btn:hover {
   background: var(--color-primary);
   color: white;
   border-color: var(--color-primary);
-  transform: translateY(-3px);
+  transform: translateY(-5px) rotate(8deg);
+  box-shadow: 0 5px 15px rgba(var(--color-primary-rgb), 0.3);
 }
 
-.letter-spacing-1 {
-  letter-spacing: 1px;
+.letter-spacing-2 {
+  letter-spacing: 2px;
+}
+
+/* Animations */
+.reveal-up {
+  animation: revealUp 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+.reveal-left {
+  animation: revealLeft 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+.reveal-right {
+  animation: revealRight 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes revealLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes revealRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 991px) {
+  .contact-hero {
+    border-radius: 20px;
+    margin: 0 0 2rem 0;
+  }
+
+  .info-card:hover {
+    transform: translateY(-5px);
+  }
 }
 </style>

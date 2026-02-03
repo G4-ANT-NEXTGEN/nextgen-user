@@ -27,11 +27,13 @@
 <style scoped>
 .post-card-skeleton {
   background: var(--color-accent);
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
+  border: none;
+  border-radius: 20px;
   padding: 24px;
+  padding-bottom: 16px;
   margin-bottom: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1) !important;
+  width: 100%;
 }
 
 .skeleton-header {
@@ -60,13 +62,13 @@
 }
 
 .skeleton-line.name {
-  width: 140px;
+  width: 180px;
   height: 16px;
   margin-bottom: 8px;
 }
 
 .skeleton-line.date {
-  width: 80px;
+  width: 100px;
   height: 12px;
 }
 
@@ -80,12 +82,12 @@
 }
 
 .skeleton-content .skeleton-line.short {
-  width: 60%;
+  width: 70%;
 }
 
 .skeleton-media {
   width: 100%;
-  height: 300px;
+  height: 380px;
   background: var(--color-border);
   border-radius: 12px;
   margin-bottom: 20px;

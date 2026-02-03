@@ -27,8 +27,6 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-import AppNavbar from '@/components/layout/AppNavbar.vue'
-import NavigationMenu from '@/components/layout/NavigationMenu.vue'
 import ProfileHeader from '@/components/profile/ProfileHeader.vue'
 import ProfileSidebar from '@/components/profile/ProfileSidebar.vue'
 

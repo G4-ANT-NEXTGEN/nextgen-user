@@ -203,7 +203,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useProfileStore } from '@/stores/profile'
 import { Cropper } from 'vue-advanced-cropper'
 defineProps({

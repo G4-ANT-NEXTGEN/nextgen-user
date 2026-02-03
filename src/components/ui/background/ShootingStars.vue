@@ -1,5 +1,5 @@
 <template>
-  <div class="stars-container" :style="{ backgroundColor: theme === 'light' ? '#ffffff' : '#000000' }">
+  <div class="stars-container">
     <!-- Static Stars Canvas -->
     <canvas ref="starsCanvas" class="stars-canvas"></canvas>
 

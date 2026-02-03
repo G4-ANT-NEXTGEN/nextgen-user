@@ -15,7 +15,7 @@
       <div class="container-fluid px-4 hero-content">
         <div class="row align-items-center min-vh-100">
           <div class="col-lg-6 mb-5 mb-lg-0">
-            <div class="hero-badge reveal-scroll reveal-up">Since 2018</div>
+            <div class="hero-badge reveal-scroll reveal-up">Since 2026</div>
             <h1 class="hero-title reveal-scroll reveal-up" style="transition-delay: 0.1s">
               Revolutionizing<br />
               <span class="gradient-text">Website</span><br />
@@ -25,7 +25,7 @@
               Next Gen brings teams together with powerful, intuitive communication tools
               built for the modern web. Experience innovation like never before.
             </p>
-            <div class="hero-buttons reveal-scroll reveal-up" style="transition-delay: 0.3s">
+            <!-- <div class="hero-buttons reveal-scroll reveal-up" style="transition-delay: 0.3s">
               <button class="btn btn-primary">
                 Start Next Gen
                 <i class="bi bi-arrow-right ms-2"></i>
@@ -34,7 +34,7 @@
                 <i class="bi bi-play-circle me-2"></i>
                 Watch Demo
               </button>
-            </div>
+            </div> -->
           </div>
           <div class="col-lg-6">
             <div class="hero-visual reveal-scroll reveal-scale">
@@ -423,7 +423,7 @@ onMounted(() => {
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  background-color: var(--color-text);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

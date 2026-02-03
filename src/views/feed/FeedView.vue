@@ -49,7 +49,7 @@
       <!-- Post -->
       <ArticleCard v-for="post in visiblePosts" :key="post.id" :post="post" :currentUserId="authStore.user?.id"
         :isLiked="isLiked(post.id)" :likeCount="getLikeCount(post.id)" @get-id="GetpostId" @edit="OpenModeledit"
-        @delete="OpenModeldelete" @like="reactLike" @hide="hidePost" @pin="pinPost" @report="reportPost" />
+        @delete="OpenModeldelete" @like="reactLike" @hide="hidePost" />
     </div>
 
     <!-- Modals -->
@@ -138,7 +138,6 @@ import { useAuthStore } from '@/stores/auth';
 import { usePostStore } from '@/stores/post';
 import { useCategoryStore } from '@/stores/category';
 import { useRequiredValidator } from '@/composables/useRequiredValidator';
-import { showSuccess, showInfo } from '@/utils/toast';
 import ArticleCard from '@/components/common/ArticleCard.vue';
 import ArticleCardSkeleton from '@/components/common/ArticleCardSkeleton.vue';
 import NoData from '@/components/common/NoData.vue';
@@ -173,13 +172,6 @@ const visiblePosts = computed(() => {
   return postStore.posts.filter(post => !hiddenPosts.value.has(post.id));
 });
 
-const pinPost = () => {
-  showSuccess('Post pinned successfully');
-};
-
-const reportPost = () => {
-  showInfo('Post reported. Thank you for making our community safer.');
-};
 
 authStore.fetchProfile();
 postStore.fetchPosts();
@@ -313,10 +305,15 @@ const prepareFormData = () => {
 };
 
 function reactLike(postId) {
-  if (!postLikeCounts.value[postId]) postLikeCounts.value[postId] = 10;
+  if (postLikeCounts.value[postId] === undefined) {
+    // Initialize from post data if available, otherwise default to 0
+    const post = postStore.posts.find(p => p.id === postId);
+    postLikeCounts.value[postId] = post?.likes_count || 0;
+  }
+
   if (likedPosts.value.has(postId)) {
     likedPosts.value.delete(postId);
-    postLikeCounts.value[postId]--;
+    postLikeCounts.value[postId] = Math.max(0, postLikeCounts.value[postId] - 1);
   } else {
     likedPosts.value.add(postId);
     postLikeCounts.value[postId]++;
@@ -328,7 +325,11 @@ function isLiked(postId) {
 }
 
 function getLikeCount(postId) {
-  return postLikeCounts.value[postId] || 10;
+  if (postLikeCounts.value[postId] !== undefined) {
+    return postLikeCounts.value[postId];
+  }
+  const post = postStore.posts.find(p => p.id === postId);
+  return post?.likes_count || 0;
 }
 
 const publishPost = async () => {
@@ -438,11 +439,10 @@ defineOptions({
 }
 
 .post-card {
-  background: var(--sidebar-bg);
+  background: var(--color-accent);
   border-radius: 20px;
   padding: 24px;
-  /* border: 1px solid var(--color-border); */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1) !important;
 }
 
 .avatar-post {
