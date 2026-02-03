@@ -276,23 +276,23 @@
               <div class="tab-content">
                 <!-- Change Password -->
                 <div v-if="settingTab === 'password'">
-                  <form >
+                  <form @submit.prevent="changePassword">
 
                     <div class="mb-3 position-relative">
-                    <BaseInput @input="validateCurrentPassword()" v-model="currentPass" :type="showCurrentPass ? 'text' : 'password'"
-                      :error="errors.password" id="password-input" placeholder="Enter your password" label="Current Password" />
+                    <BaseInput @input="validateCurrentPassword" v-model="currentPass" :type="showCurrentPass ? 'text' : 'password'"
+                      :error="errors.currentPass" id="password-input" placeholder="Enter your password" label="Current Password" />
                     <i class="bi" :class="showPass ? 'bi-eye-slash' : 'bi-eye'" @click="showCurrentPass = !showCurrentPass"
                       style="cursor: pointer; position: absolute; right: 20px; top: 65px; transform: translateY(-50%);"></i>
                   </div>
                      <div class="mb-3 position-relative">
-                    <BaseInput @input="validateNewPassword()" v-model="newPass" :type="showNewPass ? 'text' : 'password'"
-                      :error="errors.password" id="password-input" placeholder="Enter your password" label="New Password" />
+                    <BaseInput @input="validatePassword" v-model="newPass" :type="showNewPass ? 'text' : 'password'"
+                      :error="errors.newPass" id="password-input" placeholder="Enter your password" label="New Password" />
                     <i class="bi" :class="showPass ? 'bi-eye-slash' : 'bi-eye'" @click="showNewPass = !showNewPass"
                       style="cursor: pointer; position: absolute; right: 20px; top: 65px; transform: translateY(-50%);"></i>
                   </div>
                     <div class="mb-3 position-relative">
-                    <BaseInput @input="validateComfirmPassword()" v-model="comfirmPass" :type="showComfirmPass ? 'text' : 'password'"
-                      :error="errors.password" id="password-input" placeholder="Enter your password" label="Comfirm Password" />
+                    <BaseInput @blur="validateComfirmPassword" v-model="comfirmPass" :type="showComfirmPass ? 'text' : 'password'"
+                      :error="errors.comfirmPass" id="password-input" placeholder="Enter your password" label="Comfirm Password" />
                     <i class="bi" :class="showPass ? 'bi-eye-slash' : 'bi-eye'" @click="showComfirmPass = !showComfirmPass"
                       style="cursor: pointer; position: absolute; right: 20px; top: 65px; transform: translateY(-50%);"></i>
                   </div>
@@ -362,7 +362,7 @@ const tabs = [
   { key: 'cv', label: 'CV' },
 ]
 const {errors,validateField} =useRequiredValidator()
-const { validatePassword: checkPassword } = usePasswordValidator()
+const { validatePassword: checkPassword, validatePasswordMatch } = usePasswordValidator()
 const profileStore = useProfileStore()
 const image = ref(null)
 const cropperRef = ref()
@@ -385,32 +385,43 @@ const comfirmPass=ref()
 onMounted(async () => {
   await profileStore.fetchProfile()
 })
-const validateForm = () => {
-  let isValid = true
-  if (!validateEmail() || !validatePassword()) {
-    isValid = false
-  }
-  return isValid
-}
-const changePassword = () =>{
-
-}
 const validateCurrentPassword = () => {
-  const result = checkPassword(currentPass.value)
-  errors.currentPass = result.message
-  return result.isValid
+    if (!currentPass.value) {
+        errors.currentPass = 'Current Password is required'
+        return false
+    }
+    errors.currentPass = ''
+    return true
 }
-const validateNewPassword = () => {
-  const result = checkPassword(newPass.value)
-  errors.newPass = result.message
-  return result.isValid
+const validatePassword = () => {
+    const result = checkPassword(newPass.value)
+    errors.newPass = result.message
+    return result.isValid
 }
 const validateComfirmPassword = () => {
-  const result = checkPassword(comfirmPass.value)
-  errors.comfirmPass = result.message
-  return result.isValid
+    if (!comfirmPass.value) {
+        errors.comfirmPass = 'Confirm Password is required'
+        return false
+    }
+    errors.comfirmPass = ''
+    return true
 }
 
+const validateForm = () => {
+    const currentPassValid = validateCurrentPassword()
+    const passwordValid = validatePassword()
+    const comfirmPasswordValid = validateComfirmPassword()
+
+    let isValid = passwordValid && comfirmPasswordValid && currentPassValid
+
+    if (isValid && newPass.value !== comfirmPass.value) {
+        const matchResult = validatePasswordMatch(newPass.value, comfirmPass.value)
+        errors.comfirmPass = matchResult.message
+        isValid = false
+    }
+
+    return isValid
+}
 const handleFileSelect = (e) => {
   const file = e.target.files[0]
   if (!file) return
@@ -460,6 +471,10 @@ const cvOnChangeFile = (e) => {
   cvFile.value = cv
 }
 
+const changePassword = () =>{
+  validateForm()
+  alert(`current p :${currentPass.value} new p : ${newPass.value} comf p : ${comfirmPass.value}`)
+}
 const handleSaveCv = async () => {
   if (!cvFile.value) return
   await profileStore.uploadCv(cvFile.value)
