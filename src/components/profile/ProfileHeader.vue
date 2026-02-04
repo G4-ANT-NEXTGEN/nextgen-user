@@ -140,17 +140,17 @@
               <h3>Change Password</h3>
               <p>Update your password to keep your account secure</p>
             </div>
-
+            <form @submit.prevent="changePassword">
             <div class="form-group">
-              <BaseInput label="Current Password" type="password" placeholder="Enter current password" />
+              <BaseInput @input="validateCurrentPassword()" v-model="currentPass" :error="errors.currentPass" label="Current Password" type="password" placeholder="Enter current password" />
             </div>
 
             <div class="form-group">
-              <BaseInput label="New Password" type="password" placeholder="Enter new password" />
+              <BaseInput @input="validateNewPassword()" v-model="newPass" :error="errors.newPass" label="New Password" type="password" placeholder="Enter new password" />
             </div>
 
             <div class="form-group">
-              <BaseInput label="Confirm New Password" type="password" placeholder="Confirm new password" />
+              <BaseInput @input="validateComfirmPassword()" v-model="comfirmPass" :error="errors.comfirmPass" label="Confirm New Password" type="password" placeholder="Confirm new password" />
             </div>
 
             <div class="password-requirements">
@@ -163,8 +163,9 @@
             </div>
 
             <div class="form-actions">
-              <BaseButton variant="primary" :isLoading="profileStore.isLoading">Update Password</BaseButton>
+              <BaseButton variant="primary" type="submit" :isLoading="profileStore.isProcessing">Update Password</BaseButton>
             </div>
+            </form>
           </div>
 
           <!-- Delete Account Tab -->
@@ -181,13 +182,8 @@
                 </p>
               </div>
             </div>
-
-            <div class="form-group">
-              <BaseInput label="Type 'DELETE' to confirm" placeholder="DELETE" />
-            </div>
-
             <div class="form-actions">
-              <BaseButton variant="danger" :isLoading="profileStore.isLoading">
+              <BaseButton variant="danger" :isLoading="profileStore.isLoading" @click="deleteAccount = true">
                 <i class="bi bi-trash"></i>
                 <span>Permanently Delete Account</span>
               </BaseButton>
@@ -196,7 +192,20 @@
         </div>
       </div>
     </BaseModal>
+    <!-- modal comfirm delete account -->
+     <BaseModal v-if="deleteAccount" title="Comfirm Delete Account" @close="deleteAccount = false">
+      <p>Are you sure?</p>
+      <template #footer>
+        <div class="d-flex justify-content-end">
+          <!-- <base-button>Cancel</base-button> -->
+          <BaseButton variant="danger" @click="comfirmDeleteAcc" :isLoading="profileStore.isLoading">
+                <i class="bi bi-trash"></i>
+                <span> Confirm</span>
+              </BaseButton>
 
+        </div>
+      </template>
+    </BaseModal>
     <!-- Original Modal Logic (Restored) -->
     <div class="modals-container">
       <!-- Update Cover Modal -->
@@ -204,7 +213,7 @@
         <div class="modal-content-wrapper">
           <div class="cropper-container">
             <Cropper v-if="uploadedImage" ref="cropperCoverRef" :src="uploadedImage"
-              :stencil-props="{ aspectRatio: 16 / 5, resizable: true }" />
+              :stencil-props="{ aspectRatio: null, resizable: true,movable: true }" />
             <div v-else class="upload-placeholder">
               <div class="placeholder-icon">
                 <i class="bi bi-image"></i>
@@ -236,7 +245,7 @@
         </div>
 
         <template #footer>
-          <BaseButton @click="closeEditCover" variant="secondary" :isLoading="profileStore.isProcessing">Cancel
+          <BaseButton @click="closeEditCover" variant="secondary">Cancel
           </BaseButton>
           <BaseButton @click="applyChageCover" :isLoading="profileStore.isProcessing" variant="primary">
             <span>{{ profileStore.isProcessing ? 'Saving...' : 'Save Changes' }}</span>
@@ -279,7 +288,7 @@
           <BaseButton @click="showImageCropper = false" variant="secondary" :isLoading="profileStore.isProcessing">
             Cancel
           </BaseButton>
-          <BaseButton @click="applyCrop" :isLoading="profileStore.isProcessing" variant="primary">
+          <BaseButton @click="applyCrop" :isLoading="profileStore.isLoading" variant="primary">
             <span>{{ profileStore.isProcessing ? 'Saving...' : 'Save Changes' }}</span>
           </BaseButton>
         </template>
@@ -332,6 +341,11 @@ import { Cropper } from 'vue-advanced-cropper'
 import ProfileHeaderSkeleton from '@/components/profile/ProfileHeaderSkeleton.vue'
 import 'vue-advanced-cropper/dist/style.css'
 import BaseButton from '../ui/base/BaseButton.vue'
+import { useRequiredValidator } from '@/composables/useRequiredValidator';
+import { usePasswordValidator } from '@/composables/usePasswordValidator';
+
+const { errors, validateField } = useRequiredValidator()
+const { validatePassword: checkPassword, validatePasswordMatch } = usePasswordValidator()
 
 defineProps({
   activeTab: {
@@ -366,11 +380,69 @@ const editCollaboration = ref(false)
 const openSetting = ref(false)
 const settingTab = ref('password')
 const cvFile = ref(null)
+const currentPass = ref()
+const newPass = ref()
+const comfirmPass = ref()
+const deleteAccount = ref(false)
 
 onMounted(async () => {
   await profileStore.fetchProfile()
 })
 
+const validateCurrentPassword = () => {
+  if(!currentPass.value){
+
+    errors.currentPass = `Current Password is required`
+    return false
+  }
+    errors.currentPass = ''
+    return true
+}
+const validateNewPassword = () => {
+    const result = checkPassword(newPass.value)
+    errors.newPass = result.message
+    return result.isValid
+}
+const validateComfirmPassword = () => {
+    if (!comfirmPass.value) {
+        errors.comfirmPass = 'Confirm Password is required'
+        return false
+    }
+    errors.comfirmPass = ''
+    return true
+}
+const comfirmDeleteAcc = async() => {
+  await profileStore.deleteAccount()
+  openSetting.value=false
+}
+const changePassword = async() => {
+  if(!validateForm())
+    return
+  await profileStore.changePassword({
+    'old_pass':currentPass.value,
+    'new_pass':newPass.value,
+    'new_pass_confirmation':comfirmPass.value
+  })
+  openSetting.value=false
+  currentPass.value=null
+  newPass.value=null
+  comfirmPass.value=null
+}
+const validateForm = () => {
+    const currentPassValid = validateCurrentPassword()
+    const passwordValid = validateNewPassword()
+    const comfirmPasswordValid = validateComfirmPassword()
+
+    let isValid =currentPassValid && passwordValid && comfirmPasswordValid
+
+    if (isValid && newPass.value !== comfirmPass.value) {
+        const matchResult = validatePasswordMatch(newPass.value, comfirmPass.value)
+        errors.comfirmPass = matchResult.message
+        isValid = false
+    }
+
+    return isValid
+}
 const handleFileSelect = (e) => {
   const file = e.target.files[0]
   if (!file) return
