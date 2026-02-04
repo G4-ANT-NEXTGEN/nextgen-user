@@ -130,8 +130,11 @@ const formatDate = (date) => {
 }
 
 const handleAvatarClick = () => {
-  // alert(props.post.creator.id)
-  router.push({ name: 'view-profile', params: { id: props.post.creator.id } })
+  if (props.post.creator.id == props.currentUserId) {
+    router.push({ name: 'profile' })
+  } else {
+    router.push({ name: 'view-profile', params: { id: props.post.creator.id } })
+  }
 }
 
 

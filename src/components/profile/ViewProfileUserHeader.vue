@@ -47,6 +47,7 @@
 import ProfileHeaderSkeleton from './ProfileHeaderSkeleton.vue'
 import BaseButton from '@/components/ui/base/BaseButton.vue'
 import { useRouter } from 'vue-router'
+import { useChatStore } from '@/stores/chat'
 
 const props = defineProps({
   activeTab: {
@@ -61,9 +62,11 @@ const props = defineProps({
 
 defineEmits(['change-tab'])
 const router = useRouter()
+const chatStore = useChatStore()
 
 const gotoMessage = () => {
   if (props.userData?.id) {
+    chatStore.startConversation(props.userData)
     router.push({ name: 'chat-room', params: { id: props.userData.id } })
   }
 }

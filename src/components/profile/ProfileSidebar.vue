@@ -117,7 +117,8 @@
 
       <template #footer>
         <BaseButton variant="secondary" @click="closePersonalUpdate">Cancel</BaseButton>
-        <BaseButton variant="primary" @click="HandleUpdatePersonal">Save Changes</BaseButton>
+        <BaseButton variant="primary" @click="HandleUpdatePersonal" :isLoading="profileStore.isProcessing">Save Changes
+        </BaseButton>
       </template>
     </BaseModal>
 
@@ -128,7 +129,8 @@
       </div>
       <template #footer>
         <BaseButton variant="secondary" @click="closeSkillUpdate">Cancel</BaseButton>
-        <BaseButton variant="primary" @click="HandleUpdateSkill">Save Changes</BaseButton>
+        <BaseButton variant="primary" @click="HandleUpdateSkill" :isLoading="profileStore.isProcessing">Save Changes
+        </BaseButton>
       </template>
     </BaseModal>
 
@@ -173,6 +175,7 @@ import { useSchoolStore } from '@/stores/schools'
 import { useDegreeStore } from '@/stores/degrees'
 import { useSubjectStore } from '@/stores/subjects'
 import { useEducationStore } from '@/stores/education'
+import { usePostStore } from '@/stores/post'
 import { showSuccess, showError, showWarning } from '@/utils/toast'
 import BaseButton from '@/components/ui/base/BaseButton.vue'
 import BaseModal from '@/components/ui/base/BaseModal.vue'
@@ -187,6 +190,7 @@ const schoolStore = useSchoolStore()
 const degreeStore = useDegreeStore()
 const subjectStore = useSubjectStore()
 const educationStore = useEducationStore()
+const postStore = usePostStore()
 
 const isLoadingProfile = ref(true)
 const isLoading = ref(false)
@@ -257,8 +261,8 @@ const HandleUpdatePersonal = async () => {
       portfolio_link: portfolio_link.value,
     }
     await profileStore.updatePersonalInfo(payload)
-    showSuccess('Profile updated successfully!')
     personalUpdate.value = false
+    await postStore.fetchPosts()
   } catch {
     showError('Failed to update profile!')
   }
@@ -278,8 +282,8 @@ const HandleUpdateSkill = async () => {
   if (!skills.value.length) return showWarning('Select a skill!')
   try {
     await profileStore.updateProfessionalInfo({ skill_ids: skills.value })
-    showSuccess('Skills updated!')
     skillUpdate.value = false
+    await postStore.fetchPosts()
   } catch {
     showError('Failed to update skills!')
   }

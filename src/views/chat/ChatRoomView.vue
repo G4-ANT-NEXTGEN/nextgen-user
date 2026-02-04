@@ -5,13 +5,10 @@
       <router-link :to="{ name: 'view-profile', params: { id: route.params.id } }"
         class="text-decoration-none d-flex align-items-center">
         <div class="avatar-stack me-3">
-          <img
-            :src="conversationMessage[0]?.isMine ? conversationMessage[0]?.receiver.avatar : conversationMessage[0]?.sender.avatar"
-            class="header-avatar" />
+          <img :src="roomUser?.avatar" class="header-avatar" />
         </div>
         <div class="user-details">
-          <h4 class="m-0">{{ conversationMessage[0]?.isMine ? conversationMessage[0]?.receiver.full_name :
-            conversationMessage[0]?.sender.full_name }}</h4>
+          <h4 class="m-0">{{ roomUser?.full_name }}</h4>
           <span class="status-text">Online</span>
         </div>
       </router-link>
@@ -75,6 +72,14 @@ const formatLocalTime = (time) => {
     minute: '2-digit'
   })
 }
+const roomUser = computed(() => {
+  if (conversationMessage.value.length > 0) {
+    const firstMsg = conversationMessage.value[0]
+    return firstMsg.isMine ? firstMsg.receiver : firstMsg.sender
+  }
+  return chatStore.temporaryChatUser
+})
+
 const conversationMessage = computed(() => {
   const id = Number(route.params.id)
   return chatStore.getConversationMessages(id)
