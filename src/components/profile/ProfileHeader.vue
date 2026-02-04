@@ -102,14 +102,11 @@
             </label>
           </div>
         </div>
-
-        <BaseInput label="Company Name" placeholder="Enter company name" />
         <BaseInput label="Company Website" placeholder="https://example.com" />
-        <BaseInput label="Collaboration Type" placeholder="e.g., Partnership, Client" />
       </div>
 
       <template #footer>
-        <BaseButton @click="closeEditCollaboration" variant="secondary" :isLoading="profileStore.isLoading">Cancel
+        <BaseButton @click="closeEditCollaboration" variant="secondary">Cancel
         </BaseButton>
         <BaseButton @click="HandleEditCollaboration" variant="primary" :isLoading="profileStore.isLoading">
           Add Collaboration
@@ -384,6 +381,8 @@ const currentPass = ref()
 const newPass = ref()
 const comfirmPass = ref()
 const deleteAccount = ref(false)
+const companyLogo = ref()
+const companyLink = ref()
 
 onMounted(async () => {
   await profileStore.fetchProfile()
