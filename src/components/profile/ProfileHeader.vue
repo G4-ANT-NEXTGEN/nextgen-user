@@ -163,7 +163,7 @@
             </div>
 
             <div class="form-actions">
-              <BaseButton variant="primary" type="submit" :isLoading="profileStore.isLoading">Update Password</BaseButton>
+              <BaseButton variant="primary" type="submit" :isLoading="profileStore.isProcessing">Update Password</BaseButton>
             </div>
             </form>
           </div>
@@ -182,13 +182,8 @@
                 </p>
               </div>
             </div>
-
-            <div class="form-group">
-              <BaseInput label="Type 'DELETE' to confirm" placeholder="DELETE" />
-            </div>
-
             <div class="form-actions">
-              <BaseButton variant="danger" :isLoading="profileStore.isLoading">
+              <BaseButton variant="danger" :isLoading="profileStore.isLoading" @click="deleteAccount = true">
                 <i class="bi bi-trash"></i>
                 <span>Permanently Delete Account</span>
               </BaseButton>
@@ -197,7 +192,20 @@
         </div>
       </div>
     </BaseModal>
+    <!-- modal comfirm delete account -->
+     <BaseModal v-if="deleteAccount" title="Comfirm Delete Account" @close="deleteAccount = false">
+      <p>Are you sure?</p>
+      <template #footer>
+        <div class="d-flex justify-content-end">
+          <!-- <base-button>Cancel</base-button> -->
+          <BaseButton variant="danger" @click="comfirmDeleteAcc" :isLoading="profileStore.isLoading">
+                <i class="bi bi-trash"></i>
+                <span> Confirm</span>
+              </BaseButton>
 
+        </div>
+      </template>
+    </BaseModal>
     <!-- Original Modal Logic (Restored) -->
     <div class="modals-container">
       <!-- Update Cover Modal -->
@@ -237,7 +245,7 @@
         </div>
 
         <template #footer>
-          <BaseButton @click="closeEditCover" variant="secondary" :isLoading="profileStore.isLoading">Cancel
+          <BaseButton @click="closeEditCover" variant="secondary">Cancel
           </BaseButton>
           <BaseButton @click="applyChageCover" :isLoading="profileStore.isProcessing" variant="primary">
             <span>{{ profileStore.isProcessing ? 'Saving...' : 'Save Changes' }}</span>
@@ -277,9 +285,9 @@
         </div>
 
         <template #footer>
-          <BaseButton @click="showImageCropper = false" variant="secondary" :isLoading="profileStore.isProcessing">Cancel
+          <BaseButton @click="showImageCropper = false" variant="secondary" :isLoading="profileStore.isLoading">Cancel
           </BaseButton>
-          <BaseButton @click="applyCrop" :isLoading="profileStore.isProcessing" variant="primary">
+          <BaseButton @click="applyCrop" :isLoading="profileStore.isLoading" variant="primary">
             <span>{{ profileStore.isProcessing ? 'Saving...' : 'Save Changes' }}</span>
           </BaseButton>
         </template>
@@ -372,6 +380,7 @@ const cvFile = ref(null)
 const currentPass = ref()
 const newPass = ref()
 const comfirmPass = ref()
+const deleteAccount = ref(false)
 
 onMounted(async () => {
   await profileStore.fetchProfile()
@@ -399,6 +408,10 @@ const validateComfirmPassword = () => {
     errors.comfirmPass = ''
     return true
 }
+const comfirmDeleteAcc = async() => {
+  await profileStore.deleteAccount()
+  openSetting.value=false
+}
 const changePassword = async() => {
   if(!validateForm())
     return
@@ -407,6 +420,10 @@ const changePassword = async() => {
     'new_pass':newPass.value,
     'new_pass_confirmation':comfirmPass.value
   })
+  openSetting.value=false
+  currentPass.value=null
+  newPass.value=null
+  comfirmPass.value=null
 }
 const validateForm = () => {
     const currentPassValid = validateCurrentPassword()
