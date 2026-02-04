@@ -285,7 +285,8 @@
         </div>
 
         <template #footer>
-          <BaseButton @click="showImageCropper = false" variant="secondary" :isLoading="profileStore.isLoading">Cancel
+          <BaseButton @click="showImageCropper = false" variant="secondary" :isLoading="profileStore.isProcessing">
+            Cancel
           </BaseButton>
           <BaseButton @click="applyCrop" :isLoading="profileStore.isLoading" variant="primary">
             <span>{{ profileStore.isProcessing ? 'Saving...' : 'Save Changes' }}</span>
@@ -303,10 +304,10 @@
         </div>
 
         <template #footer>
-          <BaseButton @click="deleteAvatar = false" variant="secondary" :isLoading="profileStore.isLoading">Cancel
+          <BaseButton @click="deleteAvatar = false" variant="secondary" :isLoading="profileStore.isProcessing">Cancel
           </BaseButton>
-          <BaseButton @click="handleAvatarDelete" variant="danger" :isLoading="profileStore.isLoading">
-            <span>{{ profileStore.isLoading ? 'Removing...' : 'Remove' }}</span>
+          <BaseButton @click="handleAvatarDelete" variant="danger" :isLoading="profileStore.isProcessing">
+            <span>{{ profileStore.isProcessing ? 'Removing...' : 'Remove' }}</span>
           </BaseButton>
         </template>
       </BaseModal>
@@ -321,10 +322,10 @@
         </div>
 
         <template #footer>
-          <BaseButton @click="deleteCover = false" variant="secondary" :isLoading="profileStore.isLoading">Cancel
+          <BaseButton @click="deleteCover = false" variant="secondary" :isLoading="profileStore.isProcessing">Cancel
           </BaseButton>
-          <BaseButton @click="handleDeleteCover" variant="danger" :isLoading="profileStore.isLoading">
-            <span>{{ profileStore.isLoading ? 'Removing...' : 'Remove' }}</span>
+          <BaseButton @click="handleDeleteCover" variant="danger" :isLoading="profileStore.isProcessing">
+            <span>{{ profileStore.isProcessing ? 'Removing...' : 'Remove' }}</span>
           </BaseButton>
         </template>
       </BaseModal>
@@ -335,6 +336,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useProfileStore } from '@/stores/profile'
+import { usePostStore } from '@/stores/post'
 import { Cropper } from 'vue-advanced-cropper'
 import ProfileHeaderSkeleton from '@/components/profile/ProfileHeaderSkeleton.vue'
 import 'vue-advanced-cropper/dist/style.css'
@@ -355,6 +357,7 @@ defineProps({
 defineEmits(['change-tab'])
 
 const profileStore = useProfileStore()
+const postStore = usePostStore()
 
 
 const tabs = [
@@ -455,6 +458,7 @@ const applyCrop = async () => {
   await profileStore.uploadAvatarBase64(avatar)
   showImageCropper.value = false
   uploadedImage.value = null
+  await postStore.fetchPosts()
 }
 
 const applyChageCover = async () => {
@@ -472,11 +476,9 @@ const handleDeleteCover = async () => {
 }
 
 const handleAvatarDelete = async () => {
-  showImageCropper.value = false
+  deleteAvatar.value = false
   await profileStore.removeAvatar()
-  if (!profileStore.isLoading) {
-    deleteAvatar.value = false
-  }
+  await postStore.fetchPosts()
 }
 
 const cvOnChangeFile = (e) => {

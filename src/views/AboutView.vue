@@ -82,7 +82,7 @@
             <h2 class="section-title">Building the Future of Communication</h2>
             <div class="about-content">
               <p>
-                Founded in 2018, Next Gen emerged from a simple belief: communication should be
+                Founded in 2026, Next Gen emerged from a simple belief: communication should be
                 effortless, secure, and accessible to everyone. What started as a small project by a
                 team of passionate developers has grown into a platform trusted by millions
                 worldwide.
