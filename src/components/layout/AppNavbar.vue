@@ -4,16 +4,16 @@
       <div class="d-flex align-items-center gap-4">
         <div class="d-flex align-items-center gap-2">
           <!-- Mobile Sidebar Toggle -->
-          <button class="theme-btn d-lg-none me-2" @click="$emit('toggle-menu')" aria-label="Toggle menu">
+          <button class="theme-btn d-xl-none me-2" @click="$emit('toggle-menu')" aria-label="Toggle menu">
             <i class="bi bi-list fs-4"></i>
           </button>
 
-          <div @click="$router.push('/home')" class="logo-box d-none d-lg-flex">
+          <div @click="$router.push('/home')" class="logo-box d-none d-xl-flex">
             <div class="logo-inner">
               <img class="img-fluid" src="../../../public/logo.jpg" alt="" />
             </div>
           </div>
-          <span @click="$router.push('/home')" class="fs-5 fw-bold nav-brand d-none d-lg-block">NextGen</span>
+          <span @click="$router.push('/home')" class="fs-5 fw-bold nav-brand d-none d-xl-block">NextGen</span>
         </div>
       </div>
 
@@ -148,7 +148,7 @@ authStore.fetchProfile()
   color: var(--color-text);
 }
 
-.nav-brand:hover{
+.nav-brand:hover {
   cursor: pointer;
 }
 

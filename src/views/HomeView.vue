@@ -8,12 +8,12 @@
     <div class="home-container" :class="{ 'content-padding': isHomePage }">
       <div class="row g-4 h-100" v-if="isHomePage">
         <!-- Sidebar Left (Profile) -->
-        <div class="col-lg-3 d-none d-lg-block h-100">
+        <div class="col-xl-3 d-none d-xl-block h-100">
           <AppSidebar />
         </div>
 
         <!-- Main Content (Feed) -->
-        <div class="col-lg-6 main-content-column h-100">
+        <div class="col-xl-6 main-content-column h-100">
           <MainLayout>
             <router-view v-slot="{ Component }">
               <transition name="fade" mode="out-in">
@@ -24,7 +24,7 @@
         </div>
 
         <!-- Sidebar Right -->
-        <div class="col-lg-3 d-none d-lg-block h-100">
+        <div class="col-xl-3 d-none d-xl-block h-100">
           <RightSidebar />
         </div>
       </div>
@@ -101,7 +101,7 @@ defineOptions({
   width: 100%;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .home-view {
     padding-left: 280px;
     /* Offset for fixed sidebar at view level */

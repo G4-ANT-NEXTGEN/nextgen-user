@@ -335,14 +335,17 @@ const handleAvatarClick = () => {
 
 .media-container {
   width: 100%;
+  height: 500px;
   border-radius: 16px;
   overflow: hidden;
-  background: var(--color-border, #f0f0f0);
+  border-radius: 20px !important;
+  /* background: var(--color-border, #f0f0f0); */
 }
 
 .media-image {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
