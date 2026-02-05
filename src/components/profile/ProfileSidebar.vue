@@ -70,8 +70,8 @@
           <div v-for="edu in profileStore.user?.educations?.slice(0, 2)" :key="edu.id" class="summary-item">
             <i class="bi bi-mortarboard-fill"></i>
             <div>
-              <div class="item-title">{{ edu.school.name }}</div>
-              <div class="item-sub">{{ edu.degrees.name }} • {{ edu.end_date.split('-')[0] }}</div>
+              <div class="item-title">{{ edu.school?.name }}</div>
+              <div class="item-sub">{{ edu.degree?.name }} • {{ edu?.end_date }}</div>
             </div>
           </div>
           <div v-if="!profileStore.user?.educations?.length" class="text-muted small italic">
@@ -90,10 +90,10 @@
     <BaseModal size="lg" v-if="personalUpdate" title="Update Personal Info" @close="closePersonalUpdate">
       <div class="row g-3">
         <div class="col-md-6">
-          <BaseInput label="Full Name" placeholder="Enter Your Full Name" v-model="full_name" />
+          <BaseInput label="Full Name" placeholder="Enter Your Full Name" v-model="full_name" @input="validateFullName" :error="errors.full_name" />
         </div>
         <div class="col-md-6">
-          <BaseInput label="Email" placeholder="Enter Your Email" v-model="email" />
+          <BaseInput label="Email" placeholder="Enter Your Email" v-model="email" type="email"  @input="validateEmail" :error="errors.email"/>
         </div>
         <div class="col-md-6">
           <BaseInput label="Phone" placeholder="Enter Your Phone Number" v-model="phone" />
@@ -102,8 +102,15 @@
           <BaseInput label="Date of Birth" placeholder="Enter Your Date of Birth" v-model="DOB" />
         </div>
         <div class="col-md-6">
-          <BaseInput label="Gender" placeholder="Enter Your Gender" v-model="gender" />
+          <label class="form-label">Gender</label>
+          <select v-model="gender" class="form-control">
+            <option value="" disabled>Select Gender</option>
+            <option value="1">Male</option>
+            <option value="2">Female</option>
+            <option value="other">Other</option>
+          </select>
         </div>
+
         <div class="col-md-6">
           <BaseInput label="Current City" placeholder="Enter Your Current City" v-model="current_city" />
         </div>
@@ -180,6 +187,11 @@ import BaseInput from '@/components/ui/base/BaseInput.vue'
 import BaseSelect from '@/components/ui/base/BaseSelect.vue'
 import TomSelect from '@/components/ui/base/BaseTomSelect.vue'
 import InfoCardSkeleton from './InfoCardSkeleton.vue'
+import { useRequiredValidator } from '@/composables/useRequiredValidator';
+import { usePasswordValidator } from '@/composables/usePasswordValidator';
+
+const { errors, validateField } = useRequiredValidator()
+const { validatePassword: checkPassword, validatePasswordMatch } = usePasswordValidator()
 
 const profileStore = useProfileStore()
 const skillStore = useSkillStore()
@@ -214,6 +226,7 @@ onMounted(async () => {
 const openEditCV = () => emit('open-cv')
 const openEditCollaboration = () => emit('open-collab')
 
+
 /* --- Personal Info --- */
 const personalUpdate = ref(false)
 const full_name = ref('')
@@ -237,14 +250,30 @@ const UpdatePersonal = () => {
   portfolio_link.value = u?.portfolio_link || ''
   personalUpdate.value = true
 }
+const validateFullName = () =>{
+  if(!full_name.value){
+    errors.full_name='Name is required'
+    return false
+  }
+  errors.full_name=''
+  return true
+
+}
+const validateEmail = () => {
+  if(!email.value){
+    errors.email='Email is required, example@gmail.com'
+    return false
+  }
+  errors.email=''
+  return true
+}
 
 const closePersonalUpdate = () => personalUpdate.value = false
 
 const HandleUpdatePersonal = async () => {
-  if (!full_name.value || !email.value) {
-    showWarning('Full Name and Email are required!')
+  if (!validateEmail() || !validateFullName())
     return
-  }
+
   try {
     const payload = {
       full_name: full_name.value,

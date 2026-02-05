@@ -12,6 +12,8 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import 'tom-select/dist/css/tom-select.css'
 import 'vue-advanced-cropper/dist/style.css'
 
+import VueTippy from 'vue-tippy'
+import 'tippy.js/dist/tippy.css'
 
 import BaseButton from './components/ui/base/BaseButton.vue'
 import BaseInput from './components/ui/base/BaseInput.vue'
@@ -25,6 +27,7 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+app.use(VueTippy)
 
 app.component('BaseButton', BaseButton)
 app.component('BaseInput', BaseInput)
