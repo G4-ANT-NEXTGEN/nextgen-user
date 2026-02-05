@@ -81,6 +81,14 @@ export const useChatStore = defineStore('chat', () => {
       isLoading.value = false;
     }
   }
+
+  // To support adding a user to the chat list even without messages
+  const temporaryChatUser = ref(null);
+
+  const startConversation = (user) => {
+    temporaryChatUser.value = user;
+    isSelectChat.value = true;
+  }
   const chatList = computed(() => {
     const map = new Map()
     // Process sent messages
@@ -127,6 +135,17 @@ export const useChatStore = defineStore('chat', () => {
       )
       conversation.lastUpdate = conversation.messages[0]?.created_at;
     })
+
+    // Add temporary user if they aren't already in the list
+    if (temporaryChatUser.value && !map.has(temporaryChatUser.value.id)) {
+      map.set(temporaryChatUser.value.id, {
+        id: temporaryChatUser.value.id,
+        otherUser: temporaryChatUser.value,
+        messages: [],
+        lastUpdate: new Date().toISOString()
+      })
+    }
+
     return Array.from(map.values()).sort((a, b) => new Date(b.lastUpdate) - new Date(a.lastUpdate));
   })
 
@@ -140,7 +159,9 @@ export const useChatStore = defineStore('chat', () => {
     chatList,
     getAllConversationMessages,
     isSelectChat,
-    isLoading
+    isLoading,
+    startConversation,
+    temporaryChatUser
 
   }
 })

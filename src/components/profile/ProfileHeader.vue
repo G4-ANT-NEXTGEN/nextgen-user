@@ -110,12 +110,22 @@
           </div>
           <img v-if="CompanyLogoSelect" :src="companyLogoPreview" alt="">
         </div>
+<<<<<<< HEAD
         <BaseInput label="Company Website" placeholder="https://example.com" @input="validateCompanyLink"
           :error="errors.companyLink" v-model="companyLink" />
+=======
+        <BaseInput label="Company Website" placeholder="https://example.com" />
+>>>>>>> 0eea236c0696581f9760e9169da36c63e5e7b289
       </div>
 
       <template #footer>
         <BaseButton @click="closeEditCollaboration" variant="secondary">Cancel
+<<<<<<< HEAD
+=======
+        </BaseButton>
+        <BaseButton @click="HandleEditCollaboration" variant="primary" :isLoading="profileStore.isLoading">
+          Add Collaboration
+>>>>>>> 0eea236c0696581f9760e9169da36c63e5e7b289
         </BaseButton>
         <base-button type="button" @click="addCollaboration"  variant="primary" :isLoading="profileStore.isLoading">
           <span>{{ profileStore.isLoading ? 'Saving...' : 'Save' }}</span>
@@ -172,10 +182,16 @@
                 </ul>
               </div>
 
+<<<<<<< HEAD
               <div class="form-actions">
                 <BaseButton variant="primary" type="submit" :isLoading="profileStore.isLoading">Update Password
                 </BaseButton>
               </div>
+=======
+            <div class="form-actions">
+              <BaseButton variant="primary" type="submit" :isLoading="profileStore.isProcessing">Update Password</BaseButton>
+            </div>
+>>>>>>> 0eea236c0696581f9760e9169da36c63e5e7b289
             </form>
           </div>
 
@@ -193,13 +209,8 @@
                 </p>
               </div>
             </div>
-
-            <div class="form-group">
-              <BaseInput label="Type 'DELETE' to confirm" placeholder="DELETE" />
-            </div>
-
             <div class="form-actions">
-              <BaseButton variant="danger" :isLoading="profileStore.isLoading">
+              <BaseButton variant="danger" :isLoading="profileStore.isLoading" @click="deleteAccount = true">
                 <i class="bi bi-trash"></i>
                 <span>Permanently Delete Account</span>
               </BaseButton>
@@ -208,7 +219,20 @@
         </div>
       </div>
     </BaseModal>
+    <!-- modal comfirm delete account -->
+     <BaseModal v-if="deleteAccount" title="Comfirm Delete Account" @close="deleteAccount = false">
+      <p>Are you sure?</p>
+      <template #footer>
+        <div class="d-flex justify-content-end">
+          <!-- <base-button>Cancel</base-button> -->
+          <BaseButton variant="danger" @click="comfirmDeleteAcc" :isLoading="profileStore.isLoading">
+                <i class="bi bi-trash"></i>
+                <span> Confirm</span>
+              </BaseButton>
 
+        </div>
+      </template>
+    </BaseModal>
     <!-- Original Modal Logic (Restored) -->
     <div class="modals-container">
       <!-- Update Cover Modal -->
@@ -248,7 +272,7 @@
         </div>
 
         <template #footer>
-          <BaseButton @click="closeEditCover" variant="secondary" :isLoading="profileStore.isLoading">Cancel
+          <BaseButton @click="closeEditCover" variant="secondary">Cancel
           </BaseButton>
           <BaseButton @click="applyChageCover" :isLoading="profileStore.isProcessing" variant="primary">
             <span>{{ profileStore.isProcessing ? 'Saving...' : 'Save Changes' }}</span>
@@ -291,7 +315,7 @@
           <BaseButton @click="showImageCropper = false" variant="secondary" :isLoading="profileStore.isProcessing">
             Cancel
           </BaseButton>
-          <BaseButton @click="applyCrop" :isLoading="profileStore.isProcessing" variant="primary">
+          <BaseButton @click="applyCrop" :isLoading="profileStore.isLoading" variant="primary">
             <span>{{ profileStore.isProcessing ? 'Saving...' : 'Save Changes' }}</span>
           </BaseButton>
         </template>
@@ -307,10 +331,10 @@
         </div>
 
         <template #footer>
-          <BaseButton @click="deleteAvatar = false" variant="secondary" :isLoading="profileStore.isLoading">Cancel
+          <BaseButton @click="deleteAvatar = false" variant="secondary" :isLoading="profileStore.isProcessing">Cancel
           </BaseButton>
-          <BaseButton @click="handleAvatarDelete" variant="danger" :isLoading="profileStore.isLoading">
-            <span>{{ profileStore.isLoading ? 'Removing...' : 'Remove' }}</span>
+          <BaseButton @click="handleAvatarDelete" variant="danger" :isLoading="profileStore.isProcessing">
+            <span>{{ profileStore.isProcessing ? 'Removing...' : 'Remove' }}</span>
           </BaseButton>
         </template>
       </BaseModal>
@@ -325,10 +349,10 @@
         </div>
 
         <template #footer>
-          <BaseButton @click="deleteCover = false" variant="secondary" :isLoading="profileStore.isLoading">Cancel
+          <BaseButton @click="deleteCover = false" variant="secondary" :isLoading="profileStore.isProcessing">Cancel
           </BaseButton>
-          <BaseButton @click="handleDeleteCover" variant="danger" :isLoading="profileStore.isLoading">
-            <span>{{ profileStore.isLoading ? 'Removing...' : 'Remove' }}</span>
+          <BaseButton @click="handleDeleteCover" variant="danger" :isLoading="profileStore.isProcessing">
+            <span>{{ profileStore.isProcessing ? 'Removing...' : 'Remove' }}</span>
           </BaseButton>
         </template>
       </BaseModal>
@@ -339,6 +363,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useProfileStore } from '@/stores/profile'
+import { usePostStore } from '@/stores/post'
 import { Cropper } from 'vue-advanced-cropper'
 import ProfileHeaderSkeleton from '@/components/profile/ProfileHeaderSkeleton.vue'
 import 'vue-advanced-cropper/dist/style.css'
@@ -359,6 +384,7 @@ defineProps({
 defineEmits(['change-tab'])
 
 const profileStore = useProfileStore()
+const postStore = usePostStore()
 
 
 const tabs = [
@@ -384,8 +410,13 @@ const cvFile = ref(null)
 const currentPass = ref()
 const newPass = ref()
 const comfirmPass = ref()
+<<<<<<< HEAD
 const companyLogo = ref()
 const companyLogoPreview = ref()
+=======
+const deleteAccount = ref(false)
+const companyLogo = ref()
+>>>>>>> 0eea236c0696581f9760e9169da36c63e5e7b289
 const companyLink = ref()
 
 onMounted(async () => {
@@ -434,14 +465,27 @@ const validateComfirmPassword = () => {
   errors.comfirmPass = ''
   return true
 }
+<<<<<<< HEAD
 const changePassword = async () => {
   if (!validateForm())
+=======
+const comfirmDeleteAcc = async() => {
+  await profileStore.deleteAccount()
+  openSetting.value=false
+}
+const changePassword = async() => {
+  if(!validateForm())
+>>>>>>> 0eea236c0696581f9760e9169da36c63e5e7b289
     return
   await profileStore.changePassword({
     'old_pass': currentPass.value,
     'new_pass': newPass.value,
     'new_pass_confirmation': comfirmPass.value
   })
+  openSetting.value=false
+  currentPass.value=null
+  newPass.value=null
+  comfirmPass.value=null
 }
 const validateForm = () => {
   const currentPassValid = validateCurrentPassword()
@@ -483,6 +527,7 @@ const applyCrop = async () => {
   await profileStore.uploadAvatarBase64(avatar)
   showImageCropper.value = false
   uploadedImage.value = null
+  await postStore.fetchPosts()
 }
 
 const applyChageCover = async () => {
@@ -500,11 +545,9 @@ const handleDeleteCover = async () => {
 }
 
 const handleAvatarDelete = async () => {
-  showImageCropper.value = false
+  deleteAvatar.value = false
   await profileStore.removeAvatar()
-  if (!profileStore.isLoading) {
-    deleteAvatar.value = false
-  }
+  await postStore.fetchPosts()
 }
 
 const cvOnChangeFile = (e) => {

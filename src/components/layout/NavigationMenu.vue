@@ -100,11 +100,11 @@ defineOptions({
 
 .nav-menu-container {
   position: fixed;
-  ;
   left: 0;
   top: 0;
   height: 94vh;
-  width: 280px;
+  max-width: 250px;
+  width: 250px;
   background-color: var(--color-background);
   z-index: 1050;
   display: flex;
@@ -129,7 +129,7 @@ defineOptions({
   transform: translateX(0);
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .nav-menu-container {
     transform: none;
     /* Always visible on desktop */
