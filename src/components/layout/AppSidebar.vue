@@ -7,7 +7,7 @@
         <div class="profile-cover">
           <div class="cover-grid"></div>
           <div class="cover-overlay">
-            <img v-if="authStore.user?.cover" class="w-100 h-100 object-contain" :src="authStore.user?.cover" alt="">
+            <img v-if="authStore.user?.cover" class="w-100 h-100 object-contain border-0" :src="authStore.user?.cover" alt="">
           </div>
         </div>
 

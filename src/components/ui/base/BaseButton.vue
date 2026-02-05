@@ -99,9 +99,9 @@ const handleClick = () => {
   width: 24px;
   height: 24px;
   display: grid;
-  border: 1.9px solid #0000;
+  border: 1.9px solid var(--color-background);
   border-radius: 50%;
-  border-right-color: #fff;
+  border-right-color: var(--color-text);
   animation: spinner-a4dj62 1s infinite linear;
 }
 

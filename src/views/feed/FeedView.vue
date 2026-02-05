@@ -3,37 +3,39 @@
     <!-- Main Feed -->
     <div class="main-feed">
       <!-- Create Post -->
-      <div class="post-card mb-4 create-post">
-        <div class="d-flex gap-4 mb-4 align-items-center ">
-          <div>
-            <div class="small-avatar overflow-hidden rounded-circle">
-              <img class="img-fluid w-100 h-100 " :src="authStore.user.avatar" alt="">
+      <div class="post-card mb-4 create-post-card">
+        <div class="create-post-container">
+          <div class="create-post-header d-flex gap-3 align-items-center mb-4">
+            <div class="avatar-container">
+              <img :src="authStore.user.avatar" class="user-avatar" alt="User profile">
+            </div>
+            <div class="input-wrapper" @click="openCreatePostModal">
+              <span class="placeholder-text">What's on your mind, {{ authStore.user.full_name?.split(' ')[0] }}?</span>
             </div>
           </div>
-          <div class="create-post-input" @click="openCreatePostModal">
-            <input type="text" placeholder="what on your mind?" class="form-control">
-          </div>
-        </div>
-        <div class="d-flex flex-wrap justify-content-evenly state-post mb-2">
-          <div class="btn-tag" @click="openCreatePostModal">
-            <i class="bi bi-image icon-image"></i>
-            <span>Image</span>
-          </div>
-          <div class="btn-tag" @click="openCreatePostModal">
-            <i class="bi bi-paperclip icon-attachment"></i>
-            <span>Attachment</span>
-          </div>
-          <div class="btn-tag" @click="openCreatePostModal">
-            <i class="bi bi-camera-video icon-live"></i>
-            <span>Live</span>
-          </div>
-          <div class="btn-tag" @click="openCreatePostModal">
-            <span class="icon-hashtag">#</span>
-            <span>Hashtag</span>
-          </div>
-          <div class="btn-tag" @click="openCreatePostModal">
-            <span class="icon-mention">@</span>
-            <span>Mention</span>
+
+          <div class="create-post-actions">
+            <button class="action-btn-premium" @click="openCreatePostModal">
+              <div class="icon-wrap img-bg">
+                <i class="bi bi-image"></i>
+              </div>
+              <div class="action-info">
+                <span class="action-title">Photo</span>
+                <span class="action-desc">Share an image</span>
+              </div>
+            </button>
+
+            <div class="vertical-divider d-none d-sm-block"></div>
+
+            <button class="action-btn-premium" @click="openCreatePostModal">
+              <div class="icon-wrap attach-bg">
+                <i class="bi bi-paperclip"></i>
+              </div>
+              <div class="action-info">
+                <span class="action-title">Attachment</span>
+                <span class="action-desc">Share documents or files</span>
+              </div>
+            </button>
           </div>
         </div>
       </div>
@@ -119,7 +121,7 @@
 
     <BaseModal v-if="showModalDelete" title="Delete Post" size="md" @close="showModalDelete = false">
       <div class="p-2">
-        <p>Are you sure you want to delete this post?</p>
+        <p class="text-color">Are you sure you want to delete this post?</p>
       </div>
       <template #footer>
         <div class="group-btn-modal d-flex justify-content-end gap-3 align-items-center">
@@ -199,10 +201,13 @@ const deletePost = async () => {
   }
 };
 
-const OpenModeledit = async () => {
+const OpenModeledit = async (id) => {
+  if (id) PostId.value = id;
   try {
     await postStore.fetchPostsById(PostId.value);
+
     const post = postStore.post;
+
     if (!post) return;
 
     titlePost.value = post.text || '';
@@ -211,14 +216,18 @@ const OpenModeledit = async () => {
     imgPost.value = isDefaultPath ? null : (post.image || null);
     attachment.value = null;
 
-    if (post.category_ids && post.category_ids.length > 0) {
-      const categoryId = post.category_ids[0];
+    // Handle category selection
+    const categoryIds = post.category_ids || post.categories || [];
+    if (categoryIds.length > 0) {
+      // Handle both array of IDs and array of objects
+      const categoryId = typeof categoryIds[0] === 'object' ? categoryIds[0].id : categoryIds[0];
       selected.value = categoryStore.categories.find(cat => cat.id == categoryId) || null;
     } else {
       selected.value = null;
     }
+
     errorTitle.value = null;
-    showModal.value = true; // Open modal directly without resetting PostId
+    showModal.value = true;
   } catch (error) {
     console.error('Error loading post for edit:', error);
   }
@@ -296,10 +305,15 @@ function selectPill(category) {
 
 const prepareFormData = () => {
   const data = new FormData();
-  if (titlePost.value.trim()) data.append('text', titlePost.value.trim());
-  if (file.value && file.value instanceof File) data.append('image', file.value);
-  if (attachment.value && attachment.value instanceof File) data.append('attachment', attachment.value);
+
+  if (titlePost.value.trim()) {
+    data.append('text', titlePost.value.trim());
+  }
+  if (file.value && file.value instanceof File) {
+    data.append('image', file.value);
+  }
   const categoryIds = selected.value ? [selected.value.id] : [];
+
   data.append('category_ids', JSON.stringify(categoryIds));
   return data;
 };
@@ -371,7 +385,7 @@ defineOptions({
   flex-wrap: wrap;
 }
 
-.text-color{
+.text-color {
   color: var(--color-text);
 }
 
@@ -442,67 +456,147 @@ defineOptions({
   padding-bottom: 20px;
 }
 
-.post-card {
+.avatar-post{
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.create-post-card {
   background: var(--color-accent);
-  border-radius: 20px;
+  border-radius: 24px;
   padding: 24px;
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.avatar-post {
-  background-color: var(--sidebar-bg);
-  width: 56px;
-  height: 56px;
+.create-post-card:hover {
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.08) !important;
+}
+
+.create-post-header {
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 24px;
+}
+
+.avatar-container {
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
 }
 
-.main-feed .post-card .small-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+.user-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.create-post-input {
+.input-wrapper {
   flex: 1;
-  width: 100%;
-}
-
-.create-post-input input {
-  background-color: var(--nav-surface);
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
-  border-radius: 12px;
-  padding: 12px 20px;
-  width: 100%;
-  transition: all 0.3s ease;
+  background: var(--color-secondary);
+  border-radius: 16px;
+  padding: 14px 20px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
 }
 
-.create-post-input input:hover {
-  background-color: var(--color-secondary);
+.input-wrapper:hover {
+  background: var(--color-border);
   border-color: var(--color-primary);
 }
 
-.create-post-input input::placeholder {
+.placeholder-text {
   color: var(--color-muted);
+  font-size: 1.05rem;
+  font-weight: 500;
+  opacity: 0.7;
 }
 
-.btn-tag {
+.create-post-actions {
+  display: flex;
+  padding-top: 20px;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.action-btn-premium {
+  flex: 1;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  border-radius: 12px;
-  cursor: pointer;
+  gap: 16px;
+  background: transparent;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 18px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  color: var(--color-text);
-  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
 }
 
-.btn-tag:hover {
-  background-color: var(--color-secondary);
-  color: var(--color-primary);
+.action-btn-premium:hover {
+  background: var(--color-secondary);
   transform: translateY(-2px);
+}
+
+.icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.action-btn-premium:hover .icon-wrap {
+  transform: scale(1.1);
+}
+
+.img-bg {
+  background: rgba(16, 185, 129, 0.08);
+  color: #10b981;
+}
+
+.attach-bg {
+  background: rgba(59, 130, 246, 0.08);
+  color: #3b82f6;
+}
+
+.action-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.action-title {
+  color: var(--color-text);
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+.action-desc {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.vertical-divider {
+  width: 1px;
+  margin: 8px 0;
+  background-color: var(--color-border);
+  opacity: 0.5;
 }
 
 .icon-image {

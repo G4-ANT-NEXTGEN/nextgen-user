@@ -1,15 +1,9 @@
 <template>
   <div class="chat-list-container">
     <div class="list-header">
-      <div class="header-top px-3 pt-3 pb-2">
+      <div class="header-top px-3 py-3">
         <h2 class="ms-3">Messages</h2>
         <div class="badge-count">{{ chatStore.chatList.length }}</div>
-      </div>
-      <div class="search-box-wrapper px-3 pb-3">
-        <div class="custom-search">
-          <i class="bi bi-search"></i>
-          <input type="text" placeholder="Search conversations..." />
-        </div>
       </div>
     </div>
 

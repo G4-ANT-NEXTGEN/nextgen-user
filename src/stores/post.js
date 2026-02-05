@@ -98,6 +98,7 @@ export const usePostStore = defineStore('post', () => {
     try {
       const response = await api.post(`/api/posts/${id}`, payload)
       showSuccess('Post updated successfully')
+      return response.data.data
     } catch (err) {
       console.log(err.response?.data);
       showError('Failed to update post');

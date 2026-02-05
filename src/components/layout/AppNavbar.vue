@@ -33,11 +33,6 @@
           <i class="bi bi-search icon-btn"></i>
         </button>
 
-        <!-- Mobile Message Button -->
-        <button @click="goToMessages" class="theme-btn mobile-message-btn">
-          <i class="bi bi-chat-dots icon-btn"></i>
-        </button>
-
         <AnimatedThemeToggler />
 
         <div class="dropdown">

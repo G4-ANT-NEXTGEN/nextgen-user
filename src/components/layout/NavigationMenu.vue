@@ -192,23 +192,23 @@ defineOptions({
   align-items: center;
   gap: 16px;
   padding: 12px 20px;
+  border-radius: 12px;
   cursor: pointer;
   text-decoration: none;
   color: var(--color-muted);
   font-weight: 500;
-  transition: all 0.2s ease;
-  border-left: 4px solid transparent;
+  transition: all 0.3s ease;
 }
 
 .nav-item:hover {
   color: var(--color-primary);
-  background: linear-gradient(90deg, rgba(var(--color-primary-rgb), 0.05) 0%, transparent 100%);
+  background: var(--sidebar-hover);
 }
 
 .nav-item.active {
-  color: var(--color-primary);
+  color: var(--color-background);
   font-weight: 600;
-  border-left-color: var(--color-primary);
+  background-color: var(--color-text);
 }
 
 .nav-item i {
