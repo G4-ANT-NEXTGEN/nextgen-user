@@ -40,6 +40,8 @@
         </div>
       </div>
 
+
+
       <!-- Post Skeleton -->
       <template v-if="postStore.loading && postStore.posts.length === 0">
         <ArticleCardSkeleton v-for="n in 3" :key="n" />
@@ -65,7 +67,7 @@
           <div>
             <h5 class="creator-name">
               {{ authStore.user.full_name }}
-              <i class="bi bi-check-circle-fill text-primary-custom"></i>
+              <i class="bi bi-patch-check-fill verified-badge"></i>
             </h5>
             <small class="creator-position">
               {{ authStore.user.positions?.[0]?.name }}
@@ -73,7 +75,7 @@
           </div>
         </div>
         <div class="my-3">
-          <textarea v-model="titlePost" class="title-post form-control" :class="{ 'is-invalid': errorTitle }" rows="4"
+          <textarea v-model="titlePost" class="title-post" :class="{ 'is-invalid': errorTitle }" rows="4"
             placeholder="What's on your mind?" @input="validateTitle"></textarea>
           <div v-if="errorTitle" class="invalid-feedback d-block">{{ errorTitle }}</div>
           <small v-if="titlePost" class="text-color d-block mt-2">{{ titlePost.length }}/500
@@ -173,6 +175,8 @@ const hidePost = (postId) => {
 const visiblePosts = computed(() => {
   return postStore.posts.filter(post => !hiddenPosts.value.has(post.id));
 });
+
+
 
 
 authStore.fetchProfile();
@@ -409,10 +413,8 @@ defineOptions({
 }
 
 .category.active {
-  background-color: var(--sidebar-bg);
-  color: var(--color-primary);
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-sm);
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
 }
 
 .post-img {
@@ -456,7 +458,9 @@ defineOptions({
   padding-bottom: 20px;
 }
 
-.avatar-post{
+
+
+.avatar-post {
   width: 55px;
   height: 55px;
   border-radius: 50%;
@@ -639,13 +643,14 @@ defineOptions({
 
 .title-post:focus {
   outline: none;
-  border-color: var(--color-border) !important;
+  border-color: 1px solid var(--color-border) !important;
 }
 
 .creator-name {
   margin-bottom: 0;
   font-weight: 700;
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 8px;
   color: var(--color-text);

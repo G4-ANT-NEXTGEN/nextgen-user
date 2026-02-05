@@ -20,6 +20,7 @@ export const usePostStore = defineStore('post', () => {
     current_page: 1,
     last_page: 1
   })
+  const category = ref(0)
 
   const fetchPosts = async (isLoadMore = false) => {
     if (loading.value) return
@@ -34,7 +35,7 @@ export const usePostStore = defineStore('post', () => {
         params: {
           page: page.value,
           per_page: 20,
-          category: 0,
+          category: category.value,
           search: search.value,
         },
       })
@@ -119,6 +120,7 @@ export const usePostStore = defineStore('post', () => {
   return {
     posts,
     post,
+    category,
     loading,
     error,
     search,

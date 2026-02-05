@@ -110,22 +110,12 @@
           </div>
           <img v-if="CompanyLogoSelect" :src="companyLogoPreview" alt="">
         </div>
-<<<<<<< HEAD
         <BaseInput label="Company Website" placeholder="https://example.com" @input="validateCompanyLink"
           :error="errors.companyLink" v-model="companyLink" />
-=======
-        <BaseInput label="Company Website" placeholder="https://example.com" />
->>>>>>> 0eea236c0696581f9760e9169da36c63e5e7b289
       </div>
 
       <template #footer>
         <BaseButton @click="closeEditCollaboration" variant="secondary">Cancel
-<<<<<<< HEAD
-=======
-        </BaseButton>
-        <BaseButton @click="HandleEditCollaboration" variant="primary" :isLoading="profileStore.isLoading">
-          Add Collaboration
->>>>>>> 0eea236c0696581f9760e9169da36c63e5e7b289
         </BaseButton>
         <base-button type="button" @click="addCollaboration"  variant="primary" :isLoading="profileStore.isLoading">
           <span>{{ profileStore.isLoading ? 'Saving...' : 'Save' }}</span>
@@ -182,16 +172,10 @@
                 </ul>
               </div>
 
-<<<<<<< HEAD
               <div class="form-actions">
                 <BaseButton variant="primary" type="submit" :isLoading="profileStore.isLoading">Update Password
                 </BaseButton>
               </div>
-=======
-            <div class="form-actions">
-              <BaseButton variant="primary" type="submit" :isLoading="profileStore.isProcessing">Update Password</BaseButton>
-            </div>
->>>>>>> 0eea236c0696581f9760e9169da36c63e5e7b289
             </form>
           </div>
 
@@ -410,13 +394,8 @@ const cvFile = ref(null)
 const currentPass = ref()
 const newPass = ref()
 const comfirmPass = ref()
-<<<<<<< HEAD
 const companyLogo = ref()
 const companyLogoPreview = ref()
-=======
-const deleteAccount = ref(false)
-const companyLogo = ref()
->>>>>>> 0eea236c0696581f9760e9169da36c63e5e7b289
 const companyLink = ref()
 
 onMounted(async () => {
@@ -465,17 +444,8 @@ const validateComfirmPassword = () => {
   errors.comfirmPass = ''
   return true
 }
-<<<<<<< HEAD
 const changePassword = async () => {
   if (!validateForm())
-=======
-const comfirmDeleteAcc = async() => {
-  await profileStore.deleteAccount()
-  openSetting.value=false
-}
-const changePassword = async() => {
-  if(!validateForm())
->>>>>>> 0eea236c0696581f9760e9169da36c63e5e7b289
     return
   await profileStore.changePassword({
     'old_pass': currentPass.value,
