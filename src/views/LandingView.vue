@@ -27,69 +27,34 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-section">
-      <div class="container container-custom">
-        <div class="hero-grid">
-          <div class="hero-text-content">
-            <div class="badge-new reveal-up">
-              <span class="badge-dot"></span>
-              New: Community Groups & Projects
-            </div>
-            <h1 class="hero-title reveal-up" style="transition-delay: 0.1s">
-              Connect. Collaborate. <br />
-              <span class="text-gradient">Empower Your Vision.</span>
-            </h1>
-            <p class="hero-subtitle reveal-up" style="transition-delay: 0.2s">
-              NextGen is the ultimate community platform designed for creators, developers, and visionaries.
-              Join a global network where your ideas take flight.
-            </p>
-            <div class="hero-btns reveal-up" style="transition-delay: 0.3s">
-              <RouterLink to="/register" class="btn-primary-gradient">
-                Get Started Free
-                <i class="bi bi-arrow-right-short"></i>
-              </RouterLink>
-              <button class="btn-outline-custom" @click="scrollHandler('#features')">
-                Explore Features
-              </button>
-            </div>
-            <div class="social-proof reveal-up" style="transition-delay: 0.4s">
-              <div class="avatar-group">
-                <img v-for="i in 4" :key="i" :src="`https://i.pravatar.cc/100?u=${i}`" alt="User" />
-                <div class="avatar-more">+2k</div>
+    <GridHeroSection />
+
+    <!-- Marquee / Users Section -->
+    <section class="marquee-section py-5">
+      <div class="marquee-container">
+        <!-- Row 1: Left to Right -->
+        <div class="marquee-row marquee-ltr">
+          <div class="marquee-content">
+            <div class="user-pill" v-for="(user, i) in [...activeUsers, ...activeUsers]" :key="'ltr' + i">
+              <img :src="user.avatar" :alt="user.name" class="user-pill-avatar" />
+              <div class="user-pill-info">
+                <span class="user-pill-name">{{ user.name }}</span>
+                <span class="user-pill-role">{{ user.role }}</span>
               </div>
-              <p class="proof-text">Joined by 10,000+ creators this month</p>
-            </div>
-          </div>
-          <div class="hero-visual reveal-right">
-            <div class="main-visual-container">
-              <div class="floating-card card-1">
-                <i class="bi bi-chat-heart-fill"></i>
-                <span>Active <strong>Discussion</strong></span>
-              </div>
-              <div class="floating-card card-2">
-                <i class="bi bi-person-check-fill"></i>
-                <span>Verified <strong>Expert</strong></span>
-              </div>
-              <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800"
-                alt="Hero Illustration" class="hero-main-img" />
-              <div class="img-overlay-gradient"></div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Marquee / Logos Section -->
-    <section class="marquee-section py-4 border-y">
-      <div class="container overflow-hidden">
-        <div class="marquee-content">
-          <div class="brand-item" v-for="n in 10" :key="'a' + n">
-            <i class="bi bi-hexagon-fill"></i>
-            <span>COMMUNITY-{{ n }}</span>
-          </div>
-          <div class="brand-item" v-for="n in 10" :key="'b' + n">
-            <i class="bi bi-hexagon-fill"></i>
-            <span>COMMUNITY-{{ n }}</span>
+        <!-- Row 2: Right to Left -->
+        <div class="marquee-row marquee-rtl mt-3">
+          <div class="marquee-content">
+            <div class="user-pill" v-for="(user, i) in [...activeUsers, ...activeUsers].reverse()" :key="'rtl' + i">
+              <img :src="user.avatar" :alt="user.name" class="user-pill-avatar" />
+              <div class="user-pill-info">
+                <span class="user-pill-name">{{ user.name }}</span>
+                <span class="user-pill-role">{{ user.role }}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -108,78 +73,179 @@
         <div class="features-custom-grid">
           <div class="feature-large-card reveal-up" v-for="(f, i) in mainFeatures" :key="i"
             :style="{ transitionDelay: (i * 0.1) + 's' }">
-            <div class="feature-icon-wrapper" :style="{ background: f.bg }">
+            <div class="feature-icon-wrapper">
               <i :class="f.icon"></i>
             </div>
             <h3>{{ f.title }}</h3>
-            <p>{{ f.desc }}</p>
-            <RouterLink :to="f.link" class="feature-link">
-              Learn more <i class="bi bi-arrow-right"></i>
-            </RouterLink>
+            <ul class="feature-item-list">
+              <li v-for="(item, idx) in f.items" :key="idx">
+                <i class="bi bi-check2-circle"></i>
+                {{ item }}
+              </li>
+            </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Stats & Highlight -->
-    <section class="highlight-section py-5">
-      <div class="container container-custom">
-        <div class="highlight-card reveal-scale">
-          <div class="row align-items-center gy-5">
-            <div class="col-lg-7">
-              <h2 class="highlight-title">
-                Comprehensive <span>Feature Set</span> for a Modern Community App
-              </h2>
-              <div class="highlight-list">
-                <div class="h-item border-bottom pb-4 mb-4">
-                  <div class="h-icon"><i class="bi bi-cloud-check"></i></div>
-                  <div class="h-text">
-                    <h4>Seamless Data Sync</h4>
-                    <p>Your connections and conversations stay in sync across all your devices, instantly.</p>
-                  </div>
-                </div>
-                <div class="h-item">
-                  <div class="h-icon"><i class="bi bi-shield-lock"></i></div>
-                  <div class="h-text">
-                    <h4>Advanced Security</h4>
-                    <p>End-to-end encryption for your messages and private community spaces.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-5">
-              <div class="stats-box">
-                <div class="stat-item mb-4">
-                  <span class="stat-value">29M+</span>
-                  <span class="stat-label">Active Users</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-value">100M+</span>
-                  <span class="stat-label">Messages Monthly</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section id="customers" class="testimonial-section py-5">
+    <!-- Why Choose Nextgen / How it Works -->
+    <section id="how-it-works" class="how-it-works-section py-5">
       <div class="container container-custom">
         <div class="section-header text-center mb-5">
-          <h2 class="section-title">What our users <span class="text-gradient">say.</span></h2>
+          <div class="badge-outline reveal-up">THE NEXTGEN EXPERIENCE</div>
+          <h2 class="section-title reveal-up">Why choose Nextgen?</h2>
         </div>
-        <div class="row g-4">
-          <div class="col-md-4" v-for="(t, i) in testimonials" :key="i">
-            <div class="testimonial-modern-card reveal-up" :style="{ transitionDelay: (i * 0.1) + 's' }">
-              <div class="quote-icon"><i class="bi bi-quote"></i></div>
-              <p class="testimonial-text">{{ t.text }}</p>
-              <div class="testimonial-user">
-                <img :src="t.avatar" alt="User" class="user-avatar" />
-                <div class="user-info">
-                  <h6 class="user-name">{{ t.author }}</h6>
-                  <span class="user-role">{{ t.role }}</span>
+
+        <div class="steps-container">
+          <!-- Step 1 Indicator -->
+          <div class="step-indicator step-1-label reveal-up">
+            <span>Step 1</span>
+            <svg class="step-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <path d="M5 5 C 15 5, 25 15, 25 35" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4" />
+              <path d="M20 30 L 25 35 L 30 30" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+          </div>
+
+          <!-- Step 2 Indicator -->
+          <div class="step-indicator step-2-label reveal-up">
+            <svg class="step-arrow-up" width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <path d="M20 35 C 20 25, 10 15, 10 5" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4" />
+              <path d="M5 10 L 10 5 L 15 10" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+            <span>Step 2</span>
+          </div>
+
+          <!-- Step 3 Indicator -->
+          <div class="step-indicator step-3-label reveal-up">
+            <span>Step 3</span>
+            <svg class="step-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <path d="M35 5 C 25 5, 15 15, 15 35" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4" />
+              <path d="M10 30 L 15 35 L 20 30" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+          </div>
+
+          <div class="row g-4 position-relative z-1">
+            <!-- Card 1: Modern Info -->
+            <div class="col-lg-4">
+              <div class="step-card reveal-up">
+                <div class="shimmer-effect"></div>
+                <div class="step-card-visual">
+                  <div class="ui-mockup mockup-1">
+                    <div class="mock-header">
+                      <div class="mock-logo"></div>
+                      <div class="mock-line"></div>
+                    </div>
+                    <div class="mock-btn-black">Smart Matching</div>
+                    <div class="mock-plan-grid">
+                      <div class="plan-circle"><i class="bi bi-person-fill"></i></div>
+                      <div class="plan-circle active"><i class="bi bi-lightning-fill"></i></div>
+                      <div class="plan-circle"><i class="bi bi-people-fill"></i></div>
+                    </div>
+                  </div>
+                </div>
+                <h3>Smart Networking</h3>
+                <p>Algorithmically curated connections that match your professional DNA and creative vision.</p>
+              </div>
+            </div>
+
+            <!-- Card 2: Modern Info -->
+            <div class="col-lg-4">
+              <div class="step-card reveal-up" style="transition-delay: 0.15s">
+                <div class="shimmer-effect"></div>
+                <div class="step-card-visual">
+                  <div class="ui-mockup mockup-2">
+                    <div class="chat-bubble-mock left glass">
+                      <div class="mock-avatar-sm"></div>
+                      <div class="mock-line-sm"></div>
+                    </div>
+                    <div class="chat-bubble-mock right mini glass">
+                      <div class="mock-line-xs"></div>
+                    </div>
+                    <div class="mock-btn-blue">Live Interactive Room</div>
+                    <div class="avatar-stack">
+                      <img src="https://i.pravatar.cc/100?u=11" />
+                      <img src="https://i.pravatar.cc/100?u=12" />
+                    </div>
+                  </div>
+                </div>
+                <h3>Live Interactions</h3>
+                <p>Beyond simple chat. Experience high-fidelity audio and spatial networking environments.</p>
+              </div>
+            </div>
+
+            <!-- Card 3: Modern Info -->
+            <div class="col-lg-4">
+              <div class="step-card reveal-up" style="transition-delay: 0.3s">
+                <div class="shimmer-effect"></div>
+                <div class="step-card-visual">
+                  <div class="ui-mockup mockup-3">
+                    <div class="doc-stack">
+                      <div class="doc doc-1"></div>
+                      <div class="doc main-doc">
+                        <div class="mock-logo-faded"></div>
+                        <div class="mock-lines-group">
+                          <div class="l1 glow"></div>
+                          <div class="l2"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="check-badge pulse">
+                      <i class="bi bi-rocket-takeoff-fill"></i>
+                    </div>
+                  </div>
+                </div>
+                <h3>Empowered Growth</h3>
+                <p>A full localized suite of tools to scale, manage, and monetize your community vision.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section Redesign -->
+    <section id="testimonials" class="testimonial-redesign py-5">
+      <div class="container container-custom">
+        <div class="row align-items-center">
+          <!-- Left Column: Heading & CTA -->
+          <div class="col-lg-5 mb-5 mb-lg-0">
+            <div class="testimonial-header-content reveal-up">
+              <div class="squiggle-decoration mb-4">
+                <svg width="80" height="40" viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 30 Q 15 10, 25 30 T 45 30 T 65 30" stroke="#6366f1" stroke-width="3"
+                    stroke-linecap="round" fill="none" />
+                  <path d="M70 10 L 73 18 L 81 18 L 75 23 L 77 31 L 70 26 L 63 31 L 65 23 L 59 18 L 67 18 Z"
+                    fill="#fbbf24" />
+                </svg>
+              </div>
+              <h2 class="redesign-title">What Our <br /><span class="text-gradient">Customers Says</span></h2>
+              <p class="redesign-desc">
+                Discover how NextGen is empowering creators and communities worldwide.
+                Our users share their experiences on how collaboration became seamless and growth became inevitable.
+              </p>
+              <RouterLink to="/register" class="btn-testimonial-more">
+                View More <i class="bi bi-arrow-right-short"></i>
+              </RouterLink>
+            </div>
+          </div>
+
+          <!-- Right Column: Staggered Cards -->
+          <div class="col-lg-7">
+            <div class="staggered-testimonials">
+              <div v-for="(t, i) in testimonials" :key="i"
+                :class="['testimonial-stagger-card', `stagger-card-${i + 1}`, 'reveal-right']"
+                :style="{ transitionDelay: (i * 0.2) + 's' }">
+                <div class="stagger-card-inner">
+                  <div class="stagger-user-header">
+                    <img :src="t.avatar" alt="User" class="stagger-avatar" />
+                    <div class="stagger-user-info">
+                      <h6 class="stagger-author">{{ t.author }}</h6>
+                    </div>
+                    <div class="stagger-quote-icon">
+                      <i class="bi bi-quote"></i>
+                    </div>
+                  </div>
+                  <p class="stagger-text">{{ t.text }}</p>
                 </div>
               </div>
             </div>
@@ -196,8 +262,8 @@
             <h2>Ready to join the <span>NextGen?</span></h2>
             <p>Experience the community platform that adapts to your needs. Join today for free.</p>
             <div class="cta-btns">
-              <RouterLink to="/register" class="btn-primary-gradient lg">Get Started Now</RouterLink>
-              <RouterLink to="/about" class="btn-secondary-link">Read our story</RouterLink>
+              <RouterLink to="/register" class="btn-primary-gradient lg rounded-pill text-decoration-none">Get Started
+                Now</RouterLink>
             </div>
           </div>
           <div class="cta-shapes">
@@ -263,37 +329,70 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useTheme } from '@/composables/useTheme'
+import GridHeroSection from '@/components/layout/GridHeroSection.vue'
 
 const { theme, toggleTheme } = useTheme()
 const isScrolled = ref(false)
 
+const activeUsers = [
+  { name: 'Alex Rivera', role: 'DeFi Architect', avatar: 'https://i.pravatar.cc/150?u=1' },
+  { name: 'Sofia Chen', role: 'UI Engineer', avatar: 'https://i.pravatar.cc/150?u=2' },
+  { name: 'Jordan Smith', role: 'Product Design', avatar: 'https://i.pravatar.cc/150?u=3' },
+  { name: 'Emma Wilson', role: 'Backend Dev', avatar: 'https://i.pravatar.cc/150?u=4' },
+  { name: 'Liam Garcia', role: 'Security', avatar: 'https://i.pravatar.cc/150?u=5' },
+  { name: 'Mia Wong', role: 'Web3 Specialist', avatar: 'https://i.pravatar.cc/150?u=6' },
+  { name: 'Noah Davis', role: 'Frontend Lead', avatar: 'https://i.pravatar.cc/150?u=7' },
+  { name: 'Ava Brown', role: 'Community', avatar: 'https://i.pravatar.cc/150?u=8' },
+  { name: 'Ethan Hunt', role: 'Growth', avatar: 'https://i.pravatar.cc/150?u=9' },
+  { name: 'Luna Love', role: 'Artist', avatar: 'https://i.pravatar.cc/150?u=10' },
+]
+
 const navLinks = [
   { href: '#features', label: 'Features' },
-  { href: '#community', label: 'Impact' },
-  { href: '#customers', label: 'Testimonials' },
+  { href: '#how-it-works', label: 'Experience' },
+  { href: '#testimonials', label: 'Testimonials' },
 ]
 
 const mainFeatures = [
   {
-    icon: 'bi-lightning-charge-fill',
-    bg: 'linear-gradient(135deg, #f0abfc 0%, #a855f7 100%)',
-    title: 'Zero Latency',
-    desc: 'Real-time interactions powered by our cutting-edge architecture. No more waiting.',
-    link: '/help'
+    icon: 'bi-chat-square-text-fill',
+    title: 'Community Interaction',
+    items: [
+      'Create posts (text, images, videos)',
+      'Real-time engagement',
+      'Community groups & projects',
+      'Threaded discussions'
+    ]
   },
   {
-    icon: 'bi-grid-1x2-fill',
-    bg: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
-    title: 'Custom Layouts',
-    desc: 'Personalize your community view with modular components and flexible styling.',
-    link: '/help'
+    icon: 'bi-person-lines-fill',
+    title: 'User & Account Features',
+    items: [
+      'User registration (sign up / login)',
+      'Profiles (photo, bio, interests)',
+      'Edit profile & verification',
+      'Admin, moderator, member roles'
+    ]
   },
   {
-    icon: 'bi-shield-fill-check',
-    bg: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)',
-    title: 'Total Control',
-    desc: 'Manage permissions, content moderation, and privacy with enterprise-grade tools.',
-    link: '/help'
+    icon: 'bi-collection-play-fill',
+    title: 'Media & Content',
+    items: [
+      'Image & Gallery uploads',
+      'Professional Video embeds',
+      'Secure File attachments',
+      'Smart content previews'
+    ]
+  },
+  {
+    icon: 'bi-stars',
+    title: 'Other Useful Features',
+    items: [
+      'Automatic Dark / Light mode',
+      'Fully Mobile-friendly design',
+      'API support (for mobile app)',
+      'Forgot / reset password system'
+    ]
   }
 ]
 
@@ -317,11 +416,6 @@ const testimonials = [
     avatar: 'https://i.pravatar.cc/100?u=elena'
   }
 ]
-
-const scrollHandler = (id) => {
-  const el = document.querySelector(id)
-  if (el) el.scrollIntoView({ behavior: 'smooth' })
-}
 
 const onScroll = () => {
   isScrolled.value = window.scrollY > 50
@@ -446,11 +540,14 @@ onUnmounted(() => {
   font-weight: 600;
   color: var(--color-muted);
   font-size: 0.95rem;
-  transition: color 0.3s;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 8px;
 }
 
 .nav-links a:hover {
-  color: var(--color-text);
+  color: var(--color-primary);
+  background: rgba(99, 102, 241, 0.05);
 }
 
 .nav-actions {
@@ -500,277 +597,103 @@ onUnmounted(() => {
 }
 
 /* --- Hero Section Style --- */
-.hero-section {
-  padding-top: 140px;
-  padding-bottom: 80px;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-section::before {
-  content: '';
-  position: absolute;
-  top: -10%;
-  right: -10%;
-  width: 50%;
-  height: 60%;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
-  filter: blur(80px);
-  z-index: -1;
-}
-
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 60px;
-  align-items: center;
-}
-
-.badge-new {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: var(--color-hover);
-  border: 1px solid var(--color-border);
-  border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--color-text);
-  margin-bottom: 24px;
-}
-
-.badge-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--color-primary);
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-
-  50% {
-    transform: scale(1.5);
-    opacity: 0.5;
-  }
-
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.hero-title {
-  font-size: 4.5rem;
-  line-height: 1.1;
-  font-weight: 900;
-  letter-spacing: -2.5px;
-  margin-bottom: 24px;
-}
-
-.text-gradient {
-  background: var(--color-text);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.hero-subtitle {
-  font-size: 1.25rem;
-  color: var(--color-muted);
-  line-height: 1.6;
-  max-width: 540px;
-  margin-bottom: 40px;
-}
-
-.hero-btns {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 48px;
-}
-
-.btn-primary-gradient {
-  background: var(--color-primary);
-  color: var(--color-background);
-  padding: 16px 32px;
-  border-radius: 16px;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.btn-primary-gradient:hover {
-  transform: translateY(-5px);
-  opacity: 0.9;
-}
-
-.btn-outline-custom {
-  background: transparent;
-  border: 2px solid var(--color-border);
-  padding: 16px 32px;
-  border-radius: 16px;
-  font-weight: 600;
-  font-size: 1.1rem;
-  transition: all 0.3s;
-}
-
-.btn-outline-custom:hover {
-  background: var(--color-hover);
-  border-color: var(--color-text);
-}
-
-.social-proof {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.avatar-group {
-  display: flex;
-  margin-left: 10px;
-}
-
-.avatar-group img,
-.avatar-more {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 3px solid var(--color-background);
-  margin-left: -12px;
-  object-fit: cover;
-}
-
-.avatar-more {
-  background: #f3f4f6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #666;
-}
-
-.proof-text {
-  font-size: 0.9rem;
-  color: var(--color-muted);
-  font-weight: 500;
-  margin: 0;
-}
-
-/* --- Hero Visual --- */
-.hero-visual {
-  position: relative;
-}
-
-.main-visual-container {
-  position: relative;
-  background: var(--color-hover);
-  border-radius: 40px;
-  padding: 20px;
-  box-shadow: var(--shadow-lg);
-  transform: rotate(2deg);
-}
-
-.hero-main-img {
-  width: 100%;
-  border-radius: 30px;
-  display: block;
-}
-
-.floating-card {
-  position: absolute;
-  background: white;
-  padding: 12px 20px;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  z-index: 10;
-  animation: float 4s ease-in-out infinite;
-}
-
-.card-1 {
-  top: 10%;
-  left: -15%;
-  animation-delay: 0.5s;
-}
-
-.card-2 {
-  bottom: 20%;
-  right: -10%;
-  animation-delay: 1s;
-}
-
-.floating-card i {
-  width: 36px;
-  height: 36px;
-  background: #f3f4f6;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #6366f1;
-}
-
-@keyframes float {
-
-  0%,
-  100% {
-    transform: translateY(0) rotate(2deg);
-  }
-
-}
-
 /* --- Marquee Section --- */
 .marquee-section {
   background: var(--color-background);
   overflow: hidden;
-  border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
+  padding: 40px 0;
+}
+
+.marquee-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.marquee-row {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
 }
 
 .marquee-content {
-  display: flex !important;
-  gap: 60px;
-  width: max-content;
-  animation: scroll 30s linear infinite;
-  padding: 10px 0;
+  display: flex;
+  gap: 20px;
+  flex-shrink: 0;
+  padding: 8px 0;
 }
 
-.brand-item {
-  display: flex !important;
+.marquee-ltr .marquee-content {
+  animation: scroll-ltr 50s linear infinite;
+}
+
+.marquee-rtl .marquee-content {
+  animation: scroll-rtl 50s linear infinite;
+}
+
+.user-pill {
+  display: flex;
   align-items: center;
   gap: 12px;
-  color: var(--color-muted);
-  font-weight: 700;
-  font-size: 1.1rem;
-  opacity: 0.6;
+  padding: 6px 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 100px;
   white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s ease;
 }
 
-.brand-item i {
-  font-size: 1.5rem;
-  color: var(--color-primary);
+.user-pill:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-primary);
+  background: var(--color-hover);
 }
 
-@keyframes scroll {
+.user-pill-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-background);
+}
+
+.user-pill-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.user-pill-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.user-pill-role {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  font-weight: 500;
+}
+
+@keyframes scroll-ltr {
   from {
     transform: translateX(0);
   }
 
   to {
-    transform: translateX(calc(-50% - 30px));
+    transform: translateX(calc(-50% - 10px));
+  }
+}
+
+@keyframes scroll-rtl {
+  from {
+    transform: translateX(calc(-50% - 10px));
+  }
+
+  to {
+    transform: translateX(0);
   }
 }
 
@@ -811,33 +734,60 @@ onUnmounted(() => {
 }
 
 .feature-large-card:hover {
-  transform: translateY(-10px);
-  border-color: #6366f1;
-  box-shadow: 0 20px 50px rgba(99, 102, 241, 0.1);
+  transform: translateY(-15px) scale(1.03);
+  border-color: var(--color-primary);
+  box-shadow: 0 30px 60px rgba(99, 102, 241, 0.15);
 }
 
 .feature-icon-wrapper {
   width: 64px;
   height: 64px;
-  border-radius: 18px;
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--color-primary);
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 32px;
-  color: white;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .feature-icon-wrapper {
+  background: rgba(99, 102, 241, 0.15);
 }
 
 .feature-large-card h3 {
   font-size: 1.5rem;
   font-weight: 800;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
 
-.feature-large-card p {
+.feature-item-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.feature-item-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   color: var(--color-muted);
-  line-height: 1.6;
-  margin-bottom: 24px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.feature-item-list li i {
+  color: var(--color-primary);
+  font-size: 1.1rem;
+}
+
+[data-theme="dark"] .feature-item-list li {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .feature-link {
@@ -849,132 +799,586 @@ onUnmounted(() => {
   gap: 8px;
 }
 
-/* --- Highlight Section --- */
-.highlight-card {
-  background: #0f172a;
-  border-radius: 48px;
-  padding: 80px;
-  color: white;
+/* --- How It Works Section --- */
+.how-it-works-section {
+  background-color: #fafafa;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .how-it-works-section {
+  background-color: #0c0c0e;
+}
+
+.badge-outline {
+  display: inline-block;
+  padding: 6px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-muted);
+  margin-bottom: 20px;
+  background: white;
+}
+
+[data-theme="dark"] .badge-outline {
+  background: #1a1a1c;
+}
+
+.steps-container {
+  position: relative;
+  padding: 60px 0;
+}
+
+.step-card {
+  background: var(--color-background);
+  border-radius: 32px;
+  padding: 40px;
+  height: 100%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.02);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
 
-.highlight-title {
-  font-size: 3rem;
-  font-weight: 800;
-  line-height: 1.2;
-  margin-bottom: 48px;
+.shimmer-effect {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent);
+  transform: skewX(-20deg);
+  transition: 0.5s;
+  pointer-events: none;
 }
 
-.highlight-title span {
-  color: #818cf8;
+.step-card:hover .shimmer-effect {
+  left: 150%;
+  transition: 0.8s;
 }
 
-.highlight-list {
-  max-width: 500px;
+.step-card:hover {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+  border-color: var(--color-primary);
 }
 
-.h-item {
-  display: flex;
-  gap: 24px;
+.chat-bubble-mock.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.h-icon {
-  width: 56px;
-  height: 56px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
+.mock-lines-group .l1.glow {
+  background: #6366f1;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
+.check-badge.pulse {
+  animation: badge-pulse 2s infinite;
+}
+
+@keyframes badge-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.reveal-up {
+  opacity: 0.01;
+  /* Start slightly above 0 to bypass some initial render issues */
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.reveal-up.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-theme="dark"] .step-card {
+  background: #1a1a1c;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.step-card-visual {
+  height: 200px;
+  margin-bottom: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  color: #fff;
-  flex-shrink: 0;
-}
-
-.h-text h4 {
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.h-text p {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.stats-box {
-  padding: 32px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  text-align: center;
-}
-
-.stat-value {
-  display: block;
-  font-size: 4rem;
-  font-weight: 900;
-  color: #fff;
-}
-
-.stat-label {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-/* --- Testimonials Modern --- */
-.testimonial-modern-card {
-  background: var(--color-surface);
-  padding: 48px;
-  border-radius: 32px;
-  border: 1px solid var(--color-border);
+  background: #fdfdfd;
+  border-radius: 20px;
   position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="dark"] .step-card-visual {
+  background: #111113;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.step-card h3 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.step-card p {
+  color: var(--color-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* UI Mockups Styling */
+.ui-mockup {
+  position: relative;
+  width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  align-items: center;
+  justify-content: center;
 }
 
-.quote-icon {
-  font-size: 2.5rem;
-  color: var(--color-primary);
-  opacity: 0.2;
-  margin-bottom: -20px;
+.mock-header {
+  width: 120px;
+  height: 40px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
-.testimonial-text {
+[data-theme="dark"] .mock-header {
+  background: #1a1a1c;
+}
+
+.mock-logo {
+  width: 15px;
+  height: 15px;
+  background: #eee;
+  border-radius: 4px;
+}
+
+[data-theme="dark"] .mock-logo {
+  background: #333;
+}
+
+.mock-line {
+  width: 60px;
+  height: 6px;
+  background: #eee;
+  border-radius: 3px;
+}
+
+[data-theme="dark"] .mock-line {
+  background: #333;
+}
+
+.mock-btn-black {
+  width: 100px;
+  padding: 8px;
+  background: #111;
+  color: white;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.mock-plan-grid {
+  display: flex;
+  gap: 15px;
+}
+
+.plan-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #999;
+  position: relative;
+}
+
+[data-theme="dark"] .plan-circle {
+  background: #2a2a2d;
+  color: #666;
+}
+
+.plan-circle.active {
+  background: #f43f5e;
+  color: white;
+}
+
+.plan-tag {
+  position: absolute;
+  top: 100%;
+  background: #111;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 8px;
+  margin-top: 5px;
+}
+
+.chat-bubble-mock {
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  gap: 8px;
+  position: absolute;
+}
+
+[data-theme="dark"] .chat-bubble-mock {
+  background: #1a1a1c;
+}
+
+.chat-bubble-mock.left {
+  top: 20px;
+  left: 30px;
+}
+
+.chat-bubble-mock.right {
+  bottom: 20px;
+  right: 30px;
+}
+
+.mock-avatar-sm {
+  width: 12px;
+  height: 12px;
+  background: #fbbf24;
+  border-radius: 50%;
+}
+
+.mock-line-sm {
+  width: 40px;
+  height: 4px;
+  background: #eee;
+  border-radius: 2px;
+}
+
+.mock-line-xs {
+  width: 20px;
+  height: 4px;
+  background: #eee;
+  border-radius: 2px;
+}
+
+.mock-btn-blue {
+  background: #3b82f6;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+}
+
+.avatar-stack {
+  position: absolute;
+  top: 40%;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.avatar-stack img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.doc-stack {
+  position: relative;
+  width: 100px;
+  height: 120px;
+}
+
+.doc {
+  position: absolute;
+  width: 70px;
+  height: 90px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eee;
+}
+
+[data-theme="dark"] .doc {
+  background: #1a1a1c;
+  border-color: #333;
+}
+
+.doc-1 {
+  transform: rotate(-10deg);
+  left: -10px;
+  top: 10px;
+  opacity: 0.5;
+}
+
+.doc-2 {
+  transform: rotate(5deg);
+  right: -10px;
+  top: 5px;
+  opacity: 0.8;
+}
+
+.main-doc {
+  z-index: 2;
+  padding: 15px;
+}
+
+.mock-logo-faded {
+  width: 15px;
+  height: 15px;
+  background: #eee;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.mock-lines-group .l1 {
+  width: 100%;
+  height: 4px;
+  background: #f0f0f0;
+  margin-bottom: 5px;
+  border-radius: 2px;
+}
+
+.mock-lines-group .l2 {
+  width: 60%;
+  height: 4px;
+  background: #f0f0f0;
+  border-radius: 2px;
+}
+
+.check-badge {
+  position: absolute;
+  bottom: 20px;
+  z-index: 5;
+  width: 36px;
+  height: 36px;
+  background: #10b981;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  font-size: 1.2rem;
+}
+
+/* Step Labels & Arrows */
+.step-indicator {
+  position: absolute;
+  color: #ccc;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 0;
+}
+
+.step-1-label {
+  top: 0;
+  left: 15%;
+}
+
+.step-2-label {
+  bottom: 0;
+  left: 35%;
+  flex-direction: column;
+}
+
+.step-3-label {
+  top: 0;
+  right: 15%;
+}
+
+.step-arrow {
+  color: #ddd;
+}
+
+.step-arrow-up {
+  color: #ddd;
+}
+
+/* --- Testimonial Redesign --- */
+.testimonial-redesign {
+  background-color: var(--color-background);
+  overflow: hidden;
+  padding: 100px 0;
+}
+
+.redesign-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 24px;
+}
+
+.redesign-desc {
+  color: var(--color-muted);
   font-size: 1.1rem;
   line-height: 1.6;
-  font-weight: 500;
-  font-style: italic;
-  margin-bottom: 32px;
-  position: relative;
-  z-index: 1;
+  max-width: 450px;
+  margin-bottom: 40px;
 }
 
-.testimonial-user {
+.btn-testimonial-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--color-text);
+  color: var(--color-background);
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+
+.staggered-testimonials {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 40px 0;
+}
+
+.testimonial-stagger-card {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 500px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.02);
+  position: relative;
+  transition: all 0.4s ease;
+}
+
+[data-theme="dark"] .testimonial-stagger-card {
+  background: #030303;
+  border-color: rgb(255, 255, 255);
+}
+
+.testimonial-stagger-card:hover {
+  transform: translateX(12px) scale(1.02);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.1);
+  z-index: 10 !important;
+}
+
+.stagger-card-1 {
+  align-self: flex-end;
+  margin-right: 40px;
+}
+
+.stagger-card-2 {
+  align-self: flex-start;
+  margin-left: 20px;
+  border-left: 5px solid #000000;
+}
+
+.stagger-card-3 {
+  align-self: flex-end;
+  margin-right: 10px;
+}
+
+.stagger-user-header {
   display: flex;
   align-items: center;
   gap: 16px;
+  margin-bottom: 20px;
 }
 
-.user-avatar {
+.stagger-avatar {
   width: 56px;
   height: 56px;
   border-radius: 50%;
   object-fit: cover;
+  border: 3px solid #f8fafc;
 }
 
-.user-name {
+[data-theme="dark"] .stagger-avatar {
+  border-color: #334155;
+}
+
+.stagger-user-info {
+  flex: 1;
+}
+
+.stagger-author {
   font-weight: 800;
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.stagger-quote-icon {
+  font-size: 1.8rem;
+  color: var(--color-text);
+  opacity: 0.2;
+}
+
+.stagger-text {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-muted);
   margin: 0;
 }
 
-.user-role {
-  font-size: 0.85rem;
-  color: var(--color-muted);
+@media (max-width: 991px) {
+  .staggered-testimonials {
+    padding: 20px 0;
+  }
+
+  .testimonial-stagger-card {
+    align-self: center !important;
+    margin: 0 !important;
+    max-width: 100%;
+  }
+
+  .redesign-title {
+    font-size: 2.8rem;
+  }
 }
 
 /* --- Final CTA Section --- */
 .cta-banner {
-  background: var(--color-primary);
+  background: var(--color-text);
   border-radius: 48px;
   padding: 100px 40px;
   text-align: center;
@@ -1008,6 +1412,7 @@ onUnmounted(() => {
 
 .cta-btns {
   display: flex;
+  align-items: center;
   justify-content: center;
   gap: 20px;
 }
