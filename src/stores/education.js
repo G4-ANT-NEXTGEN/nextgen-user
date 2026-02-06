@@ -1,10 +1,13 @@
 import { defineStore } from "pinia";
 import api from "@/api/api";
+import { ref } from "vue";
 import { showSuccess, showError } from '@/utils/toast'
 
 export const useEducationStore = defineStore("education", () => {
 
+  const isLoading = ref(false)
   const CreateEducation = async (payload) => {
+    isLoading.value=true
     try {
       const responce = await api.post("/api/educations", payload);
       showSuccess("Education created successfully");
@@ -13,6 +16,9 @@ export const useEducationStore = defineStore("education", () => {
       console.log("Create Education Error:", err);
       showError("Failed to create Education");
       throw err;
+    }
+    finally{
+      isLoading.value=false
     }
   };
 
@@ -40,6 +46,7 @@ export const useEducationStore = defineStore("education", () => {
 
 
   return {
+    isLoading,
     CreateEducation,
     UpdateEducation,
     DeleteEducation

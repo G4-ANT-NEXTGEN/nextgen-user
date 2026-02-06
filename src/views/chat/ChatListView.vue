@@ -1,15 +1,9 @@
 <template>
   <div class="chat-list-container">
     <div class="list-header">
-      <div class="header-top px-3 pt-3 pb-2">
+      <div class="header-top px-3 py-3">
         <h2 class="ms-3">Messages</h2>
         <div class="badge-count">{{ chatStore.chatList.length }}</div>
-      </div>
-      <div class="search-box-wrapper px-3 pb-3">
-        <div class="custom-search">
-          <i class="bi bi-search"></i>
-          <input type="text" placeholder="Search conversations..." />
-        </div>
       </div>
     </div>
 
@@ -26,24 +20,28 @@
 
       <div v-else class="chats-stack">
         <router-link v-for="chat in chatStore.chatList" :key="chat.id" class="chat-entry"
-          :to="{ name: 'chat-room', params: { id: chat.messages[0].isMine ? chat.messages[0].receiver.id : chat.messages[0].sender.id } }"
-          active-class="active" @click="chatStore.isSelectChat = true">
+          :to="{ name: 'chat-room', params: { id: chat.id } }" active-class="active"
+          @click="chatStore.isSelectChat = true">
           <div class="avatar-cell">
-            <img :src="chat.messages[0].isMine ? chat.messages[0].receiver.avatar : chat.messages[0].sender.avatar"
-              class="user-avatar" />
+            <img :src="chat.otherUser.avatar" class="user-avatar" />
             <span class="status-dot online"></span>
             <div v-if="chat.unreadCount > 0" class="unread-pill">{{ chat.unreadCount }}</div>
           </div>
           <div class="info-cell">
             <div class="name-row">
-              <span class="full-name">{{ chat.messages[0].isMine ? chat.messages[0].receiver.full_name :
-                chat.messages[0].sender.full_name }}</span>
-              <span class="time-stamp">{{ formatLocalTime(chat.messages[0].created_at) }}</span>
+              <span class="full-name">{{ chat.otherUser.full_name }}</span>
+              <span class="time-stamp" v-if="chat.messages.length > 0">{{ formatLocalTime(chat.messages[0].created_at)
+              }}</span>
             </div>
             <div class="message-row">
               <p class="last-msg-text text-truncate">
-                <span v-if="chat.messages[0].isMine">You: </span>
-                {{ chat.messages[0].message }}
+                <template v-if="chat.messages.length > 0">
+                  <span v-if="chat.messages[0].isMine">You: </span>
+                  {{ chat.messages[0].message }}
+                </template>
+                <template v-else>
+                  <span class="fst-italic opacity-50">New conversation...</span>
+                </template>
               </p>
             </div>
           </div>

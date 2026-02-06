@@ -100,11 +100,11 @@ defineOptions({
 
 .nav-menu-container {
   position: fixed;
-  ;
   left: 0;
   top: 0;
   height: 94vh;
-  width: 280px;
+  max-width: 250px;
+  width: 250px;
   background-color: var(--color-background);
   z-index: 1050;
   display: flex;
@@ -129,7 +129,7 @@ defineOptions({
   transform: translateX(0);
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .nav-menu-container {
     transform: none;
     /* Always visible on desktop */
@@ -192,23 +192,23 @@ defineOptions({
   align-items: center;
   gap: 16px;
   padding: 12px 20px;
+  border-radius: 12px;
   cursor: pointer;
   text-decoration: none;
   color: var(--color-muted);
   font-weight: 500;
-  transition: all 0.2s ease;
-  border-left: 4px solid transparent;
+  transition: all 0.3s ease;
 }
 
 .nav-item:hover {
   color: var(--color-primary);
-  background: linear-gradient(90deg, rgba(var(--color-primary-rgb), 0.05) 0%, transparent 100%);
+  background: var(--sidebar-hover);
 }
 
 .nav-item.active {
-  color: var(--color-primary);
+  color: var(--color-background);
   font-weight: 600;
-  border-left-color: var(--color-primary);
+  background-color: var(--color-text);
 }
 
 .nav-item i {

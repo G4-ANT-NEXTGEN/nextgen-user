@@ -14,6 +14,11 @@
           </div>
           <div class="post-meta">
             <time class="post-date">{{ formatDate(post.created_at) }}</time>
+            <span class="meta-dot" v-if="post.categories?.length > 0">•</span>
+            <div class="category-badge" v-if="post.categories?.length > 0">
+              <i class="bi bi-tag-fill me-1"></i>
+              {{ post.categories[0].name }}
+            </div>
           </div>
         </div>
       </div>
@@ -53,10 +58,27 @@
 
     <!-- Image Section -->
     <div class="post-media" v-if="post.image && post.image !== 'http://novia2.csm.linkpc.net/storage/posts'">
-      <div class="media-container">
+      <div class="media-container" @click="showPreview = true">
         <img class="media-image" :src="post.image" alt="Post image" />
+        <div class="media-overlay">
+          <i class="bi bi-zoom-in"></i>
+        </div>
       </div>
     </div>
+
+    <!-- Image Preview Modal -->
+    <Teleport to="body">
+      <Transition name="scale">
+        <div v-if="showPreview" class="image-preview-overlay" @click="showPreview = false">
+          <button class="close-preview" @click="showPreview = false">
+            <i class="bi bi-x-lg"></i>
+          </button>
+          <div class="preview-content" @click.stop>
+            <img :src="post.image" alt="Preview" class="preview-image" />
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
 
     <!-- Engagement Stats Row -->
     <div class="engagement-stats ">
@@ -101,8 +123,11 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import router from '@/router'
 import moment from 'moment-timezone'
+
+const showPreview = ref(false);
 
 const props = defineProps({
   post: {
@@ -130,8 +155,11 @@ const formatDate = (date) => {
 }
 
 const handleAvatarClick = () => {
-  // alert(props.post.creator.id)
-  router.push({ name: 'view-profile', params: { id: props.post.creator.id } })
+  if (props.post.creator.id == props.currentUserId) {
+    router.push({ name: 'profile' })
+  } else {
+    router.push({ name: 'view-profile', params: { id: props.post.creator.id } })
+  }
 }
 
 
@@ -245,6 +273,23 @@ const handleAvatarClick = () => {
   font-weight: bold;
 }
 
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  background: rgba(var(--color-primary-rgb, 59, 130, 246), 0.1);
+  color: var(--color-primary, #3b82f6);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.category-badge i {
+  font-size: 10px;
+}
+
 /* Post Actions Dropdown */
 .post-actions {
   position: relative;
@@ -332,14 +377,17 @@ const handleAvatarClick = () => {
 
 .media-container {
   width: 100%;
+  height: 500px;
   border-radius: 16px;
   overflow: hidden;
-  background: var(--color-border, #f0f0f0);
+  border-radius: 20px !important;
+  /* background: var(--color-border, #f0f0f0); */
 }
 
 .media-image {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
@@ -514,5 +562,93 @@ const handleAvatarClick = () => {
   .action-btn i {
     font-size: 20px;
   }
+}
+
+/* Image Preview Styles */
+.media-container {
+  cursor: pointer;
+  position: relative;
+}
+
+.media-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: white;
+  font-size: 2rem;
+}
+
+.media-container:hover .media-overlay {
+  opacity: 1;
+}
+
+.image-preview-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  cursor: zoom-out;
+}
+
+.preview-content {
+  max-width: 90vw;
+  max-height: 90vh;
+  position: relative;
+  cursor: default;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.close-preview {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  z-index: 10001;
+}
+
+.close-preview:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+}
+
+/* Transitions */
+.scale-enter-active,
+.scale-leave-active {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scale-enter-from,
+.scale-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
 }
 </style>

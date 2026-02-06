@@ -1,20 +1,25 @@
 <template>
   <div class="chat-room-facelift h-100 d-flex flex-column">
     <!-- Header -->
-    <div class="room-header px-4 py-3 border-bottom">
-      <router-link :to="{ name: 'view-profile', params: { id: route.params.id } }"
-        class="text-decoration-none d-flex align-items-center">
-        <div class="avatar-stack me-3">
-          <img
-            :src="conversationMessage[0]?.isMine ? conversationMessage[0]?.receiver.avatar : conversationMessage[0]?.sender.avatar"
-            class="header-avatar" />
-        </div>
-        <div class="user-details">
-          <h4 class="m-0">{{ conversationMessage[0]?.isMine ? conversationMessage[0]?.receiver.full_name :
-            conversationMessage[0]?.sender.full_name }}</h4>
-          <span class="status-text">Online</span>
-        </div>
-      </router-link>
+    <div class="room-header px-3 py-3 border-bottom">
+      <div class="d-flex align-items-center">
+        <!-- Back button - only visible on mobile -->
+        <router-link :to="{ name: 'chat-layout' }" @click="chatStore.isSelectChat = false"
+          class="text-decoration-none me-3 d-lg-none back-btn">
+          <i class="bi bi-chevron-left"></i>
+        </router-link>
+
+        <router-link :to="{ name: 'view-profile', params: { id: route.params.id } }"
+          class="text-decoration-none d-flex align-items-center">
+          <div class="avatar-stack me-3">
+            <img :src="roomUser?.avatar" class="header-avatar" />
+          </div>
+          <div class="user-details">
+            <h4 class="m-0">{{ roomUser?.full_name }}</h4>
+            <span class="status-text">Online</span>
+          </div>
+        </router-link>
+      </div>
     </div>
 
     <!-- Message Stream -->
@@ -32,7 +37,7 @@
         <img v-if="!msg.isMine" :src="msg.sender.avatar" class="bubble-avatar" />
         <div class="bubble-wrapper">
           <div class="message-bubble">
-            <p>{{ msg.message }}</p>
+            <p class="text-color">{{ msg.message }}</p>
           </div>
           <span class="msg-time">{{ formatLocalTime(msg.created_at) }}</span>
         </div>
@@ -75,6 +80,14 @@ const formatLocalTime = (time) => {
     minute: '2-digit'
   })
 }
+const roomUser = computed(() => {
+  if (conversationMessage.value.length > 0) {
+    const firstMsg = conversationMessage.value[0]
+    return firstMsg.isMine ? firstMsg.receiver : firstMsg.sender
+  }
+  return chatStore.temporaryChatUser
+})
+
 const conversationMessage = computed(() => {
   const id = Number(route.params.id)
   return chatStore.getConversationMessages(id)
@@ -166,6 +179,30 @@ onMounted(async () => {
   color: var(--color-primary);
 }
 
+.back-btn {
+  color: var(--color-text);
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.back-btn:hover {
+  background: var(--color-surface);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.back-btn i {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
 .message-stream {
   display: flex;
   flex-direction: column;
@@ -228,7 +265,7 @@ onMounted(async () => {
 
 .is-mine .message-bubble {
   background: var(--btn-primary-bg);
-  color: var(--btn-primary-text);
+  color: var(--color-background);
   border-radius: 20px 20px 4px 20px;
 }
 

@@ -6,6 +6,7 @@
         class="project-card" :showCreate="false" :showUpdate="true" :showDelete="true" @create="onCreate"
         @update="() => onUpdate(project)" @delete="() => openDeleteModal(project)">
         <div v-if="project.link" class="info-row">
+          <p>Project Reference</p>
           <i class="bi bi-link-45deg icon"></i>
           <a :href="project.link" target="_blank" class="project-link">
             {{ project.link }}
@@ -27,6 +28,7 @@
       <InfoCard v-for="project in viewProjects" :key="project.id" :title="project.title || 'Project'"
         icon="bi bi-folder" class="project-card" :showCreate="false" :showUpdate="false" :showDelete="false">
         <div v-if="project.link" class="info-row">
+          <p>Project Reference</p>
           <i class="bi bi-link-45deg icon"></i>
           <a :href="project.link" target="_blank" class="project-link">
             {{ project.link }}

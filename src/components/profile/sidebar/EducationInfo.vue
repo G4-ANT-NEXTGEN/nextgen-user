@@ -80,7 +80,7 @@
           </InfoCard>
         </div>
       </div>
-      
+
       <div v-else class="empty-state-card guest">
         <div class="empty-icon-circle">
           <i class="bi bi-mortarboard text-muted"></i>
@@ -145,7 +145,7 @@
       </div>
 
       <template #footer>
-        <BaseButton variant="secondary" @click="closeDeleteModal">Wait, keep it</BaseButton>
+        <BaseButton variant="secondary" @click="closeDeleteModal">Cancel</BaseButton>
         <BaseButton variant="danger" @click="confirmDeleteEducation" :isLoading="isDeleting">Yes, Remove</BaseButton>
       </template>
     </BaseModal>
@@ -229,10 +229,10 @@ const confirmDeleteEducation = async () => {
     isDeleting.value = true
     await educationStore.DeleteEducation(selectedEducationForDelete.value.id)
     await profileStore.fetchProfile()
-    showSuccess('Education entry removed successfully')
+    // showSuccess('Education entry removed successfully')
     closeDeleteModal()
   } catch {
-    showError('Could not remove education entry')
+    // showError('Could not remove education entry')
   } finally {
     isDeleting.value = false
   }
@@ -253,17 +253,17 @@ const HandleAddNewEducation = async () => {
   try {
     if (isEditMode.value && selectedEducation.value) {
       await educationStore.UpdateEducation(selectedEducation.value.id, payload)
-      showSuccess('Education details updated successfully')
+      // showSuccess('Education details updated successfully')
     } else {
       await educationStore.CreateEducation(payload)
-      showSuccess('New education entry added successfully')
+      // showSuccess('New education entry added successfully')
     }
 
     await profileStore.fetchProfile()
     closeAddNewEducation()
   } catch (error) {
     console.error(error)
-    showError('Operation failed. Please check your data.')
+    // showError('Operation failed. Please check your data.')
   } finally {
     isLoading.value = false
   }

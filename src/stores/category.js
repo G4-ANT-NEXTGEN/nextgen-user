@@ -1,7 +1,6 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import api from '@/api/api'
-import { showSuccess, showError } from '@/utils/toast'
 
 export const useCategoryStore = defineStore('category', () => {
     const categories = ref([])
@@ -10,11 +9,14 @@ export const useCategoryStore = defineStore('category', () => {
     const error = ref(null)
 
     const fetchCategorys = async () => {
+        loading.value = true
         try {
             const response = await api.get('/api/categories')
             categories.value = response.data.data
         } catch (err) {
             error.value = err
+        } finally {
+            loading.value = false
         }
     }
 

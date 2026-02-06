@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import api from "@/api/api";
 import { ref } from "vue";
+import { showError, showSuccess } from "@/utils/toast";
 
 export const useSkillStore = defineStore("skill", () => {
   const skills = ref([]);
@@ -58,7 +59,28 @@ export const useSkillStore = defineStore("skill", () => {
       isProcessing.value = false;
     }
   };
+  const updateSkills = async(payload) => {
+    try{
+      isProcessing.value=true
+      const params = new URLSearchParams();
+      params.append('skill_ids', JSON.stringify(payload))
+      const res = await api.put("/api/profile/skills", params, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
 
+        },
+      });
+      showSuccess('Skill update successfully')
+      return res
+    }
+    catch(e){
+      console.log(e)
+      showError('Faild to update skill')
+    }
+    finally{
+      isProcessing.value=true
+    }
+  }
   const deleteSkill = async (id) => {
     try {
       isProcessing.value = true;
@@ -81,5 +103,6 @@ export const useSkillStore = defineStore("skill", () => {
     createSkill,
     editSkill,
     deleteSkill,
+    updateSkills
   };
 });
