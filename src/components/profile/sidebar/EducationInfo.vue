@@ -21,15 +21,6 @@
                 </div>
               </div>
 
-              <!-- This is the professional "Edit" button they asked for -->
-              <div class="entry-actions-row">
-                <button class="professional-edit-btn" @click="onUpdate(edu)">
-                  <div class="btn-icon-square">
-                    <i class="bi bi-pencil-square"></i>
-                  </div>
-                  <span class="btn-label">Edit</span>
-                </button>
-              </div>
 
               <div v-if="edu.description" class="entry-description">
                 <p>{{ edu.description }}</p>
