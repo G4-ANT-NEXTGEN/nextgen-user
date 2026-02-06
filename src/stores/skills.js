@@ -71,6 +71,7 @@ export const useSkillStore = defineStore("skill", () => {
         },
       });
       showSuccess('Skill update successfully')
+      fetchSkills()
       return res
     }
     catch(e){

@@ -138,7 +138,7 @@
       </div>
       <template #footer>
         <BaseButton variant="secondary" @click="closeSkillUpdate">Cancel</BaseButton>
-        <BaseButton variant="primary" @click="HandleUpdateSkill" :isLoading="profileStore.isProcessing">Save Changes
+        <BaseButton variant="primary" @click="HandleUpdateSkill" :isLoading="skillStore.isProcessing"><span>{{ skillStore.isProcessing ? 'Saving...' : 'Save Changes'}}</span>
         </BaseButton>
       </template>
     </BaseModal>
@@ -345,17 +345,9 @@ const UpdateSkill = () => {
 }
 const closeSkillUpdate = () => skillUpdate.value = false
 const HandleUpdateSkill = async () => {
-
-  console.log('this is skills id : ',skills.value)
   await skillStore.updateSkills(skills.value)
-  // if (!skills.value.length) return showWarning('Select a skill!')
-  // try {
-  //   await profileStore.updateProfessionalInfo({ skill_ids: skills.value })
+  
     skillUpdate.value = false
-  //   await postStore.fetchPosts()
-  // } catch {
-  //   showError('Failed to update skills!')
-  // }
 }
 
 /* --- Education --- */
