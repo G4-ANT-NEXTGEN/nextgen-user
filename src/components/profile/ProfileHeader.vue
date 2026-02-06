@@ -395,6 +395,7 @@ const newPass = ref()
 const comfirmPass = ref()
 const deleteAccount = ref(false)
 const companyLogo = ref()
+const companyLogoPreview = ref()
 const companyLink = ref()
 
 onMounted(async () => {
@@ -447,8 +448,8 @@ const comfirmDeleteAcc = async() => {
   await profileStore.deleteAccount()
   openSetting.value=false
 }
-const changePassword = async() => {
-  if(!validateForm())
+const changePassword = async () => {
+  if (!validateForm())
     return
   await profileStore.changePassword({
     'old_pass': currentPass.value,

@@ -134,7 +134,7 @@
     <!-- Update Skill Modal -->
     <BaseModal v-if="skillUpdate" title="Update Your Skills" @close="closeSkillUpdate">
       <div class="pb-5 mb-5">
-        <TomSelect v-model="skills" :options="skillOptions" multiple placeholder="Select skills..." />
+        <TomSelect v-model="skills" :options="skillOptions" multiple placeholder="Select skills..."/>
       </div>
       <template #footer>
         <BaseButton variant="secondary" @click="closeSkillUpdate">Cancel</BaseButton>
@@ -345,14 +345,17 @@ const UpdateSkill = () => {
 }
 const closeSkillUpdate = () => skillUpdate.value = false
 const HandleUpdateSkill = async () => {
-  if (!skills.value.length) return showWarning('Select a skill!')
-  try {
-    await profileStore.updateProfessionalInfo({ skill_ids: skills.value })
+
+  console.log('this is skills id : ',skills.value)
+  await skillStore.updateSkills(skills.value)
+  // if (!skills.value.length) return showWarning('Select a skill!')
+  // try {
+  //   await profileStore.updateProfessionalInfo({ skill_ids: skills.value })
     skillUpdate.value = false
-    await postStore.fetchPosts()
-  } catch {
-    showError('Failed to update skills!')
-  }
+  //   await postStore.fetchPosts()
+  // } catch {
+  //   showError('Failed to update skills!')
+  // }
 }
 
 /* --- Education --- */

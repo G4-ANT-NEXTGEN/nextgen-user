@@ -49,17 +49,18 @@
         <div class="col-lg-12">
           <div class="accordion custom-accordion" id="helpAccordion">
             <div class="row g-4">
-              <div v-for="(faq, index) in filteredFaqs" :key="index" class="col-lg-6">
-                <div class="accordion-item h-100 border-0 rounded-3 overflow-hidden shadow-sm">
-                  <h2 class="accordion-header" :id="'heading' + index">
-                    <button class="accordion-button collapsed fw-semibold h-100 align-items-center" type="button"
-                      data-bs-toggle="collapse" :data-bs-target="'#collapse' + index" aria-expanded="false"
-                      :aria-controls="'collapse' + index">
+              <div v-for="faq in filteredFaqs" :key="faq.q" class="col-lg-6">
+                <div class="accordion-item border-0 rounded-3 overflow-hidden shadow-sm">
+                  <h2 class="accordion-header" :id="'heading-' + faq.q.replace(/\s+/g, '-').toLowerCase()">
+                    <button class="accordion-button collapsed fw-semibold align-items-center" type="button"
+                      data-bs-toggle="collapse"
+                      :data-bs-target="'#collapse-' + faq.q.replace(/\s+/g, '-').toLowerCase()" aria-expanded="false"
+                      :aria-controls="'collapse-' + faq.q.replace(/\s+/g, '-').toLowerCase()">
                       {{ faq.q }}
                     </button>
                   </h2>
-                  <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index"
-                    data-bs-parent="#helpAccordion">
+                  <div :id="'collapse-' + faq.q.replace(/\s+/g, '-').toLowerCase()" class="accordion-collapse collapse"
+                    :aria-labelledby="'heading-' + faq.q.replace(/\s+/g, '-').toLowerCase()">
                     <div class="accordion-body text-secondary">
                       {{ faq.a }}
                     </div>
