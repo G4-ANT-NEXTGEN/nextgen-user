@@ -17,9 +17,11 @@
         </ul>
 
         <div class="nav-actions">
-          <button @click="toggleTheme" class="theme-toggle">
-            <i :class="theme === 'light' ? 'bi bi-moon-stars' : 'bi bi-sun'"></i>
-          </button>
+          <div class="">
+            <button @click="toggleTheme" class="theme-toggle">
+              <i :class="theme === 'light' ? 'bi bi-moon-stars' : 'bi bi-sun'"></i>
+            </button>
+          </div>
           <RouterLink to="/login" class="btn-login d-none d-sm-block">Sign In</RouterLink>
           <RouterLink to="/register" class="btn-cta-nav">Try Free</RouterLink>
         </div>
@@ -562,7 +564,8 @@ onUnmounted(() => {
   border: none;
   color: var(--color-text);
   font-size: 1.2rem;
-  padding: 8px;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
   border-radius: 12px;
   transition: background 0.3s;

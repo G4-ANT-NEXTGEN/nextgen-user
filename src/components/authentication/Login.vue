@@ -5,27 +5,27 @@
       <div class="row g-0 h-100">
         <div class="col-lg-6">
           <div class="left-panel h-100">
-              <div class="h-100 d-flex flex-column justify-content-between p-4 relative z-10">
-                <div>
-                  <div class="logo">
-                    <div class="logo-icon">
-                      <img src="/public/logo.jpg" alt="NextGen Logo">
-                    </div>
-                    <span>NextGen</span>
+            <div class="h-100 d-flex flex-column justify-content-between p-4 relative z-10">
+              <div>
+                <div class="logo">
+                  <div class="logo-icon">
+                    <img src="/public/logo.jpg" alt="NextGen Logo">
                   </div>
+                  <span>NextGen</span>
                 </div>
-
-                <div class="hero-content">
-                  <h1>Connect. Innovate.<br>Grow Together.</h1>
-                  <p>A vibrant community for students, freelancers, entrepreneurs, and investors to connect,
-                    innovate, and grow together.</p>
-                </div>
-
-                <router-link to="" class="back-link">
-                  <span>←</span>
-                  <span>Back to Website</span>
-                </router-link>
               </div>
+
+              <div class="hero-content">
+                <h1>Connect. Innovate.<br>Grow Together.</h1>
+                <p>A vibrant community for students, freelancers, entrepreneurs, and investors to connect,
+                  innovate, and grow together.</p>
+              </div>
+
+              <router-link to="/" class="back-link">
+                <span>←</span>
+                <span>Back to Website</span>
+              </router-link>
+            </div>
           </div>
         </div>
 

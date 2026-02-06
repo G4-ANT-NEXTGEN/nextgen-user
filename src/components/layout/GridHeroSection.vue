@@ -71,7 +71,7 @@
     <div class="hero-main-content">
       <div class="badge-premium reveal-up">
         <div class="badge-icon">⭐</div>
-        <span>No.1 Community Platform for Creators</span>
+        <span>No.1 Community Platform for Developer</span>
       </div>
 
       <h1 class="hero-title reveal-up">
