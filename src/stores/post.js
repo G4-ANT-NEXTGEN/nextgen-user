@@ -92,17 +92,24 @@ export const usePostStore = defineStore('post', () => {
       console.log(err.response?.data)
       showError('Failed to create post')
     }
-
   }
 
   const updatePost = async (id, payload) => {
     try {
-      const response = await api.post(`/api/posts/${id}`, payload)
+      let config
+      if (payload instanceof FormData) {
+        config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      }
+      const response = await api.post(`/api/posts/${id}`, payload, config)
       showSuccess('Post updated successfully')
       return response.data.data
     } catch (err) {
-      console.log(err.response?.data);
-      showError('Failed to update post');
+      console.log(err.response?.data)
+      showError('Failed to update post')
     }
   }
 

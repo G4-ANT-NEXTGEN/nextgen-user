@@ -1,5 +1,5 @@
 <template>
-  <article class="post-card">
+  <article class="post-card" :id="`post-${post.id}`">
     <!-- Header Section -->
     <header class="post-header">
       <div class="author-info">
@@ -108,10 +108,43 @@
           <span class="action-label">Comment</span>
         </button>
 
-        <button class="action-btn">
-          <i class="bi bi-share"></i>
-          <span class="action-label">Share</span>
-        </button>
+        <div class="share-wrapper">
+          <button class="action-btn" @click.stop="toggleShareMenu">
+            <i class="bi bi-share"></i>
+            <span class="action-label">Share</span>
+          </button>
+
+          <div v-if="isShareOpen" class="share-menu" @click.stop>
+            <button class="share-item" type="button" @click="shareNative">
+              <i class="bi bi-share-fill"></i>
+              <span>Share...</span>
+            </button>
+            <button class="share-item" type="button" @click="shareTo('telegram')">
+              <i class="bi bi-telegram"></i>
+              <span>Telegram</span>
+            </button>
+            <button class="share-item" type="button" @click="shareTo('facebook')">
+              <i class="bi bi-facebook"></i>
+              <span>Facebook</span>
+            </button>
+            <button class="share-item" type="button" @click="shareTo('whatsapp')">
+              <i class="bi bi-whatsapp"></i>
+              <span>WhatsApp</span>
+            </button>
+            <button class="share-item" type="button" @click="shareTo('x')">
+              <i class="bi bi-twitter"></i>
+              <span>X (Twitter)</span>
+            </button>
+            <button class="share-item" type="button" @click="shareTo('linkedin')">
+              <i class="bi bi-linkedin"></i>
+              <span>LinkedIn</span>
+            </button>
+            <button class="share-item" type="button" @click="copyShareLink">
+              <i class="bi bi-link-45deg"></i>
+              <span>Copy Link</span>
+            </button>
+          </div>
+        </div>
 
         <button class="action-btn bookmark-btn">
           <i class="bi bi-bookmark"></i>
@@ -123,11 +156,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, onBeforeUnmount } from 'vue';
 import router from '@/router'
 import moment from 'moment-timezone'
+import { showError, showSuccess } from '@/utils/toast'
 
 const showPreview = ref(false);
+const isShareOpen = ref(false);
 
 const props = defineProps({
   post: {
@@ -159,6 +194,95 @@ const handleAvatarClick = () => {
     router.push({ name: 'profile' })
   } else {
     router.push({ name: 'view-profile', params: { id: props.post.creator.id } })
+  }
+}
+
+const shareUrl = computed(() => {
+  if (typeof window === 'undefined') return ''
+  return `${window.location.origin}${window.location.pathname}#post-${props.post.id}`
+})
+
+const shareText = computed(() => {
+  const text = props.post.text || ''
+  return text.length > 200 ? `${text.slice(0, 200)}…` : text
+})
+
+const toggleShareMenu = () => {
+  isShareOpen.value = !isShareOpen.value
+}
+
+const closeShareMenu = () => {
+  isShareOpen.value = false
+}
+
+const handleDocumentClick = () => {
+  if (isShareOpen.value) closeShareMenu()
+}
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('click', handleDocumentClick)
+}
+
+onBeforeUnmount(() => {
+  if (typeof document !== 'undefined') {
+    document.removeEventListener('click', handleDocumentClick)
+  }
+})
+
+const shareNative = async () => {
+  if (!navigator.share) {
+    showError('Sharing is not supported in this browser.')
+    return
+  }
+
+  try {
+    await navigator.share({
+      title: props.post.creator?.full_name || 'Post',
+      text: shareText.value,
+      url: shareUrl.value,
+    })
+    closeShareMenu()
+  } catch {
+    // user cancelled or share failed
+  }
+}
+
+const shareTo = (platform) => {
+  const url = encodeURIComponent(shareUrl.value)
+  const text = encodeURIComponent(shareText.value)
+  let shareLink = ''
+
+  switch (platform) {
+    case 'telegram':
+      shareLink = `https://t.me/share/url?url=${url}&text=${text}`
+      break
+    case 'facebook':
+      shareLink = `https://www.facebook.com/sharer/sharer.php?u=${url}`
+      break
+    case 'whatsapp':
+      shareLink = `https://wa.me/?text=${text}%20${url}`
+      break
+    case 'x':
+      shareLink = `https://twitter.com/intent/tweet?text=${text}&url=${url}`
+      break
+    case 'linkedin':
+      shareLink = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`
+      break
+    default:
+      return
+  }
+
+  window.open(shareLink, '_blank', 'noopener,noreferrer')
+  closeShareMenu()
+}
+
+const copyShareLink = async () => {
+  try {
+    await navigator.clipboard.writeText(shareUrl.value)
+    showSuccess('Link copied to clipboard')
+    closeShareMenu()
+  } catch {
+    showError('Failed to copy link')
   }
 }
 
@@ -503,6 +627,51 @@ const handleAvatarClick = () => {
 
 .action-btn i {
   font-size: 20px;
+}
+
+.share-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.share-menu {
+  position: absolute;
+  bottom: 48px;
+  right: 0;
+  background: var(--color-accent);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  border-radius: 14px;
+  padding: 10px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 5;
+}
+
+.share-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  font-weight: 600;
+  padding: 8px 10px;
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.share-item:hover {
+  background: var(--color-secondary);
+}
+
+.share-item i {
+  font-size: 1.1rem;
 }
 
 .action-btn.is-active {
