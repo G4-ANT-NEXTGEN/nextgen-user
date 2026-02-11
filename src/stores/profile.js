@@ -2,12 +2,17 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import api from '@/api/api'
 import { showSuccess, showError } from '@/utils/toast'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 export const useProfileStore = defineStore('profile', () => {
   const user = ref(null)
+  const router = useRouter()
+  const authStore = useAuthStore()
   const viewUser = ref(null)
   const isLoading = ref(false)
   const isProcessing = ref(false)
+  const collaboration = ref(null)
 
   const fetchProfile = async () => {
     isLoading.value = true
@@ -33,12 +38,11 @@ export const useProfileStore = defineStore('profile', () => {
           'Content-Type': 'multipart/form-data',
         },
       })
-      showSuccess('Avatar Upload Successful')
+      showSuccess(res.data.message)
       await fetchProfile()
       return res.data
     } catch (error) {
-      console.error('Failed to upload avatar:', error)
-      showError('Fail to Upload Avatar!')
+      showError(error.response?.data?.message || 'Fail to Upload Avatar!')
       throw error
     } finally {
       isProcessing.value = false
@@ -56,11 +60,10 @@ export const useProfileStore = defineStore('profile', () => {
         },
       })
       await fetchProfile()
-      showSuccess('Avatar Upload Successful')
+      showSuccess(res.data.message)
       return res.data
     } catch (error) {
-      console.error('Failed to upload cover:', error)
-      showError('Fail to upload avatar!')
+      showError(error.response?.data?.message || 'Fail to upload cover!')
       throw error
     } finally {
       isProcessing.value = false
@@ -72,46 +75,47 @@ export const useProfileStore = defineStore('profile', () => {
       const formData = new FormData()
       formData.append('cv', paylaod)
 
-      await api.post(`/api/profile/cv`, formData, {
+      const res = await api.post(`/api/profile/cv`, formData, {
         headers: {
           Accept: 'application/pdf',
           'Content-Type': 'multipart/form-data',
         },
       })
-      showSuccess('CV Upload Successful')
+      showSuccess(res.data.message)
     } catch (e) {
-      showError('Only *.pdf file!')
-      console.log(e)
+      showError(e.response?.data?.message || 'Only *.pdf file!')
     } finally {
       isProcessing.value = false
     }
   }
+
   const addCollaboration = async (payload) => {
-    isLoading.value = true
+    isProcessing.value = true
     try {
-      const res = api.post(`/api/profile/collaboration`, payload, {
+      const res = await api.post(`/api/profile/collaboration`, payload, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       })
-      showSuccess('Collaboration Upload Successful')
+      showSuccess(res.data.message)
+      await fetchProfile()
       return res
     } catch (e) {
-      console.log(e)
-      showError('Can not Upload Collaboration!')
+      showError(e.response?.data?.message || 'Can not Upload Collaboration!')
     } finally {
-      isLoading.value = false
+      isProcessing.value = false
     }
   }
+
   const removeAvatar = async () => {
     isProcessing.value = true
     try {
       const res = await api.delete('/api/profile/avatar')
       await fetchProfile()
-      showSuccess('Avatar Deleted')
+      showSuccess(res.data.message)
       return res.data
     } catch (error) {
-      console.error('Failed to remove avatar:', error)
+      showError(error.response?.data?.message || 'Failed to remove avatar!')
       throw error
     } finally {
       isProcessing.value = false
@@ -119,15 +123,14 @@ export const useProfileStore = defineStore('profile', () => {
   }
   const removeCover = async () => {
     try {
-      isLoading.value = true
-      await api.delete(`/api/profile/cover`)
+      isProcessing.value = true
+      const res = await api.delete(`/api/profile/cover`)
       await fetchProfile()
-      showSuccess('Cover Deleted')
+      showSuccess(res.data.message)
     } catch (e) {
-      console.log(e)
-      showError('can not delete')
+      showError(e.response?.data?.message || 'can not delete')
     } finally {
-      isLoading.value = false
+      isProcessing.value = false
     }
   }
   const updatePersonalInfo = async (payload) => {
@@ -146,9 +149,10 @@ export const useProfileStore = defineStore('profile', () => {
         },
       })
       await fetchProfile()
+      showSuccess(res.data.message)
       return res.data
     } catch (error) {
-      console.error('Failed to update personal info:', error)
+      showError(error.response?.data?.message || 'Failed to update personal info!')
       throw error
     } finally {
       isProcessing.value = false
@@ -161,9 +165,10 @@ export const useProfileStore = defineStore('profile', () => {
       const res = await api.put('/api/profile/professional', payload)
       // Refresh to get nested professional data correctly
       await fetchProfile()
+      showSuccess(res.data.message)
       return res.data
     } catch (error) {
-      console.error('Failed to update professional info:', error)
+      showError(error.response?.data?.message || 'Failed to update professional info!')
       throw error
     } finally {
       isProcessing.value = false
@@ -192,15 +197,15 @@ export const useProfileStore = defineStore('profile', () => {
       }
       showSuccess(res.data.message)
       await fetchProfile()
-      // showSuccess('Password has been change')
       return res.data
     } catch (error) {
-      console.error('Failed to change password:', error)
+      showError(error.response?.data?.message || 'Failed to change password!')
       throw error
     } finally {
       isProcessing.value = false
     }
   }
+
   const uploadAvatarBase64 = async (myImage) => {
     try {
       const response = await fetch(myImage)
@@ -208,9 +213,10 @@ export const useProfileStore = defineStore('profile', () => {
       const file = new File([blob], 'avatar.jpg', { type: 'image/jpeg' })
       return await uploadAvatar(file)
     } catch (err) {
-      console.log('Failed to upload avatar (base64):', err)
+      showError(err.response?.data?.message || 'Failed to upload avatar (base64)!')
     }
   }
+
   const uploadCoverBase64 = async (myImage) => {
     try {
       const response = await fetch(myImage)
@@ -218,7 +224,7 @@ export const useProfileStore = defineStore('profile', () => {
       const file = new File([blob], 'cover.jpg', { type: 'image/jpeg' })
       return await uploadCover(file)
     } catch (err) {
-      console.log('Failed to upload cover (base64):', err)
+      showError(err.response?.data?.message || 'Failed to upload cover (base64)!')
     }
   }
 
@@ -229,24 +235,27 @@ export const useProfileStore = defineStore('profile', () => {
       viewUser.value = res.data.data
       return res.data.data
     } catch (error) {
-      console.error('Failed to fetch user profile:', error)
+      showError(error.response?.data?.message || 'Failed to fetch user profile!')
       throw error
     } finally {
       isLoading.value = false
     }
   }
+
   const deleteAccount = async () => {
     try {
       isLoading.value = true
       await api.delete(`/api/profile/delete-acc`)
       showSuccess('Delete Account Successful')
+      authStore.clearAuth()
+      router.push({ name: 'landing' })
     } catch (e) {
-      console.log(e)
-      showError('Fail to delete account!')
+      showError(e.response?.data?.message || 'Fail to delete account!')
     } finally {
       isLoading.value = false
     }
   }
+
   const downloadCv = async () => {
     try {
       isProcessing.value = true
@@ -264,8 +273,7 @@ export const useProfileStore = defineStore('profile', () => {
       document.body.removeChild(link)
       showSuccess('CV downloaded successfully')
     } catch (error) {
-      console.error('Failed to download CV:', error)
-      showError('Failed to download CV')
+      showError('Failed to download CV!')
     } finally {
       isProcessing.value = false
     }
@@ -340,5 +348,6 @@ export const useProfileStore = defineStore('profile', () => {
     userProfile,
     addCollaboration,
     deleteAccount,
+    collaboration
   }
 })

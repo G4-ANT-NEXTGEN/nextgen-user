@@ -13,17 +13,17 @@
     <form @submit.prevent="nextStep()" class="registration-form">
       <div class="row g-4">
         <div class="col-12">
-          <BaseInput v-model="fullname" label="Full Name" placeholder="John Doe" :error="errors.fullname"
+          <BaseInput v-model="fullname" label="Full Name" placeholder="Next Gen" :error="errors.fullname"
             @input="validateFullName"  />
         </div>
 
         <div class="col-md-6">
-          <BaseInput v-model="email" type="email" label="Email Address" placeholder="john@example.com"
+          <BaseInput v-model="email" type="email" label="Email Address" placeholder="NextGen@gmail.com"
             :error="errors.email" @input="validateEmail"  />
         </div>
 
         <div class="col-md-6">
-          <BaseInput v-model="phone" type="tel" label="Phone Number" placeholder="+1 234 567 890" :error="errors.phone"
+          <BaseInput v-model="phone" type="tel" label="Phone Number" placeholder="081 777 888" :error="errors.phone"
             @input="validatePhone"  />
         </div>
 

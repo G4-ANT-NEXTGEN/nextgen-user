@@ -119,14 +119,12 @@ defineOptions({
 
 <style scoped>
 .register-wrapper {
-  min-height: 100vh;
   background-color: var(--color-background);
   position: relative;
   overflow-y: auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 0;
   transition: background-color 0.5s ease;
 }
 
@@ -135,8 +133,6 @@ defineOptions({
   border-radius: 32px;
   width: 100%;
   max-width: 1240px;
-  min-height: 600px;
-  max-height: calc(100vh - 48px);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -212,9 +208,11 @@ defineOptions({
   height: 48px;
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(8px);
-  padding: 8px;
-  border-radius: 14px;
+  border-radius: 50%;
   display: flex;
+  justify-content: center;
+  object-fit: cover;
+  overflow: hidden;
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -250,13 +248,13 @@ defineOptions({
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 80px;
   margin-left: 4px;
 }
 
 .step-item {
   display: flex;
-  gap: 24px;
+  gap: 34px;
   position: relative;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -296,7 +294,7 @@ defineOptions({
 .step-number {
   width: 42px;
   height: 42px;
-  border-radius: 50%;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;

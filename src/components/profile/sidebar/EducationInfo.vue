@@ -132,7 +132,7 @@
         </div>
         <h4>Are you sure?</h4>
         <p>You are about to remove your education details at <strong>{{ selectedEducationForDelete?.school?.name
-        }}</strong>.</p>
+            }}</strong>.</p>
       </div>
 
       <template #footer>
@@ -198,8 +198,8 @@ const onUpdate = (edu) => {
   school.value = edu.school?.id || null
   degree.value = edu.degree?.id || null
   subject.value = edu.subject?.id || null
-  start_date.value = edu.start_date || ''
-  end_date.value = edu.end_date || ''
+  start_date.value = edu.start_date && edu.start_date.length === 7 ? `${edu.start_date}-01` : (edu.start_date || '')
+  end_date.value = edu.end_date && edu.end_date.length === 7 ? `${edu.end_date}-01` : (edu.end_date || '')
   description.value = edu.description || ''
 
   addNewEducation.value = true

@@ -57,8 +57,8 @@
                       <div class="d-flex justify-content-end">
                         <BaseButton type="button" variant="primary" @click="submitForm" :isLoading="isSubmitting">
                           <span v-if="!isSubmitting">Send Message</span>
-                          <div v-else class="spinner-border spinner-border-sm" role="status"></div>
-                          <i class="bi bi-send-fill ms-2"></i>
+                          <span v-else>Sending...</span>
+                          <i v-if="!isSubmitting" class="bi bi-send-fill ms-2"></i>
                         </BaseButton>
                       </div>
                     </div>
@@ -137,6 +137,7 @@
 
 <script setup>
 import BaseButton from '@/components/ui/base/BaseButton.vue';
+import { showSuccess } from '@/utils/toast';
 import { ref } from 'vue';
 
 const isSubmitting = ref(false);
@@ -146,7 +147,7 @@ const submitForm = () => {
   // Simulate API call
   setTimeout(() => {
     isSubmitting.value = false;
-    alert('Message sent successfully!');
+    showSuccess('Message sent successfully!');
   }, 1500);
 };
 

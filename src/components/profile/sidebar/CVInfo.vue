@@ -211,7 +211,7 @@
       </div>
 
       <template #footer>
-        <BaseButton @click="closeEditCV" variant="secondary" :isLoading="profileStore.isProcessing">Cancel</BaseButton>
+        <BaseButton @click="closeEditCV" variant="secondary">Cancel</BaseButton>
         <BaseButton @click="handleSaveCv" :isLoading="profileStore.isProcessing" variant="primary" :disabled="!cvFile">
           <span>{{ profileStore.isProcessing ? 'Uploading...' : 'Upload CV' }}</span>
         </BaseButton>

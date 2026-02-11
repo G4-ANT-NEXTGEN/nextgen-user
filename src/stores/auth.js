@@ -34,11 +34,17 @@ export const useAuthStore = defineStore('auth', () => {
       const response = await api.post('/api/login', payload)
       token.value = response.data.data.token
       localStorage.setItem('token', token.value)
-      await fetchProfile()
-      showSuccess('Login successful')
+
+      if (response.data.result === false) {
+        showError(response.data.message)
+      } else {
+        showSuccess(response.data.message)
+        router.push({ name: 'home' })
+      }
+
     } catch (error) {
-      showError('Login failed')
-      throw error
+      showError(error.response?.data?.message || 'Login failed')
+      throw error.response
     }
   }
 
@@ -46,6 +52,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       await api.delete('/api/login')
       showSuccess('Logout successful')
+
     } catch (error) {
       console.error('Logout failed:', error)
       showError('Logout failed')
@@ -61,7 +68,7 @@ export const useAuthStore = defineStore('auth', () => {
       const response = await api.post('/api/forgot/pass', payload)
       user.value = response.data
     } catch (error) {
-      showError('Failed to send OTP')
+      showError(error.response?.data?.message || 'Failed to reset password')
       throw error
     }
   }
@@ -110,12 +117,28 @@ export const useAuthStore = defineStore('auth', () => {
 
     } catch (error) {
       let errorMsg = 'Registration failed'
-      if (error.response?.data?.errors) {
+      const responseData = error.response?.data
+
+      if (responseData?.data && typeof responseData.data === 'object') {
+        // Handle case where validation errors are in response.data.data
+        const keys = Object.keys(responseData.data)
+        if (keys.length > 0) {
+          const firstKey = keys[0]
+          const firstError = responseData.data[firstKey]
+          if (Array.isArray(firstError) && firstError.length > 0) {
+            errorMsg = firstError[0]
+          } else {
+            errorMsg = String(firstError)
+          }
+        } else if (responseData?.message) {
+          errorMsg = responseData.message
+        }
+      } else if (responseData?.errors) {
         // Extract the first validation error if available
-        const firstErrorKey = Object.keys(error.response.data.errors)[0]
-        errorMsg = error.response.data.errors[firstErrorKey][0]
-      } else if (error.response?.data?.message) {
-        errorMsg = error.response.data.message
+        const firstErrorKey = Object.keys(responseData.errors)[0]
+        errorMsg = responseData.errors[firstErrorKey][0]
+      } else if (responseData?.message) {
+        errorMsg = responseData.message
       }
       showError(errorMsg)
       console.error('Register error:', error.response?.data || error)

@@ -52,7 +52,7 @@
                     <BaseInput @input="validatePassword()" v-model="password" :type="showPass ? 'text' : 'password'"
                       :error="errors.password" id="password-input" placeholder="Enter your password" label="Password" />
                     <i class="bi" :class="showPass ? 'bi-eye-slash' : 'bi-eye'" @click="showPass = !showPass"
-                      style="cursor: pointer; position: absolute; right: 20px; top: 65px; transform: translateY(-50%);"></i>
+                      style="cursor: pointer; position: absolute; right: 20px; top: 60px; transform: translateY(-50%);"></i>
                   </div>
 
                   <div class="form-options mb-4">
@@ -144,11 +144,8 @@ const loginForm = async () => {
         password: password.value
       }
     )
-
-    console.log(authStore.userResult);
-    router.push({ name: 'home' })
-  } catch (err) {
-    console.log(err);
+  } catch (e) {
+    console.error('Login error:', e)
   } finally {
     Isloading.value = false
   }
@@ -272,12 +269,12 @@ function gotoRegister() {
 }
 
 .logo-icon {
+  overflow: hidden;
   width: 48px;
   height: 48px;
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(8px);
-  padding: 8px;
-  border-radius: 14px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;

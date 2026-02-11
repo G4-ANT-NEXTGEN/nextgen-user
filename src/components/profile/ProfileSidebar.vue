@@ -329,7 +329,6 @@ const HandleUpdatePersonal = async () => {
     }
     await profileStore.updatePersonalInfo(payload)
     personalUpdate.value = false
-    showSuccess('Profile updated successfully!')
     await postStore.fetchPosts()
   } catch {
     showError('Failed to update profile!')

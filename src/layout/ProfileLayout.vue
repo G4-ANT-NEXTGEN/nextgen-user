@@ -34,6 +34,7 @@ import PersonalInfo from '@/components/profile/sidebar/PersonalInfo.vue'
 import ProfessionalInfo from '@/components/profile/sidebar/ProfessionalInfo.vue'
 import ProjectsInfo from '@/components/profile/sidebar/ProjectsInfo.vue'
 import EducationInfo from '@/components/profile/sidebar/EducationInfo.vue'
+import CollaborationInfo from '@/components/profile/sidebar/CollaborationInfo.vue'
 import CVInfo from '@/components/profile/sidebar/CVInfo.vue'
 
 
@@ -48,6 +49,7 @@ const map = {
   professional: ProfessionalInfo,
   project: ProjectsInfo,
   education: EducationInfo,
+  collaboration: CollaborationInfo,
   cv: CVInfo,
 }
 

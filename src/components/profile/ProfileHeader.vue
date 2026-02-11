@@ -82,7 +82,7 @@
       </div>
 
       <template #footer>
-        <BaseButton @click="closeEditCV" variant="secondary" :isLoading="profileStore.isProcessing">Cancel</BaseButton>
+        <BaseButton @click="closeEditCV" variant="secondary">Cancel</BaseButton>
         <BaseButton @click="handleSaveCv" :isLoading="profileStore.isProcessing" variant="primary" :disabled="!cvFile">
           <span>{{ profileStore.isProcessing ? 'Uploading...' : 'Upload CV' }}</span>
         </BaseButton>
@@ -97,10 +97,12 @@
           <div class="d-flex justify-content-between">
 
             <label class="form-label">Company Logo</label>
-            <p v-if="companyLogo" v-tippy="'click to cancel image'" @click="companyLogo = null"><i
-                class="fs-4 bi bi-x-circle"></i></p>
+            <p v-if="companyLogoPreview" v-tippy="'click to cancel image'"
+              @click="companyLogo = null; companyLogoPreview = null" style="cursor: pointer;">
+              <i class="fs-4 bi bi-x-circle"></i>
+            </p>
           </div>
-          <div class="file-upload-area small" v-if="!companyLogo">
+          <div class="file-upload-area small" v-if="!companyLogoPreview">
 
             <input class="file-input" type="file" id="collabFile" multiple accept="image/*"
               @change="CompanyLogoSelect" />
@@ -109,7 +111,7 @@
               <span>Upload Logo</span>
             </label>
           </div>
-          <img v-if="CompanyLogoSelect" :src="companyLogoPreview" alt="">
+          <img v-if="companyLogoPreview" :src="companyLogoPreview" alt="Company Logo Preview" class="logo-preview">
         </div>
         <BaseInput label="Company Website" placeholder="https://example.com" @input="validateCompanyLink"
           :error="errors.companyLink" v-model="companyLink" />
@@ -118,8 +120,8 @@
       <template #footer>
         <BaseButton @click="closeEditCollaboration" variant="secondary">Cancel
         </BaseButton>
-        <base-button type="button" @click="addCollaboration" variant="primary" :isLoading="profileStore.isLoading">
-          <span>{{ profileStore.isLoading ? 'Saving...' : 'Save' }}</span>
+        <base-button type="button" @click="addCollaboration" variant="primary" :isLoading="profileStore.isProcessing">
+          <span>{{ profileStore.isProcessing ? 'Saving...' : 'Save' }}</span>
         </base-button>
       </template>
 
@@ -173,7 +175,7 @@
                 </ul>
               </div>
 
-              <div class="form-actions">
+              <div class="form-actions mt-4">
                 <BaseButton variant="primary" type="submit" :isLoading="profileStore.isProcessing">Update Password
                 </BaseButton>
               </div>
@@ -244,10 +246,6 @@
             </label>
             <input id="coverUpload" type="file" class="d-none" accept="image/*" @change="handleFileSelect" />
 
-            <!-- <button class="delete-btn" @click="deleteCover = true">
-              <i class="bi bi-trash"></i>
-              Remove Cover
-            </button> -->
             <BaseButton @click="deleteCover = true" variant="danger" class="delete-btn"
               :isLoading="profileStore.isLoading">
               <i class="bi bi-trash"></i>
@@ -260,13 +258,15 @@
           <BaseButton @click="closeEditCover" variant="secondary">Cancel
           </BaseButton>
           <BaseButton @click="applyChageCover" :isLoading="profileStore.isProcessing" variant="primary">
-            <span>{{ profileStore.isProcessing ? 'Saving...' : 'Save Changes' }}</span>
+            <span>
+              {{ profileStore.isProcessing ? 'Saving ...' : 'Save Changes' }}
+            </span>
           </BaseButton>
         </template>
       </BaseModal>
 
       <!-- Crop Avatar Modal -->
-      <BaseModal v-if="showImageCropper" title="Update Profile Photo" @close="showImageCropper = false">
+      <BaseModal v-if="showImageCropper" title="Update Profile Photo" @close="closeEditAvatar">
         <div class="modal-content-wrapper">
           <div class="cropper-container circle">
             <Cropper v-if="uploadedImage" ref="cropperRef" :src="uploadedImage" :stencil-props="{ aspectRatio: 1 }"
@@ -297,17 +297,17 @@
         </div>
 
         <template #footer>
-          <BaseButton @click="showImageCropper = false" variant="secondary" :isLoading="profileStore.isProcessing">
+          <BaseButton @click="closeEditAvatar" variant="secondary">
             Cancel
           </BaseButton>
-          <BaseButton @click="applyCrop" :isLoading="profileStore.isLoading" variant="primary">
+          <BaseButton @click="applyCrop" variant="primary" :isLoading="profileStore.isProcessing">
             <span>{{ profileStore.isProcessing ? 'Saving...' : 'Save Changes' }}</span>
           </BaseButton>
         </template>
       </BaseModal>
 
       <!-- Delete Avatar Confirmation -->
-      <BaseModal v-if="deleteAvatar" title="Remove Profile Photo">
+      <BaseModal v-if="deleteAvatar" title="Remove Profile Photo" @close="deleteAvatar = false">
         <div class="confirmation-content">
           <div class="warning-icon">
             <i class="bi bi-exclamation-triangle"></i>
@@ -316,7 +316,8 @@
         </div>
 
         <template #footer>
-          <BaseButton @click="deleteAvatar = false" variant="secondary" :isLoading="profileStore.isProcessing">Cancel
+          <BaseButton @click="deleteAvatar = false" variant="secondary">
+            <span>Cancel</span>
           </BaseButton>
           <BaseButton @click="handleAvatarDelete" variant="danger" :isLoading="profileStore.isProcessing">
             <span>{{ profileStore.isProcessing ? 'Removing...' : 'Remove' }}</span>
@@ -334,7 +335,8 @@
         </div>
 
         <template #footer>
-          <BaseButton @click="deleteCover = false" variant="secondary" :isLoading="profileStore.isProcessing">Cancel
+          <BaseButton @click="deleteCover = false" variant="secondary">
+            Cancel
           </BaseButton>
           <BaseButton @click="handleDeleteCover" variant="danger" :isLoading="profileStore.isProcessing">
             <span>{{ profileStore.isProcessing ? 'Removing...' : 'Remove' }}</span>
@@ -349,14 +351,17 @@
 import { onMounted, ref } from 'vue'
 import { useProfileStore } from '@/stores/profile'
 import { usePostStore } from '@/stores/post'
+import { useAuthStore } from '@/stores/auth'
 import { Cropper } from 'vue-advanced-cropper'
 import ProfileHeaderSkeleton from '@/components/profile/ProfileHeaderSkeleton.vue'
 import 'vue-advanced-cropper/dist/style.css'
 import BaseButton from '../ui/base/BaseButton.vue'
 import { useRequiredValidator } from '@/composables/useRequiredValidator';
 import { usePasswordValidator } from '@/composables/usePasswordValidator';
+import { showWarning, showError } from '@/utils/toast'
+import router from '@/router'
 
-const { errors, validateField } = useRequiredValidator()
+const { errors } = useRequiredValidator()
 const { validatePassword: checkPassword, validatePasswordMatch } = usePasswordValidator()
 
 defineProps({
@@ -377,9 +382,11 @@ const tabs = [
   { key: 'professional', label: 'Professional' },
   { key: 'education', label: 'Education' },
   { key: 'project', label: 'Project' },
+  { key: 'collaboration', label: 'Collaboration' },
   { key: 'cv', label: 'CV' },
 ]
 
+const authStore = useAuthStore()
 const cropperRef = ref()
 const cropperCoverRef = ref(null)
 const showImageCropper = ref(false)
@@ -403,6 +410,7 @@ const companyLink = ref()
 onMounted(async () => {
   await profileStore.fetchProfile()
 })
+
 const addCollaboration = async () => {
   if (!validateCompanyLink())
     return
@@ -410,9 +418,11 @@ const addCollaboration = async () => {
   formData.append('company_logo', companyLogo.value)
   formData.append('company_link', companyLink.value)
   await profileStore.addCollaboration(formData)
-  editCollaboration.value = false
 
+  editCollaboration.value = false
+  await profileStore.fetchProfile()
 }
+
 const validateCompanyLink = () => {
   if (!companyLink.value) {
     errors.companyLink = 'Company link is required'
@@ -421,9 +431,12 @@ const validateCompanyLink = () => {
   errors.companyLink = ''
   return true
 }
-// const validateFormCollaboration = () => {
-//   const validCompanyLink = validateCompanyLink()
-// }
+
+const closeEditAvatar = () => {
+  showImageCropper.value = false
+  uploadedImage.value = null
+}
+
 const validateCurrentPassword = () => {
   if (!currentPass.value) {
 
@@ -446,10 +459,15 @@ const validateComfirmPassword = () => {
   errors.comfirmPass = ''
   return true
 }
+
 const comfirmDeleteAcc = async () => {
   await profileStore.deleteAccount()
   openSetting.value = false
+  deleteAccount.value = false
+  authStore.clearAuth()
+  router.push({ name: 'landing' })
 }
+
 const changePassword = async () => {
   if (!validateForm())
     return
@@ -498,6 +516,10 @@ const CompanyLogoSelect = (e) => {
 }
 
 const applyCrop = async () => {
+  if (!uploadedImage.value) {
+    showWarning('Please select an image')
+    return
+  }
   const canvas = cropperRef.value.getResult().canvas
   const avatar = canvas.toDataURL('image/jpeg', 0.9)
   await profileStore.uploadAvatarBase64(avatar)
@@ -507,6 +529,10 @@ const applyCrop = async () => {
 }
 
 const applyChageCover = async () => {
+  if (!uploadedImage.value) {
+    showWarning('Please select an image')
+    return
+  }
   const canvas = cropperCoverRef.value.getResult().canvas
   const cover = canvas.toDataURL('image/jpeg', 0.9)
   await profileStore.uploadCoverBase64(cover)
@@ -517,13 +543,17 @@ const applyChageCover = async () => {
 const handleDeleteCover = async () => {
   editCover.value = false
   await profileStore.removeCover()
-  if (!profileStore.isLoading) deleteCover.value = false
+  if (!profileStore.isProcessing) deleteCover.value = false
 }
 
 const handleAvatarDelete = async () => {
-  deleteAvatar.value = false
+  if (uploadedImage.value == null) {
+    showWarning("You can't delete default image")
+    return
+  }
+  showImageCropper.value = false
   await profileStore.removeAvatar()
-  await postStore.fetchPosts()
+  if (!profileStore.isProcessing) deleteAvatar.value = false
 }
 
 const cvOnChangeFile = (e) => {
@@ -586,11 +616,10 @@ function openEditCollaboration() {
 
 function closeEditCollaboration() {
   editCollaboration.value = false
-}
-
-function HandleEditCollaboration() {
-  alert('Collaboration added successfully')
-  editCollaboration.value = false
+  companyLogo.value = null
+  companyLogoPreview.value = null
+  companyLink.value = null
+  errors.companyLink = ''
 }
 
 function openChangePassAndDeleteAcc() {
@@ -883,14 +912,11 @@ defineExpose({
   border: 2px dashed var(--color-border);
   border-radius: 20px;
   transition: all 0.3s ease;
-  cursor: pointer;
   min-height: 240px;
 }
 
 .upload-placeholder:hover {
   background: var(--color-hover);
-  border-color: var(--color-primary);
-  transform: scale(0.99);
 }
 
 .placeholder-icon {

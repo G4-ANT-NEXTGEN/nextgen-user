@@ -73,10 +73,10 @@
             </li>
             <div class="dropdown-divider mx-2"></div>
             <li>
-              <button @click="authStore.logout" type="button" :isLoading="isLoading"
+              <button @click="handleLogout" type="button" :disabled="isLoading"
                 class="action-item dropdown-item d-flex align-items-center gap-3 py-2 text-danger">
                 <i class="bi bi-box-arrow-right"></i>
-                <span>Logout</span>
+                <span>{{ isLoading ? 'Logging out...' : 'Logout' }}</span>
               </button>
             </li>
           </ul>
@@ -84,18 +84,21 @@
       </div>
     </div>
   </nav>
+  <FullScreenLoader v-if="isLoading" text="Logging out..." />
 </template>
 
 <script setup>
 import { useAuthStore } from '@/stores/auth'
 import { usePostStore } from '@/stores/post'
-import { useRouter } from 'vue-router'
+
 import { watch, ref } from 'vue'
 import AnimatedThemeToggler from '@/registry/magicui/AnimatedThemeToggler.vue'
 
+import FullScreenLoader from '@/components/common/FullScreenLoader.vue'
+
 const authStore = useAuthStore()
 const postStore = usePostStore()
-const router = useRouter()
+
 const isSearchActive = ref(false)
 const isLoading = ref(false)
 
@@ -105,12 +108,19 @@ const toggleSearch = () => {
   isSearchActive.value = !isSearchActive.value
 }
 
-const goToMessages = () => {
-  router.push({ name: 'chat-layout' })
-}
+
 
 const handleSearch = () => {
   postStore.fetchPosts()
+}
+
+const handleLogout = async () => {
+  isLoading.value = true
+  try {
+    await authStore.logout()
+  } finally {
+    isLoading.value = false
+  }
 }
 
 let timeout = null

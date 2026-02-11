@@ -72,7 +72,8 @@ const nextStep = async () => {
         if (authStore.user?.result) {
             router.push("/reset-password/otp")
         } else {
-            showError('Email not found')
+            console.log();
+            showError(authStore.user?.message || 'Email not Found')
         }
     } catch (error) {
         console.log(error);
