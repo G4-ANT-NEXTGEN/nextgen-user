@@ -98,7 +98,8 @@
             :error="errors.email" />
         </div>
         <div class="col-md-6">
-          <BaseInput label="Phone" placeholder="Enter Your Phone Number" v-model="phone" />
+          <BaseInput label="Phone" placeholder="Enter Your Phone Number" v-model="phone" @input="validatePhone"
+            :error="errors.phone" />
         </div>
         <div class="col-md-6">
           <BaseInput label="Date of Birth" type="date" placeholder="Enter Your Date of Birth" v-model="DOB" />
@@ -109,7 +110,6 @@
             <option value="" disabled>Select Gender</option>
             <option value="1">Male</option>
             <option value="2">Female</option>
-            <option value="other">Other</option>
           </select>
         </div>
 
@@ -120,7 +120,8 @@
           <BaseInput label="Hometown" placeholder="Enter Your Hometown" v-model="home_town" />
         </div>
         <div class="col-md-6">
-          <BaseInput label="Portfolio Link" placeholder="Enter Your Portfolio Link" v-model="portfolio_link" />
+          <BaseInput label="Portfolio Link" placeholder="Enter Your Portfolio Link" v-model="portfolio_link"
+            @input="validatePortfolioLink" :error="errors.portfolio_link" />
         </div>
       </div>
 
@@ -189,7 +190,7 @@ import { useDegreeStore } from '@/stores/degrees'
 import { useSubjectStore } from '@/stores/subjects'
 import { useEducationStore } from '@/stores/education'
 import { usePostStore } from '@/stores/post'
-import { showSuccess, showError, showWarning } from '@/utils/toast'
+import { showError } from '@/utils/toast'
 import BaseButton from '@/components/ui/base/BaseButton.vue'
 import BaseModal from '@/components/ui/base/BaseModal.vue'
 import BaseInput from '@/components/ui/base/BaseInput.vue'
@@ -197,10 +198,8 @@ import BaseSelect from '@/components/ui/base/BaseSelect.vue'
 import TomSelect from '@/components/ui/base/BaseTomSelect.vue'
 import InfoCardSkeleton from './InfoCardSkeleton.vue'
 import { useRequiredValidator } from '@/composables/useRequiredValidator';
-import { usePasswordValidator } from '@/composables/usePasswordValidator';
 
-const { errors, validateField } = useRequiredValidator()
-const { validatePassword: checkPassword, validatePasswordMatch } = usePasswordValidator()
+const { errors } = useRequiredValidator()
 
 const profileStore = useProfileStore()
 const skillStore = useSkillStore()
@@ -211,7 +210,6 @@ const educationStore = useEducationStore()
 const postStore = usePostStore()
 
 const isLoadingProfile = ref(true)
-const isLoading = ref(false)
 
 const emit = defineEmits(['open-cv', 'open-collab'])
 
@@ -276,6 +274,17 @@ const validateEmail = () => {
   errors.email = ''
   return true
 }
+
+const validatePhone = () => {
+  // Regex: 9-15 chars, allowed: 0-9, +, -, space.
+  if (!/^[+]?[0-9\s-]{9,15}$/.test(phone.value)) {
+    errors.phone = 'Phone number must be 9-15 digits'
+    return false
+  }
+
+  errors.phone = ''
+  return true
+}
 const validateSchool = () => {
   if (!school.value) {
     errors.school = 'School is required'
@@ -300,6 +309,32 @@ const validateDegree = () => {
   errors.degree = ''
   return true
 }
+
+const validatePortfolioLink = () => {
+  if (!portfolio_link.value) {
+    errors.portfolio_link = ''
+    return true
+  }
+
+  // Strictly require http:// or https:// at the start
+  const pattern = new RegExp(
+    '^(https?:\\/\\/)' + // protocol (required)
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+    '(\\#[-a-z\\d_]*)?$', // fragment locator
+    'i'
+  )
+
+  if (!pattern.test(portfolio_link.value)) {
+    errors.portfolio_link = 'URL must start with http:// or https://'
+    return false
+  }
+
+  errors.portfolio_link = ''
+  return true
+}
 const validateForm = () => {
   const isValid = ref(false)
   const validSchool = validateSchool()
@@ -310,10 +345,11 @@ const validateForm = () => {
   return true
 
 }
+
 const closePersonalUpdate = () => personalUpdate.value = false
 
 const HandleUpdatePersonal = async () => {
-  if (!validateEmail() || !validateFullName())
+  if (!validateEmail() || !validateFullName() || !validatePortfolioLink() || !validatePhone())
     return
 
   try {
@@ -330,8 +366,8 @@ const HandleUpdatePersonal = async () => {
     await profileStore.updatePersonalInfo(payload)
     personalUpdate.value = false
     await postStore.fetchPosts()
-  } catch {
-    showError('Failed to update profile!')
+  } catch (error) {
+    showError(error.response?.data?.message || 'Failed to update profile!')
   }
 }
 

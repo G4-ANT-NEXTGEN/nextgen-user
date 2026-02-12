@@ -414,9 +414,15 @@ onMounted(async () => {
 const addCollaboration = async () => {
   if (!validateCompanyLink())
     return
+
+  let link = companyLink.value
+  if (link && !/^https?:\/\//i.test(link)) {
+    link = `https://${link}`
+  }
+
   const formData = new FormData()
   formData.append('company_logo', companyLogo.value)
-  formData.append('company_link', companyLink.value)
+  formData.append('company_link', link)
   await profileStore.addCollaboration(formData)
 
   editCollaboration.value = false
@@ -428,6 +434,22 @@ const validateCompanyLink = () => {
     errors.companyLink = 'Company link is required'
     return false
   }
+
+  const pattern = new RegExp(
+    '^(https?:\\/\\/)?' + // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+    '(\\#[-a-z\\d_]*)?$', // fragment locator
+    'i'
+  )
+
+  if (!pattern.test(companyLink.value)) {
+    errors.companyLink = 'Please enter a valid URL (e.g., https://example.com)'
+    return false
+  }
+
   errors.companyLink = ''
   return true
 }
@@ -575,7 +597,6 @@ const handleSaveCv = async () => {
   profileStore.isProcessing = true
   try {
     await profileStore.uploadCv(cvFile.value)
-    // Modal will close after toast is shown by the store
     editCV.value = false
     cvFile.value = null
   } catch (error) {

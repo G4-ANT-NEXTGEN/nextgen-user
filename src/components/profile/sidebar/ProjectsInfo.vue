@@ -77,9 +77,11 @@
     <BaseModal v-if="projectUpdate" :title="isEditMode ? 'Update Project' : 'Add New Project'"
       @close="closeProjectUpdate">
       <div class="p-3">
-        <BaseInput label="Project Title" v-model="projectTitle" placeholder="Enter project title" />
+        <BaseInput label="Project Title" v-model="projectTitle" placeholder="Enter project title" :error="errors.title"
+          @input="validateTitle" />
         <div class="mt-4">
-          <BaseInput label="Project Link" v-model="projectLink" placeholder="https://your-project.com" />
+          <BaseInput label="Project Link" v-model="projectLink" placeholder="https://your-project.com"
+            :error="errors.link" @input="validateLink" />
           <p class="form-hint mt-1 small text-muted">
             <i class="bi bi-info-circle me-1"></i>
             Provide a link to the live project, repository, or case study.
@@ -143,6 +145,11 @@ const projectLink = ref('')
 const selectedProjectId = ref(null)
 const isLoading = ref(false)
 
+const errors = ref({
+  title: '',
+  link: '',
+})
+
 const isEditMode = computed(() => !!selectedProjectId.value)
 
 const deleteModal = ref(false)
@@ -165,6 +172,42 @@ const resetForm = () => {
   selectedProjectId.value = null
   projectTitle.value = ''
   projectLink.value = ''
+  errors.value = { title: '', link: '' }
+}
+
+const validateTitle = () => {
+  if (!projectTitle.value.trim()) {
+    errors.value.title = 'Project title is required'
+    return false
+  }
+  errors.value.title = ''
+  return true
+}
+
+const validateLink = () => {
+  if (!projectLink.value.trim()) {
+    errors.value.link = 'Project link is required'
+    return false
+  }
+
+  // Strict URL validation like ProfileSidebar
+  const pattern = new RegExp(
+    '^(https?:\\/\\/)' + // protocol (required)
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+    '(\\#[-a-z\\d_]*)?$', // fragment locator
+    'i'
+  )
+
+  if (!pattern.test(projectLink.value)) {
+    errors.value.link = 'URL must start with http:// or https://'
+    return false
+  }
+
+  errors.value.link = ''
+  return true
 }
 
 /* DELETE MODAL HANDLERS */
@@ -195,7 +238,11 @@ const closeProjectUpdate = () => {
 }
 
 const handleUpdateProject = async () => {
-  if (!projectTitle.value.trim() || !projectLink.value.trim()) return
+  // Run validations
+  const titleValid = validateTitle()
+  const linkValid = validateLink()
+
+  if (!titleValid || !linkValid) return
 
   try {
     isLoading.value = true

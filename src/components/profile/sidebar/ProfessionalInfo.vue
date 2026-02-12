@@ -145,10 +145,9 @@ const HandleSaveProfessional = async () => {
       company_name: form.company_name,
       responsibility: form.responsibility
     })
-    showSuccess('Professional info updated successfully!')
     showUpdateModal.value = false
   } catch {
-    showError('Failed to update professional information.')
+    showError('Failed to update professional info')
   } finally {
     isSaving.value = false
   }

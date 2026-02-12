@@ -375,6 +375,7 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   background: var(--color-hover);
+  color: var(--color-text);
   border-radius: 8px;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;

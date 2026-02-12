@@ -17,7 +17,7 @@
 
                 <div class="date-badge">
                   <i class="bi bi-calendar3"></i>
-                  <span>{{ edu.start_date }} — {{ edu.end_date || 'Present' }}</span>
+                  <span>{{ formatDate(edu.start_date) }} — {{ formatDate(edu.end_date) || 'Present' }}</span>
                 </div>
               </div>
 
@@ -61,7 +61,7 @@
                 </div>
                 <div class="date-badge">
                   <i class="bi bi-calendar3"></i>
-                  <span>{{ edu.start_date }} — {{ edu.end_date || 'Present' }}</span>
+                  <span>{{ formatDate(edu.start_date) }} — {{ formatDate(edu.end_date) || 'Present' }}</span>
                 </div>
               </div>
               <div v-if="edu.description" class="entry-description">
@@ -132,7 +132,7 @@
         </div>
         <h4>Are you sure?</h4>
         <p>You are about to remove your education details at <strong>{{ selectedEducationForDelete?.school?.name
-            }}</strong>.</p>
+        }}</strong>.</p>
       </div>
 
       <template #footer>
@@ -155,7 +155,6 @@ import { useEducationStore } from '@/stores/education'
 import { useSchoolStore } from '@/stores/schools'
 import { useDegreeStore } from '@/stores/degrees'
 import { useSubjectStore } from '@/stores/subjects'
-import { showSuccess, showError } from '@/utils/toast'
 
 const profileStore = useProfileStore()
 const educationStore = useEducationStore()
@@ -244,10 +243,8 @@ const HandleAddNewEducation = async () => {
   try {
     if (isEditMode.value && selectedEducation.value) {
       await educationStore.UpdateEducation(selectedEducation.value.id, payload)
-      // showSuccess('Education details updated successfully')
     } else {
       await educationStore.CreateEducation(payload)
-      // showSuccess('New education entry added successfully')
     }
 
     await profileStore.fetchProfile()
@@ -274,6 +271,11 @@ const resetForm = () => {
   start_date.value = ''
   end_date.value = ''
   description.value = ''
+}
+
+const formatDate = (date) => {
+  if (!date) return ''
+  return date.length > 7 ? date.slice(0, 7) : date
 }
 
 onMounted(async () => {

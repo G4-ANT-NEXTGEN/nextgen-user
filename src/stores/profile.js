@@ -69,6 +69,7 @@ export const useProfileStore = defineStore('profile', () => {
       isProcessing.value = false
     }
   }
+
   const uploadCv = async (paylaod) => {
     isProcessing.value = true
     try {
@@ -101,7 +102,13 @@ export const useProfileStore = defineStore('profile', () => {
       await fetchProfile()
       return res
     } catch (e) {
-      showError(e.response?.data?.message || 'Can not Upload Collaboration!')
+      if (e.response?.data?.data && typeof e.response.data.data === 'object') {
+        const errors = e.response.data.data
+        const firstError = Object.values(errors).flat()[0]
+        showError(firstError || e.response?.data?.message || 'Can not Upload Collaboration!')
+      } else {
+        showError(e.response?.data?.message || 'Can not Upload Collaboration!')
+      }
     } finally {
       isProcessing.value = false
     }
@@ -133,6 +140,7 @@ export const useProfileStore = defineStore('profile', () => {
       isProcessing.value = false
     }
   }
+
   const updatePersonalInfo = async (payload) => {
     isProcessing.value = true
     try {
@@ -149,10 +157,17 @@ export const useProfileStore = defineStore('profile', () => {
         },
       })
       await fetchProfile()
-      showSuccess(res.data.message)
+      // Only show success if it's actually successful and has a message
+      if (res.data.message) showSuccess(res.data.message)
       return res.data
     } catch (error) {
-      showError(error.response?.data?.message || 'Failed to update personal info!')
+      if (error.response?.data?.data && typeof error.response.data.data === 'object') {
+        const errors = error.response.data.data
+        const firstError = Object.values(errors).flat()[0]
+        showError(firstError || error.response?.data?.message || 'Failed to update personal info!')
+      } else {
+        showError(error.response?.data?.message || 'Failed to update personal info!')
+      }
       throw error
     } finally {
       isProcessing.value = false
