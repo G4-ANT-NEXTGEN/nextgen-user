@@ -16,7 +16,6 @@
                     <div class="logo-icon">
                       <img src="/logo.jpg" alt="NextGen Logo" class="img-fluid rounded-2">
                     </div>
-                    <div class="logo-text">NextGen</div>
                   </div>
                 </div>
 
@@ -48,12 +47,8 @@
                   <BaseInput @input="validateEmail()" v-model="email" type="text" :error="errors.email" id="email-input"
                     placeholder="Enter your email" label="Email Address" />
 
-                  <div class="mb-3 position-relative">
-                    <BaseInput @input="validatePassword()" v-model="password" :type="showPass ? 'text' : 'password'"
-                      :error="errors.password" id="password-input" placeholder="Enter your password" label="Password" />
-                    <i class="bi" :class="showPass ? 'bi-eye-slash' : 'bi-eye'" @click="showPass = !showPass"
-                      style="cursor: pointer; position: absolute; right: 20px; top: 60px; transform: translateY(-50%);"></i>
-                  </div>
+                  <BaseInput @input="validatePassword()" v-model="password" type="password" :error="errors.password"
+                    id="password-input" placeholder="Enter your password" label="Password" />
 
                   <div class="form-options mb-4">
                     <div class="form-check">
@@ -107,7 +102,6 @@ const router = useRouter()
 const { theme } = useTheme()
 const email = ref('')
 const password = ref('')
-const showPass = ref(false)
 const Isloading = ref(false)
 const { errors, validateField } = useRequiredValidator()
 const { validatePassword: checkPassword } = usePasswordValidator()
@@ -278,7 +272,6 @@ function gotoRegister() {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 

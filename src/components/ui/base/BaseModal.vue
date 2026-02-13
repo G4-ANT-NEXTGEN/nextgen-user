@@ -70,7 +70,6 @@ const sizeClass = computed(() => (props.size ? `modal-${props.size}` : ''))
 
 .btn-close:hover {
   opacity: 1;
-  background-color: var(--bg-hover);
 }
 
 .modal-body {

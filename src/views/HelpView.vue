@@ -22,16 +22,13 @@
     <div class="container-fluid px-4 mb-5">
       <div class="row g-4">
         <div v-for="(category, index) in categories" :key="index" class="col-md-4">
-          <div class="card category-card h-100 border-0">
+          <div class="card py-5 category-card h-100 border-0">
             <div class="card-body p-4 text-center">
               <div class="icon-box mb-3 mx-auto" :style="{ background: category.gradient }">
                 <i :class="['bi', category.icon, 'text-white']"></i>
               </div>
-              <h5 class="fw-bold mb-2">{{ category.title }}</h5>
+              <h5 class="fw-bold mb-2 light-dark">{{ category.title }}</h5>
               <p class="text-secondary small mb-3">{{ category.desc }}</p>
-              <a href="#" class="btn btn-link text-decoration-none p-0 stretched-link view-articles-link">
-                View Articles <i class="bi bi-arrow-right ms-1"></i>
-              </a>
             </div>
           </div>
         </div>

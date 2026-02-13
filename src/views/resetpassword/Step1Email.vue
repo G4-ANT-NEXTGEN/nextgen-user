@@ -3,6 +3,10 @@
 
     <!-- Step 1: Reset Password -->
     <div class="form-section active">
+        <button class="back-button mb-4" @click="router.push({ name: 'login' })">
+            <i class="bi bi-arrow-left me-2"></i>
+            <span>Back to Login</span>
+        </button>
         <div class="step-indicator">STEP 1 OF 4</div>
         <h1>Reset Password</h1>
         <p class="description">Enter your email or phone number to reset your password</p>
@@ -108,6 +112,24 @@ h1 {
     font-size: 14px;
     margin-bottom: 40px;
     line-height: 1.5;
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.back-button:hover {
+    color: var(--color-primary);
+    transform: translateX(-4px);
 }
 
 .form-section {

@@ -1,7 +1,7 @@
 <template>
   <div class="form-section">
     <div class="header-section">
-      <button class="back-button" @click="router.go(-1)">
+      <button class="back-button" @click="router.push({ name: 'login' })">
         <i class="bi bi-arrow-left"></i>
         <span>Back to Login</span>
       </button>
@@ -14,27 +14,27 @@
       <div class="row g-4">
         <div class="col-12">
           <BaseInput v-model="fullname" label="Full Name" placeholder="Next Gen" :error="errors.fullname"
-            @input="validateFullName"  />
+            @input="validateFullName" />
         </div>
 
         <div class="col-md-6">
           <BaseInput v-model="email" type="email" label="Email Address" placeholder="NextGen@gmail.com"
-            :error="errors.email" @input="validateEmail"  />
+            :error="errors.email" @input="validateEmail" />
         </div>
 
         <div class="col-md-6">
           <BaseInput v-model="phone" type="tel" label="Phone Number" placeholder="081 777 888" :error="errors.phone"
-            @input="validatePhone"  />
+            @input="validatePhone" />
         </div>
 
         <div class="col-md-6">
           <BaseInput v-model="password" type="password" label="Password" placeholder="••••••••" :error="errors.password"
-            @input="validatePassword"  />
+            @input="validatePassword" />
         </div>
 
         <div class="col-md-6">
           <BaseInput v-model="comfirmpassword" type="password" label="Confirm Password" placeholder="••••••••"
-            :error="errors.comfirmpassword" @input="validateComfirmPassword"  />
+            :error="errors.comfirmpassword" @input="validateComfirmPassword" />
         </div>
       </div>
 
@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref } from 'vue';
 import { useRequiredValidator } from '@/composables/useRequiredValidator';
 import { usePasswordValidator } from '@/composables/usePasswordValidator';
 import { useAuthStore } from '@/stores/auth';

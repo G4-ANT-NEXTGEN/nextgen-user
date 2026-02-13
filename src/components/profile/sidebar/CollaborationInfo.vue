@@ -5,18 +5,17 @@
     </div>
 
     <!-- Collaboration Grid -->
-    <div v-if="profileStore.user.collaboration" class="collaboration-grid">
+    <div v-if="collaborationData" class="collaboration-grid">
       <div class="collaboration-card">
         <div class="card-content">
           <!-- Logo Area -->
           <div class="logo-wrapper">
-            <img :src="profileStore.user.collaboration.company_logo" alt="Company Logo"
-              class="company-logo">
+            <img :src="collaborationData.company_logo" alt="Company Logo" class="company-logo">
           </div>
 
           <!-- Action Area -->
           <div class="card-actions">
-            <a :href="profileStore.user.collaboration.company_link" target="_blank" class="website-btn">
+            <a :href="collaborationData.company_link" target="_blank" class="website-btn">
               <span>Visit Website</span>
               <i class="bi bi-arrow-up-right-circle-fill"></i>
             </a>
@@ -26,7 +25,8 @@
     </div>
 
     <!-- Empty State -->
-    <div v-else class="empty-state-card">
+    <div v-else class="empty-state-card" :class="{ 'clickable': isOwnProfile }"
+      @click="isOwnProfile ? onAddCollaboration() : null">
       <div class="empty-visual">
         <div class="icon-circle">
           <i class="bi bi-people"></i>
@@ -39,7 +39,13 @@
       </div>
       <div class="empty-content">
         <h4>No Collaborations Yet</h4>
-        <p>No collaboration opportunities have been posted yet.</p>
+        <p v-if="isOwnProfile">Post your first collaboration opportunity to connect with partners.</p>
+        <p v-else>This user hasn't shared any collaboration opportunities yet.</p>
+
+        <BaseButton v-if="isOwnProfile" variant="primary" class="mt-4">
+          <i class="bi bi-plus-lg me-2"></i>
+          Add Collaboration
+        </BaseButton>
       </div>
     </div>
   </section>
@@ -48,10 +54,25 @@
 <script setup>
 import { computed } from 'vue'
 import { useProfileStore } from '@/stores/profile'
-import { useAuthStore } from '@/stores/auth'
+import BaseButton from '@/components/ui/base/BaseButton.vue'
 
 const profileStore = useProfileStore()
-const authStore = useAuthStore()
+
+const emit = defineEmits(['open-collab'])
+
+const isOwnProfile = computed(() => {
+  return profileStore.viewUser === null
+})
+
+const collaborationData = computed(() => {
+  return isOwnProfile.value
+    ? profileStore.user?.collaboration
+    : profileStore.viewUser?.collaboration
+})
+
+const onAddCollaboration = () => {
+  emit('open-collab')
+}
 
 
 </script>

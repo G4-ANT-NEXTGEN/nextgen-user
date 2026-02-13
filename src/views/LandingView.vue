@@ -7,7 +7,6 @@
           <div class="logo-circle">
             <img src="/logo.jpg" alt="Logo" />
           </div>
-          <span class="brand-text">NextGen</span>
         </RouterLink>
 
         <ul class="nav-links d-none d-lg-flex">
@@ -498,11 +497,9 @@ onUnmounted(() => {
 }
 
 .logo-circle {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 120px;
+  height: 120px;
   overflow: hidden;
-  border: 2px solid var(--color-primary);
 }
 
 .logo-circle img {

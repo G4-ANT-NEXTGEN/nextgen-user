@@ -182,7 +182,7 @@
 
     <!-- Upload CV Modal -->
     <BaseModal v-if="cvUpdateModal" title="Upload Your CV" @close="closeEditCV">
-      <div class="upload-section">
+      <div class="upload-section cursor-pointer">
         <div class="file-upload-area" :class="{ 'has-file': cvFile }">
           <input class="file-input" type="file" id="cvFile" @change="cvOnChangeFile" accept="application/pdf" />
           <label for="cvFile" class="file-upload-label">
@@ -190,7 +190,7 @@
               <i class="bi bi-cloud-arrow-up"></i>
             </div>
             <div class="upload-text">
-              <span class="primary-text">Drop your CV here or click to browse</span>
+              <span class="primary-text light-dark ">Drop your CV here or click to browse</span>
               <span class="secondary-text">PDF files only • Max 10MB</span>
             </div>
           </label>

@@ -45,7 +45,7 @@
           <!-- Empty State -->
           <div v-if="chatStore.chatList.length === 0" class="empty-state">
             <i class="bi bi-chat-dots empty-icon"></i>
-            <p class="empty-text">No messages yet</p>
+            <p class="empty-text light-dark">No messages yet</p>
             <p class="empty-subtext">Start a conversation to see your messages here</p>
           </div>
         </div>

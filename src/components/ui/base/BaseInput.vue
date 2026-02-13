@@ -1,27 +1,36 @@
 <template>
-  <div class="mb-3">
+  <div class="mb-3 position-relative">
     <label :for="id" v-if="label" class="form-label">{{ label }}</label>
 
-    <!-- Use Flatpickr for date inputs -->
-    <flat-pickr v-if="type === 'date'" :id="id" :value="modelValue" :placeholder="placeholder"
-      :class="['form-control', { 'is-invalid': error }]" :disabled="disabled" :config="flatpickrConfig"
-      @on-change="handleDateChange" v-bind="$attrs" />
+    <div class="input-group-custom">
+      <!-- Use Flatpickr for date inputs -->
+      <flat-pickr v-if="type === 'date'" :id="id" :value="modelValue" :placeholder="placeholder"
+        :class="['form-control', { 'is-invalid': error }]" :disabled="disabled" :config="flatpickrConfig"
+        @on-change="handleDateChange" v-bind="$attrs" />
 
-    <!-- Regular input for non-date types -->
-    <input v-else :type="type" :id="id" :value="modelValue" :placeholder="placeholder"
-      :class="['form-control', { 'is-invalid': error }]" :disabled="disabled" :required="required"
-      @input="$emit('update:modelValue', $event.target.value)" v-bind="$attrs" />
+      <!-- Regular input for non-date types -->
+      <template v-else>
+        <input :type="inputType" :id="id" :value="modelValue" :placeholder="placeholder"
+          :class="['form-control', { 'is-invalid': error, 'pe-5': type === 'password' }]" :disabled="disabled"
+          :required="required" @input="$emit('update:modelValue', $event.target.value)" v-bind="$attrs" />
 
-    <div v-if="error" class="invalid-feedback">{{ error }}</div>
+        <!-- Password Visibility Toggle -->
+        <button v-if="type === 'password'" type="button" class="password-toggle" @click="togglePassword" tabindex="-1">
+          <i class="bi" :class="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+        </button>
+      </template>
+    </div>
+
+    <div v-if="error" class="invalid-feedback d-block">{{ error }}</div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import flatPickr from 'vue-flatpickr-component'
 import 'flatpickr/dist/flatpickr.css'
 
-defineProps({
+const props = defineProps({
   modelValue: [String, Number],
   label: String,
   placeholder: String,
@@ -42,6 +51,19 @@ defineProps({
 })
 
 const emit = defineEmits(['update:modelValue', 'blur'])
+
+const showPassword = ref(false)
+
+const inputType = computed(() => {
+  if (props.type === 'password') {
+    return showPassword.value ? 'text' : 'password'
+  }
+  return props.type
+})
+
+const togglePassword = () => {
+  showPassword.value = !showPassword.value
+}
 
 // Flatpickr configuration
 const flatpickrConfig = computed(() => ({
@@ -139,5 +161,41 @@ const handleDateChange = (selectedDates, dateStr) => {
 
 :deep(.flatpickr-day.today) {
   border-color: var(--color-primary);
+}
+
+/* Password Toggle Styles */
+.input-group-custom {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 5;
+  border-radius: 8px;
+}
+
+.password-toggle:hover {
+  color: var(--color-primary);
+  background: rgba(var(--color-primary-rgb), 0.05);
+}
+
+.password-toggle i {
+  font-size: 1.2rem;
+}
+
+.pe-5 {
+  padding-right: 3rem !important;
 }
 </style>

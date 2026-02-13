@@ -19,7 +19,6 @@
                     <div class="logo-icon">
                       <img src="/logo.jpg" alt="NextGen Logo" class="img-fluid rounded-2">
                     </div>
-                    <div class="logo-text">NextGen</div>
                   </div>
                   <p class="subtitle">Join our community and start your journey in 4 simple steps.</p>
                 </div>
@@ -121,11 +120,13 @@ defineOptions({
 .register-wrapper {
   background-color: var(--color-background);
   position: relative;
-  overflow-y: auto;
+  min-height: 100vh;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background-color 0.5s ease;
+  overflow-x: hidden;
 }
 
 .container-custom {
@@ -140,7 +141,7 @@ defineOptions({
   border: 1px solid var(--color-border);
   position: relative;
   z-index: 10;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
 }
 
 /* Sidebar Styling - Redesigned for Premium Feel */

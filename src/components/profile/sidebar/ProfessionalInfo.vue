@@ -72,10 +72,12 @@
       <div class="professional-form">
         <div class="row g-3 mb-3">
           <div class="col-md-6">
-            <BaseInput label="Job Title" placeholder="e.g. Senior Product Designer" v-model="form.job_title" />
+            <BaseInput label="Job Title" placeholder="e.g. Senior Product Designer" v-model="form.job_title"
+              :error="errors.job_title" @input="validateJobTitle" />
           </div>
           <div class="col-md-6">
-            <BaseInput label="Company Name" placeholder="e.g. Acme Corporation" v-model="form.company_name" />
+            <BaseInput label="Company Name" placeholder="e.g. Acme Corporation" v-model="form.company_name"
+              :error="errors.company_name" @input="validateCompanyName" />
           </div>
         </div>
         <div class="mb-0">
@@ -102,7 +104,8 @@ import InfoCard from '../InfoCard.vue'
 import BaseModal from '@/components/ui/base/BaseModal.vue'
 import BaseInput from '@/components/ui/base/BaseInput.vue'
 import BaseButton from '@/components/ui/base/BaseButton.vue'
-import { showSuccess, showError } from '@/utils/toast'
+import { useRequiredValidator } from '@/composables/useRequiredValidator'
+import { showError } from '@/utils/toast'
 
 const props = defineProps({
   userData: {
@@ -115,11 +118,16 @@ const profileStore = useProfileStore()
 const showUpdateModal = ref(false)
 const isSaving = ref(false)
 
+const { errors, validateField } = useRequiredValidator()
+
 const form = reactive({
   job_title: '',
   company_name: '',
   responsibility: ''
 })
+
+const validateJobTitle = () => validateField('job_title', form.job_title, 'Job title is required')
+const validateCompanyName = () => validateField('company_name', form.company_name, 'Company name is required')
 
 const isOwnProfile = computed(() => {
   return !props.userData
@@ -138,6 +146,13 @@ const closeUpdateModal = () => {
 }
 
 const HandleSaveProfessional = async () => {
+  const isJobTitleValid = validateJobTitle()
+  const isCompanyNameValid = validateCompanyName()
+
+  if (!isJobTitleValid || !isCompanyNameValid) {
+    return
+  }
+
   try {
     isSaving.value = true
     await profileStore.updateProfessionalInfo({

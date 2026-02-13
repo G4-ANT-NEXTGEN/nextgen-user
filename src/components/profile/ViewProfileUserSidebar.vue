@@ -57,7 +57,8 @@
             <i class="bi bi-mortarboard-fill"></i>
             <div class="d-flex flex-column gap-1">
               <div class="item-title">{{ edu.school?.name }}</div>
-              <div class="item-sub">{{ edu.degrees?.name }} • {{ edu.end_date?.split('-')[0] }}</div>
+              <div class="item-sub">{{ edu.degrees?.name }} • {{ edu.start_date?.split('-')[0] }} - {{
+                edu.end_date?.split('-')[0] || 'Present' }}</div>
             </div>
           </div>
         </div>
@@ -73,6 +74,8 @@ defineProps({
     required: true,
   },
 })
+
+
 </script>
 
 <style scoped>

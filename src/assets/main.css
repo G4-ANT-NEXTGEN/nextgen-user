@@ -271,3 +271,11 @@ body {
 .Toastify__toast--info {
   border-left: 5px solid var(--toastify-color-info) !important;
 }
+
+.light-dark {
+  color: var(--color-text) !important;
+}
+
+.dark-light {
+  color: var(--color-background) !important;
+}

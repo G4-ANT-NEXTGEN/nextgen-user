@@ -11,31 +11,35 @@
 
         <button class="cover-edit-trigger" @click="openEditCover">
           <i class="bi bi-camera-fill"></i>
-          <span>Edit Cover</span>
+          <span>Add cover photo</span>
         </button>
+      </div>
 
-        <div class="identity-container">
+      <!-- Profile Info Section - Below Cover -->
+      <div class="profile-info-section">
+        <div class="profile-container">
+          <!-- Avatar - Overlapping Cover -->
           <div class="avatar-box">
             <div class="avatar-ring">
               <img :src="profileStore.user?.avatar" alt="Profile Avatar" class="profile-avatar" />
-              <div class="status-indicator"></div>
             </div>
             <button class="avatar-edit-trigger" @click="showImageCropper = true">
               <i class="bi bi-camera-fill"></i>
             </button>
           </div>
 
+          <!-- Name and Info -->
           <div class="identity-details">
             <h1 class="display-name">{{ profileStore.user?.full_name || 'Loading...' }}</h1>
             <p class="role-text">{{ profileStore.user?.positions?.[0]?.name || 'Freelancer' }}</p>
           </div>
 
+          <!-- Action Buttons -->
           <div class="identity-actions">
-            <BaseButton @click="openChangePassAndDeleteAcc" variant="primary" class="chat-btn"
-              :isLoading="profileStore.isLoading">
-              <!-- <i class="bi bi-chat-dots-fill"></i> -->
-              <span>Change Password</span>
+            <BaseButton @click="openChangePassAndDeleteAcc" variant="secondary" class="settings-btn">
+              <i class="bi bi-gear-fill"></i>
             </BaseButton>
+
           </div>
         </div>
       </div>
@@ -61,8 +65,8 @@
               <i class="bi bi-cloud-arrow-up"></i>
             </div>
             <div class="upload-text">
-              <span class="primary-text">Drop your CV here or click to browse</span>
-              <span class="secondary-text">PDF files only • Max 10MB</span>
+              <span class="primary-text light-dark">Drop your CV here or click to browse</span>
+              <span class="secondary-text light-dark">PDF files only • Max 10MB</span>
             </div>
           </label>
         </div>
@@ -106,12 +110,16 @@
 
             <input class="file-input" type="file" id="collabFile" multiple accept="image/*"
               @change="CompanyLogoSelect" />
-            <label for="collabFile" class="file-upload-label">
+            <label for="collabFile" class="file-upload-label light-dark">
               <i class="bi bi-image"></i>
-              <span>Upload Logo</span>
+              <span class="light-dark">Upload Logo</span>
             </label>
           </div>
           <img v-if="companyLogoPreview" :src="companyLogoPreview" alt="Company Logo Preview" class="logo-preview">
+          <div v-if="errors.companyLogo" class="text-danger small mt-1">
+            <i class="bi bi-exclamation-circle me-1"></i>
+            {{ errors.companyLogo }}
+          </div>
         </div>
         <BaseInput label="Company Website" placeholder="https://example.com" @input="validateCompanyLink"
           :error="errors.companyLink" v-model="companyLink" />
@@ -412,7 +420,10 @@ onMounted(async () => {
 })
 
 const addCollaboration = async () => {
-  if (!validateCompanyLink())
+  const isLinkValid = validateCompanyLink()
+  const isLogoValid = validateCompanyLogo()
+
+  if (!isLinkValid || !isLogoValid)
     return
 
   let link = companyLink.value
@@ -431,7 +442,7 @@ const addCollaboration = async () => {
 
 const validateCompanyLink = () => {
   if (!companyLink.value) {
-    errors.companyLink = 'Company link is required'
+    errors.companyLink = 'Company website link is required'
     return false
   }
 
@@ -446,11 +457,20 @@ const validateCompanyLink = () => {
   )
 
   if (!pattern.test(companyLink.value)) {
-    errors.companyLink = 'Please enter a valid URL (e.g., https://example.com)'
+    errors.companyLink = 'Please enter a valid URL'
     return false
   }
 
   errors.companyLink = ''
+  return true
+}
+
+const validateCompanyLogo = () => {
+  if (!companyLogo.value) {
+    errors.companyLogo = 'Company logo is required'
+    return false
+  }
+  errors.companyLogo = ''
   return true
 }
 
@@ -531,6 +551,7 @@ const CompanyLogoSelect = (e) => {
   if (!logo)
     return false
   companyLogo.value = logo
+  errors.companyLogo = '' // Clear logo error when selected
   const reader = new FileReader()
   reader.onload = (ev) => (companyLogoPreview.value = ev.target.result)
   reader.readAsDataURL(logo)
@@ -727,23 +748,25 @@ defineExpose({
 }
 
 /* ====================================
-  IDENTITY OVERLAY
+  PROFILE INFO SECTION (Below Cover)
    ==================================== */
-.identity-container {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 0 2rem 2.5rem;
+.profile-info-section {
+  background: var(--color-surface);
+  padding: 0 2rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.profile-container {
   display: flex;
   align-items: flex-end;
-  gap: 2rem;
-  z-index: 5;
+  gap: 1.5rem;
+  position: relative;
 }
 
 .avatar-box {
   position: relative;
-  transform: translateY(2rem);
+  transform: translateY(-50%);
+  flex-shrink: 0;
 }
 
 .avatar-ring {
@@ -754,6 +777,7 @@ defineExpose({
   background: var(--color-surface);
   box-shadow: var(--shadow-xl);
   position: relative;
+  border: 4px solid var(--color-surface);
 }
 
 .profile-avatar {
@@ -763,35 +787,26 @@ defineExpose({
   border-radius: 50%;
 }
 
-.status-indicator {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
-  width: 24px;
-  height: 24px;
-  background: #10b981;
-  border: 4px solid var(--color-surface);
-  border-radius: 50%;
-}
-
 .avatar-edit-trigger {
   position: absolute;
-  bottom: 0;
+  bottom: 10px;
   right: 10px;
   width: 40px;
   height: 40px;
-  background: var(--color-primary);
-  color: var(--color-surface);
-  border: 4px solid var(--color-surface);
+  background: var(--color-background);
+  color: var(--color-text);
+  border: 3px solid var(--color-surface);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .avatar-edit-trigger:hover {
   transform: scale(1.1);
+  background: var(--color-hover);
 }
 
 .identity-details {
@@ -800,50 +815,57 @@ defineExpose({
 }
 
 .display-name {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--color-text);
   margin-bottom: 0.25rem;
-  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .role-text {
-  font-size: 1.125rem;
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: var(--color-muted);
+  margin-bottom: 0;
   font-weight: 500;
 }
 
 .identity-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding-bottom: 0.75rem;
+  gap: 0.75rem;
+  padding-bottom: 0.5rem;
 }
 
-.chat-btn {
-  padding: 0.875rem 2rem !important;
-  font-weight: 700 !important;
-  border-radius: 16px !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+.settings-btn {
+  width: 44px !important;
+  height: 44px !important;
+  padding: 0 !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.125rem !important;
 }
 
-.settings-trigger {
-  width: 48px;
-  height: 48px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 14px;
-  color: #fff;
+.more-btn {
+  width: 44px;
+  height: 44px;
+  background: var(--color-accent);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  color: var(--color-text);
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  cursor: pointer;
+  font-size: 1.125rem;
 }
 
-.settings-trigger:hover {
-  background: rgba(255, 255, 255, 0.2);
+.more-btn:hover {
+  background: var(--color-hover);
+  border-color: var(--color-primary);
 }
+
 
 /* ====================================
    NAVIGATION
@@ -899,15 +921,15 @@ defineExpose({
     height: 280px;
   }
 
-  .identity-container {
+  .profile-container {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding-bottom: 1.5rem;
   }
 
   .avatar-box {
-    transform: translateY(0);
+    transform: translateY(-50%);
+    margin-bottom: 0;
   }
 
   .avatar-ring {
@@ -915,12 +937,171 @@ defineExpose({
     height: 140px;
   }
 
+  .avatar-edit-trigger {
+    right: 5px;
+    bottom: 5px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .display-name {
+    font-size: 1.75rem;
+  }
+
+  .role-text {
+    font-size: 0.95rem;
+  }
+
+  .identity-actions {
+    justify-content: center;
+  }
+
+  .settings-btn {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .more-btn {
+    width: 40px;
+    height: 40px;
+  }
+
   .nav-links {
     margin-left: 0;
     justify-content: center;
     gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .nav-link-btn {
+    font-size: 0.9rem;
+    padding: 1.25rem 0.5rem;
   }
 }
+
+@media (max-width: 768px) {
+  .cover-area {
+    height: 220px;
+  }
+
+  .profile-info-section {
+    padding: 0 1.5rem 1.25rem;
+  }
+
+  .avatar-ring {
+    width: 120px;
+    height: 120px;
+  }
+
+  .avatar-edit-trigger {
+    width: 32px;
+    height: 32px;
+  }
+
+  .avatar-edit-trigger i {
+    font-size: 0.85rem;
+  }
+
+  .display-name {
+    font-size: 1.5rem;
+  }
+
+  .role-text {
+    font-size: 0.9rem;
+  }
+
+  .settings-btn {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1rem !important;
+  }
+
+  .more-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+  }
+
+  .header-nav {
+    padding: 0 1rem;
+  }
+
+  .nav-links {
+    gap: 0.5rem;
+  }
+
+  .nav-link-btn {
+    padding: 1rem 0.4rem;
+    font-size: 0.85rem;
+  }
+
+  .cover-edit-trigger {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .cover-edit-trigger span {
+    display: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .cover-area {
+    height: 180px;
+  }
+
+  .profile-info-section {
+    padding: 0 1rem 1rem;
+  }
+
+  .avatar-ring {
+    width: 100px;
+    height: 100px;
+    padding: 4px;
+  }
+
+  .avatar-edit-trigger {
+    width: 28px;
+    height: 28px;
+  }
+
+  .display-name {
+    font-size: 1.35rem;
+  }
+
+  .role-text {
+    font-size: 0.85rem;
+  }
+
+  .settings-btn {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 0.95rem !important;
+  }
+
+  .more-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 0.95rem;
+  }
+
+  .nav-links {
+    gap: 0.25rem;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding-bottom: 0.5rem;
+  }
+
+  .nav-link-btn {
+    padding: 1rem 0.75rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+}
+
+
 
 .upload-placeholder {
   display: flex;

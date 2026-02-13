@@ -31,18 +31,30 @@
     </div>
 
     <div v-else class="message-stream flex-grow-1 p-4 overflow-y-auto">
-      <div class="date-divider"><span>Today</span></div>
-
-      <div v-for="msg in conversationMessage" :key="msg.id" class="message-group" :class="{ 'is-mine': msg.isMine }">
-        <img v-if="!msg.isMine" :src="msg.sender.avatar" class="bubble-avatar" />
-        <div class="bubble-wrapper">
-          <div class="message-bubble">
-            <p class="text-color">{{ msg.message }}</p>
-          </div>
-          <span class="msg-time">{{ formatLocalTime(msg.created_at) }}</span>
+      <!-- Empty State - No Messages -->
+      <div v-if="conversationMessage.length === 0" class="empty-messages-state">
+        <div class="empty-icon-wrapper">
+          <i class="bi bi-chat-dots empty-chat-icon"></i>
         </div>
-        <img v-if="msg.isMine" :src="msg.sender.avatar" class="bubble-avatar" />
+        <h3 class="empty-title light-dark">No messages yet</h3>
+        <p class="empty-subtitle">Start the conversation by sending a message below</p>
       </div>
+
+      <!-- Messages List -->
+      <template v-else>
+        <div class="date-divider"><span>Today</span></div>
+
+        <div v-for="msg in conversationMessage" :key="msg.id" class="message-group" :class="{ 'is-mine': msg.isMine }">
+          <img v-if="!msg.isMine" :src="msg.sender.avatar" class="bubble-avatar" />
+          <div class="bubble-wrapper">
+            <div class="message-bubble">
+              <p class="message-text">{{ msg.message }}</p>
+            </div>
+            <span class="msg-time">{{ formatLocalTime(msg.created_at) }}</span>
+          </div>
+          <img v-if="msg.isMine" :src="msg.sender.avatar" class="bubble-avatar" />
+        </div>
+      </template>
     </div>
 
     <!-- Facelift Input -->
@@ -231,6 +243,50 @@ onMounted(async () => {
   z-index: 2;
 }
 
+/* Empty Messages State */
+.empty-messages-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.empty-icon-wrapper {
+  width: 120px;
+  height: 120px;
+  background: var(--color-surface);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.empty-chat-icon {
+  font-size: 3.5rem;
+  color: var(--color-primary);
+  opacity: 0.6;
+}
+
+.empty-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--color-text);
+}
+
+.empty-subtitle {
+  font-size: 1rem;
+  color: var(--color-muted);
+  max-width: 400px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
 .message-group {
   display: flex;
   align-items: flex-end;
@@ -270,9 +326,26 @@ onMounted(async () => {
   line-height: 1.5;
 }
 
+/* Message text color */
+.message-text {
+  color: var(--color-text);
+}
+
+/* Own messages - keep background same, change text color */
+.is-mine .message-text {
+  color: var(--color-background);
+  /* Light mode: white/light text */
+}
+
+/* Dark mode: own messages text should be black */
+[data-bs-theme="dark"] .is-mine .message-text {
+  color: #000000 !important;
+}
+
 .msg-time {
   font-size: 0.65rem;
   opacity: 0.6;
+  color: var(--color-muted);
   display: block;
   margin-top: 5px;
   text-align: right;

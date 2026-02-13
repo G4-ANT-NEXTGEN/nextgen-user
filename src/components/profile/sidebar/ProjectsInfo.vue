@@ -82,7 +82,7 @@
         <div class="mt-4">
           <BaseInput label="Project Link" v-model="projectLink" placeholder="https://your-project.com"
             :error="errors.link" @input="validateLink" />
-          <p class="form-hint mt-1 small text-muted">
+          <p class="form-hint mt-1 small light-dark">
             <i class="bi bi-info-circle me-1"></i>
             Provide a link to the live project, repository, or case study.
           </p>
@@ -344,8 +344,6 @@ onMounted(async () => {
 }
 
 .project-card-inner:hover .project-icon-box {
-  background: var(--color-primary);
-  color: #fff;
   transform: rotate(-10deg) scale(1.1);
 }
 

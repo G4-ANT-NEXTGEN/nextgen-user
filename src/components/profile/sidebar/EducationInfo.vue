@@ -74,7 +74,7 @@
 
       <div v-else class="empty-state-card guest">
         <div class="empty-icon-circle">
-          <i class="bi bi-mortarboard text-muted"></i>
+          <i class="bi bi-mortarboard text-muted light-drak"></i>
         </div>
         <p>No education history available for this user.</p>
       </div>
@@ -86,23 +86,27 @@
       <div class="education-form-container">
         <div class="mb-4">
           <BaseSelect v-model="school" label="School / University" placeholder="Search school..."
-            :options="schoolStore.schools.map((s) => ({ value: s.id, label: s.name }))" />
+            :options="schoolStore.schools.map((s) => ({ value: s.id, label: s.name }))" :error="errors.school"
+            @change="validateSchool" />
         </div>
 
         <div class="row g-3 mb-4">
           <div class="col-md-6">
             <BaseSelect v-model="degree" label="Degree" placeholder="Select degree"
-              :options="degreeStore.degrees.map((d) => ({ value: d.id, label: d.name }))" />
+              :options="degreeStore.degrees.map((d) => ({ value: d.id, label: d.name }))" :error="errors.degree"
+              @change="validateDegree" />
           </div>
           <div class="col-md-6">
             <BaseSelect v-model="subject" label="Field of Study" placeholder="Select subject"
-              :options="subjectStore.subjects.map((s) => ({ value: s.id, label: s.name }))" />
+              :options="subjectStore.subjects.map((s) => ({ value: s.id, label: s.name }))" :error="errors.subject"
+              @change="validateSubject" />
           </div>
         </div>
 
         <div class="row g-3 mb-4">
           <div class="col-md-6">
-            <BaseInput type="date" label="Start Date" placeholder="YYYY-MM" v-model="start_date" />
+            <BaseInput type="date" label="Start Date" placeholder="YYYY-MM" v-model="start_date"
+              :error="errors.start_date" @input="validateStartDate" />
           </div>
           <div class="col-md-6">
             <BaseInput type="date" label="End Date" placeholder="YYYY-MM or Present" v-model="end_date" />
@@ -110,9 +114,10 @@
         </div>
 
         <div class="mb-0">
-          <label class="form-label d-block mb-2 fw-bold small text-uppercase">Description</label>
-          <textarea class="form-control" placeholder="Describe your achievements, participation or relevant courses..."
-            rows="5" v-model="description"></textarea>
+          <label class="form-label d-block mb-2 fw-bold small text-uppercase light-dark">Description</label>
+          <textarea class="form-control light-dark"
+            placeholder="Describe your achievements, participation or relevant courses..." rows="5"
+            v-model="description"></textarea>
         </div>
       </div>
 
@@ -130,9 +135,10 @@
         <div class="warning-ring">
           <i class="bi bi-trash3-fill"></i>
         </div>
-        <h4>Are you sure?</h4>
-        <p>You are about to remove your education details at <strong>{{ selectedEducationForDelete?.school?.name
-        }}</strong>.</p>
+        <h4 class="light-dark">Are you sure?</h4>
+        <p class="light-dark">You are about to remove your education details at <strong>{{
+          selectedEducationForDelete?.school?.name
+            }}</strong>.</p>
       </div>
 
       <template #footer>
@@ -155,6 +161,7 @@ import { useEducationStore } from '@/stores/education'
 import { useSchoolStore } from '@/stores/schools'
 import { useDegreeStore } from '@/stores/degrees'
 import { useSubjectStore } from '@/stores/subjects'
+import { useRequiredValidator } from '@/composables/useRequiredValidator'
 
 const profileStore = useProfileStore()
 const educationStore = useEducationStore()
@@ -177,12 +184,19 @@ const selectedEducation = ref(null)
 const deleteModal = ref(false)
 const selectedEducationForDelete = ref(null)
 
+const { errors, validateField } = useRequiredValidator()
+
 const school = ref(null)
 const degree = ref(null)
 const subject = ref(null)
 const start_date = ref('')
 const end_date = ref('')
 const description = ref('')
+
+const validateSchool = () => validateField('school', school.value, 'School is required')
+const validateDegree = () => validateField('degree', degree.value, 'Degree is required')
+const validateSubject = () => validateField('subject', subject.value, 'Field of study is required')
+const validateStartDate = () => validateField('start_date', start_date.value, 'Start date is required')
 
 const onCreate = () => {
   resetForm()
@@ -229,6 +243,15 @@ const confirmDeleteEducation = async () => {
 }
 
 const HandleAddNewEducation = async () => {
+  const isSchoolValid = validateSchool()
+  const isDegreeValid = validateDegree()
+  const isSubjectValid = validateSubject()
+  const isStartDateValid = validateStartDate()
+
+  if (!isSchoolValid || !isDegreeValid || !isSubjectValid || !isStartDateValid) {
+    return
+  }
+
   isLoading.value = true
 
   const payload = {
@@ -274,8 +297,20 @@ const resetForm = () => {
 }
 
 const formatDate = (date) => {
-  if (!date) return ''
-  return date.length > 7 ? date.slice(0, 7) : date
+  // Handle null, undefined, or empty string
+  if (!date || date === '') return ''
+
+  // Convert to string if it's not already
+  const dateStr = String(date)
+
+  // If it's already in YYYY-MM format, return as is
+  if (dateStr.length === 7 && dateStr.includes('-')) return dateStr
+
+  // If it's in YYYY-MM-DD format or longer, extract YYYY-MM
+  if (dateStr.length > 7) return dateStr.slice(0, 7)
+
+  // Return as is for other formats
+  return dateStr
 }
 
 onMounted(async () => {

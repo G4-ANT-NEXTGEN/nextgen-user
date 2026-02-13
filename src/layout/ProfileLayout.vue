@@ -14,7 +14,7 @@
           <!-- Main content -->
           <main class="profile-content-column">
             <transition name="fade-slide" mode="out-in">
-              <component :is="currentComponent" />
+              <component :is="currentComponent" @open-collab="openHeaderCollab" />
             </transition>
           </main>
         </div>
@@ -24,8 +24,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-
+import { ref, computed, onMounted } from 'vue'
+import { useProfileStore } from '@/stores/profile'
 
 import ProfileHeader from '@/components/profile/ProfileHeader.vue'
 import ProfileSidebar from '@/components/profile/ProfileSidebar.vue'
@@ -37,9 +37,16 @@ import EducationInfo from '@/components/profile/sidebar/EducationInfo.vue'
 import CollaborationInfo from '@/components/profile/sidebar/CollaborationInfo.vue'
 import CVInfo from '@/components/profile/sidebar/CVInfo.vue'
 
-
+const profileStore = useProfileStore()
 const activeTab = ref('overview')
 const headerRef = ref(null)
+
+onMounted(async () => {
+  profileStore.viewUser = null
+  if (!profileStore.user) {
+    await profileStore.fetchProfile()
+  }
+})
 
 const openHeaderCV = () => headerRef.value?.openEditCV()
 const openHeaderCollab = () => headerRef.value?.openEditCollaboration()

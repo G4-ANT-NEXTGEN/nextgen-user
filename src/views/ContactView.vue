@@ -73,7 +73,7 @@
                 <!-- Info Cards -->
                 <div class="info-card p-4 rounded-4">
                   <div class="d-flex align-items-center gap-4">
-                    <div class="icon-circle bg-primary-gradient text-white">
+                    <div class="icon-circle text-white">
                       <i class="bi bi-geo-alt-fill"></i>
                     </div>
                     <div>
@@ -88,7 +88,7 @@
 
                 <div class="info-card p-4 rounded-4">
                   <div class="d-flex align-items-center gap-4">
-                    <div class="icon-circle bg-secondary-gradient text-white">
+                    <div class="icon-circle text-white">
                       <i class="bi bi-envelope-fill"></i>
                     </div>
                     <div>
@@ -103,11 +103,11 @@
 
                 <div class="info-card p-4 rounded-4">
                   <div class="d-flex align-items-center gap-4">
-                    <div class="icon-circle bg-info-gradient text-white">
-                      <i class="bi bi-telephone-fill"></i>
+                    <div class="icon-circle light-dark text-white">
+                      <i class="bi bi-telephone-fill light-dark"></i>
                     </div>
                     <div>
-                      <h5 class="fw-bold mb-1">Call Us</h5>
+                      <h5 class="fw-bold mb-1 light-dark">Call Us</h5>
                       <p class="text-secondary mb-0">
                         096 4207 193<br>
                         Mon-Fri from 8am to 5pm
@@ -118,7 +118,7 @@
 
                 <!-- Socials -->
                 <div class="social-links mt-auto pt-4 text-center text-lg-start">
-                  <h6 class="fw-bold mb-4 text-uppercase small letter-spacing-2 text-muted">Follow Our Journey</h6>
+                  <h6 class="fw-bold mb-4 text-uppercase small dark-light">Follow Our Journey</h6>
                   <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
                     <a href="#" class="social-btn"><i class="bi bi-twitter-x"></i></a>
                     <a href="#" class="social-btn"><i class="bi bi-linkedin"></i></a>
@@ -313,8 +313,6 @@ defineOptions({
 }
 
 .social-btn:hover {
-  background: var(--color-primary);
-  color: white;
   border-color: var(--color-primary);
   transform: translateY(-5px) rotate(8deg);
   box-shadow: 0 5px 15px rgba(var(--color-primary-rgb), 0.3);

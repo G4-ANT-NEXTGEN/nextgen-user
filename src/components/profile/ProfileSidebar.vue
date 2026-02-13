@@ -71,10 +71,11 @@
             <i class="bi bi-mortarboard-fill"></i>
             <div>
               <div class="item-title">{{ edu.school?.name }}</div>
-              <div class="item-sub">{{ edu.degree?.name }} • {{ edu?.end_date }}</div>
+              <div class="item-sub">{{ edu.degree?.name }} • {{ edu.start_date?.split('-')[0] }} - {{
+                edu.end_date?.split('-')[0] || 'Present' }}</div>
             </div>
           </div>
-          <div v-if="!profileStore.user?.educations?.length" class="text-muted small italic">
+          <div v-if="!profileStore.user?.educations?.length" class=" light-dark small italic">
             No education history added.
           </div>
         </div>
@@ -168,7 +169,7 @@
         </div>
       </div>
       <div class="mb-3">
-        <label class="form-label fw-semibold">Description</label>
+        <label class="form-label fw-semibold light-dark">Description</label>
         <textarea class="form-control" placeholder="Description" style="height: 100px" v-model="description"></textarea>
       </div>
       <template #footer>
@@ -548,7 +549,6 @@ const HandleAddNewEducation = async () => {
 
 .edit-btn-minimal:hover {
   background: var(--color-primary);
-  color: #fff;
 }
 
 /* Summary Items */
