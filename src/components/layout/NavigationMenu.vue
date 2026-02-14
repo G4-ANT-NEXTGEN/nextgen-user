@@ -8,10 +8,9 @@
       <div class="d-flex align-items-center gap-2">
         <div class="logo-box">
           <div class="logo-inner">
-            <img class="img-fluid" src="/logo.jpg" alt="NextGen Logo" />
+            <img class="img-fluid" src="../../../public/logo_favicon.png" alt="Vetika Logo" />
           </div>
         </div>
-        <span class="fs-5 fw-bold nav-brand">NextGen</span>
       </div>
       <button class="close-btn" @click="$emit('close')" aria-label="Close menu">
         <i class="bi bi-x-lg"></i>
@@ -297,14 +296,8 @@ defineOptions({
 }
 
 .logo-box {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(10, 10, 10, 0.15);
+  width: 105px;
+  height: 48px;
 }
 
 .logo-inner {
@@ -316,6 +309,14 @@ defineOptions({
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+[data-theme="dark"] .logo-box img {
+  filter: brightness(0) invert(1);
+}
+
+[data-theme="light"] .logo-box img {
+  filter: brightness(0) invert(0);
 }
 
 .nav-brand {

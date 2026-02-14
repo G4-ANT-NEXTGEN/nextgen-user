@@ -18,7 +18,7 @@
         </div>
 
         <div class="col-md-6">
-          <BaseInput v-model="email" type="email" label="Email Address" placeholder="NextGen@gmail.com"
+          <BaseInput v-model="email" type="email" label="Email Address" placeholder="Vetika@gmail.com"
             :error="errors.email" @input="validateEmail" />
         </div>
 

@@ -94,8 +94,8 @@
                     <div>
                       <h5 class="fw-bold mb-1">Email Us</h5>
                       <p class="text-secondary mb-0">
-                        hello@nextgen.com<br>
-                        support@nextgen.com
+                        hello@Vetika.com<br>
+                        support@Vetika.com
                       </p>
                     </div>
                   </div>

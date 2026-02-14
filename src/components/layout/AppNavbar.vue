@@ -10,10 +10,9 @@
 
           <div @click="$router.push('/home')" class="logo-box d-none d-xl-flex">
             <div class="logo-inner">
-              <img class="img-fluid" src="../../../public/logo.jpg" alt="" />
+              <img class="img-fluid" src="../../../public/logo_favicon.png" alt="" />
             </div>
           </div>
-          <span @click="$router.push('/home')" class="fs-5 fw-bold nav-brand d-none d-xl-block">NextGen</span>
         </div>
       </div>
 
@@ -171,14 +170,16 @@ authStore.fetchProfile()
 }
 
 .logo-box {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(10, 10, 10, 0.15);
+  width: 105px;
+  height: 48px;
+}
+
+[data-theme="dark"] .logo-box img {
+  filter: brightness(0) invert(1);
+}
+
+[data-theme="light"] .logo-box img {
+  filter: brightness(0) invert(0);
 }
 
 .logo-box:hover {

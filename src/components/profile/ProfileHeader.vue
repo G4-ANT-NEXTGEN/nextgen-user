@@ -16,7 +16,7 @@
       </div>
 
       <!-- Profile Info Section - Below Cover -->
-      <div class="profile-info-section">
+      <div class="profile-info-section mt-3">
         <div class="profile-container">
           <!-- Avatar - Overlapping Cover -->
           <div class="avatar-box">
@@ -216,7 +216,7 @@
     </BaseModal>
     <!-- modal comfirm delete account -->
     <BaseModal v-if="deleteAccount" title="Comfirm Delete Account" @close="deleteAccount = false">
-      <p>Are you sure?</p>
+      <p class="light-dark">Are you sure?</p>
       <template #footer>
         <div class="d-flex justify-content-end">
           <!-- <base-button>Cancel</base-button> -->
@@ -810,6 +810,8 @@ defineExpose({
 }
 
 .identity-details {
+  margin-top: -80px;
+  margin-left: -180px;
   flex: 1;
   padding-bottom: 0.5rem;
 }
@@ -914,9 +916,15 @@ defineExpose({
 }
 
 /* ====================================
-   RESPONSIVE
+  RESPONSIVE
    ==================================== */
 @media (max-width: 991px) {
+
+  .identity-details {
+    margin-left: 0;
+    flex: 1;
+  }
+
   .cover-area {
     height: 280px;
   }

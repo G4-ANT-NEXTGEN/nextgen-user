@@ -98,7 +98,7 @@ const categories = [
   {
     title: 'Getting Started',
     icon: 'bi-rocket-takeoff',
-    desc: 'Everything you need to know to get started with NextGen.',
+    desc: 'Everything you need to know to get started with Vetika.',
     gradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
   },
   {

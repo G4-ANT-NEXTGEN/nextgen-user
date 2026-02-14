@@ -17,7 +17,7 @@
                 <div class="brand-section">
                   <div class="logo">
                     <div class="logo-icon">
-                      <img src="/logo.jpg" alt="NextGen Logo" class="img-fluid rounded-2">
+                      <img src="../../../public/logo_favicon.png" alt="Vetika Logo" class="img-fluid rounded-2">
                     </div>
                   </div>
                   <p class="subtitle">Join our community and start your journey in 4 simple steps.</p>
@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="sidebar-footer">
-                  <p>© 2026 NextGen. All rights reserved.</p>
+                  <p>© 2026 . All rights reserved.</p>
                 </div>
               </div>
             </div>
@@ -56,7 +56,7 @@
               <div class="mobile-header d-lg-none">
                 <div class="logo">
                   <img src="/logo.jpg" alt="Logo" class="mobile-logo">
-                  <span class="logo-text">NextGen</span>
+                  <span class="logo-text">Vetika</span>
                 </div>
               </div>
 
@@ -89,7 +89,7 @@ const activeStep = ref(1)
 
 const steps = [
   { number: 1, title: 'Create Account', desc: 'Basic info & credentials' },
-  { number: 2, title: 'User Type', desc: 'How will you use NextGen?' },
+  { number: 2, title: 'User Type', desc: 'How will you use Vetika?' },
   { number: 3, title: 'Position', desc: 'Your professional role' },
   { number: 4, title: 'Review', desc: 'Confirm your details' }
 ]
@@ -205,24 +205,26 @@ defineOptions({
 }
 
 .logo-icon {
-  width: 48px;
+  width: 105px;
   height: 48px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
   object-fit: cover;
   overflow: hidden;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .logo-icon img {
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
+
+[data-theme="dark"] .logo-icon img {
+  filter: brightness(0) invert(1);
+}
+
+[data-theme="light"] .logo-icon img {
+  filter: brightness(1) invert(1);
+}
+
 
 .logo-text {
   font-size: 26px;
