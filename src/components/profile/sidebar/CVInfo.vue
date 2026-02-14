@@ -226,10 +226,10 @@
             <header class="share-header">
               <div class="share-header-left">
                 <h3 class="label primary">Share CV</h3>
-                <p class=" label">Share your CV quickly via link, email, or social platforms.</p>
+                <p class=" label light-dark">Share your CV quickly via link, email, or social platforms.</p>
               </div>
               <div class="share-header-right">
-                <button class="modal-close-btn" @click="showShareModal = false">
+                <button class="modal-close-btn light-dark" @click="showShareModal = false">
                   <i class="bi bi-x-lg"></i>
                 </button>
               </div>
@@ -288,7 +288,7 @@
                     <span>Email</span>
                   </button>
                 </div>
-                <p class="share-help muted label primary">NOTE: If a popup is blocked, allow popups for this site.</p>
+                <p class="share-help muted label primary light-dark">NOTE: If a popup is blocked, allow popups for this site.</p>
               </div>
             </div>
           </div>
@@ -1221,6 +1221,7 @@ onMounted(async () => {
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  color: var(--color-text);
   padding: 12px;
   border-radius: 12px;
   border: 1px solid var(--color-border);

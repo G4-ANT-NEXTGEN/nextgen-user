@@ -14,7 +14,7 @@
                 <div>
                   <div class="logo">
                     <div class="logo-icon">
-                      <img src="/logo.jpg" alt="NextGen Logo" class="img-fluid rounded-2">
+                      <img src="../../../public/logo_favicon.png" alt="Vetika Logo" class="img-fluid rounded-2">
                     </div>
                   </div>
                 </div>
@@ -254,32 +254,32 @@ function gotoRegister() {
 }
 
 .logo {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 20px;
-  z-index: 10;
-  position: relative;
+  width: 105px;
 }
 
 .logo-icon {
   overflow: hidden;
-  width: 48px;
+  width: 100%;
   height: 48px;
-  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(8px);
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .logo-icon img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+
+}
+
+[data-theme="dark"] .logo-icon img {
+  filter: brightness(0) invert(1);
+}
+
+[data-theme="light"] .logo-icon img {
+  filter: brightness(1) invert(1);
 }
 
 .logo-text {

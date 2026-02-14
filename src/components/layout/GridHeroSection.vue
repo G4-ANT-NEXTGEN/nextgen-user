@@ -34,7 +34,7 @@
 
       <div class="float-item item-logo" style="left: 10%; top: 68%;">
         <div class="logo-hexagon reveal-scale">
-          <img src="/logo.jpg" alt="Logo" />
+          <img src="../../../public/logo_favicon.png" alt="Logo" />
         </div>
       </div>
 
@@ -303,7 +303,7 @@ import { Twitter, Facebook, Instagram } from 'lucide-vue-next';
 }
 
 .logo-hexagon {
-  width: 85px;
+  width: 100%;
   height: 85px;
   background: white;
   border-radius: 22px;
@@ -314,7 +314,7 @@ import { Twitter, Facebook, Instagram } from 'lucide-vue-next';
 }
 
 [data-theme="dark"] .logo-hexagon {
-  background: #1a1a1c;
+  background: #ffffff;
 }
 
 .logo-hexagon img {

@@ -5,7 +5,7 @@
       <div class="container container-custom">
         <RouterLink to="/" class="brand">
           <div class="logo-circle">
-            <img src="/logo.jpg" alt="Logo" />
+            <img src="../../public/logo_favicon.png" alt="Logo" />
           </div>
         </RouterLink>
 
@@ -89,12 +89,12 @@
       </div>
     </section>
 
-    <!-- Why Choose Nextgen / How it Works -->
+    <!-- Why Choose Vetika / How it Works -->
     <section id="how-it-works" class="how-it-works-section py-5">
       <div class="container container-custom">
         <div class="section-header text-center mb-5">
-          <div class="badge-outline reveal-up">THE NEXTGEN EXPERIENCE</div>
-          <h2 class="section-title reveal-up">Why choose Nextgen?</h2>
+          <div class="badge-outline reveal-up">THE Vetika EXPERIENCE</div>
+          <h2 class="section-title reveal-up">Why choose Vetika?</h2>
         </div>
 
         <div class="steps-container">
@@ -221,7 +221,7 @@
               </div>
               <h2 class="redesign-title">What Our <br /><span class="text-gradient">Customers Says</span></h2>
               <p class="redesign-desc">
-                Discover how NextGen is empowering creators and communities worldwide.
+                Discover how Vetika is empowering creators and communities worldwide.
                 Our users share their experiences on how collaboration became seamless and growth became inevitable.
               </p>
               <RouterLink to="/createuser" class="btn-testimonial-more">
@@ -260,7 +260,7 @@
       <div class="container container-custom">
         <div class="cta-banner reveal-up">
           <div class="cta-content">
-            <h2>Ready to join the <span>NextGen?</span></h2>
+            <h2>Ready to join the <span>Vetika?</span></h2>
             <p>Experience the community platform that adapts to your needs. Join today for free.</p>
             <div class="cta-btns">
               <RouterLink to="/createuser" class="btn-primary-gradient lg rounded-pill text-decoration-none">Get Started
@@ -282,9 +282,8 @@
           <div class="col-lg-4">
             <RouterLink to="/" class="brand mb-4 d-inline-flex">
               <div class="logo-circle">
-                <img src="/logo.jpg" alt="Logo" />
+                <img src="../../public/logo_favicon.png" alt="Logo" />
               </div>
-              <span class="brand-text">NextGen</span>
             </RouterLink>
             <p class="footer-desc">Building the future of community collaboration. Connect, share, and grow with the
               next generation of social platforms.</p>
@@ -315,7 +314,7 @@
           </div>
         </div>
         <div class="footer-bottom mt-5 pt-4 border-top d-flex flex-wrap justify-content-between">
-          <p class="copyright">&copy; 2026 NextGen. All rights reserved.</p>
+          <p class="copyright">&copy; 2026 Vetika. All rights reserved.</p>
           <div class="footer-links">
             <a href="#">Privacy Policy</a>
             <a href="#">Terms of Service</a>
@@ -389,13 +388,13 @@ const mainFeatures = [
 
 const testimonials = [
   {
-    text: "NextGen has transformed how my team communicates. It's the most polished community tool I've ever used.",
+    text: "Vetika has transformed how my team communicates. It's the most polished community tool I've ever used.",
     author: 'Sarah Chen',
     role: 'Product Lead at Design Systems',
     avatar: 'https://i.pravatar.cc/100?u=sarah'
   },
   {
-    text: 'Building a community used to be hard. With NextGen, I had my space up and running in minutes.',
+    text: 'Building a community used to be hard. With Vetika, I had my space up and running in minutes.',
     author: 'James Wilson',
     role: 'Community Manager',
     avatar: 'https://i.pravatar.cc/100?u=james'
@@ -487,19 +486,14 @@ onUnmounted(() => {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
+.logo-circle {
+  width: 100%;
+  height: 48px;
   flex-shrink: 0;
-  white-space: nowrap;
 }
 
-.logo-circle {
-  width: 120px;
-  height: 120px;
-  overflow: hidden;
+[data-theme="dark"] .logo-circle img {
+  filter: brightness(0) invert(1);
 }
 
 .logo-circle img {
