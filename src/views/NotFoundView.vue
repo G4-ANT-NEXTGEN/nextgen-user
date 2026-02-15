@@ -16,7 +16,7 @@
             <div class="action-group">
                 <button class="btn-premium" @click="$router.push({ name: 'home' })">
                     <i class="bi bi-house-door-fill me-2"></i>
-                    Back to Dashboard
+                    Back to Home
                 </button>
                 <button class="btn-outline-premium" @click="$router.go(-1)">
                     <i class="bi bi-arrow-left me-2"></i>

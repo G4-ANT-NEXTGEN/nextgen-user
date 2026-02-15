@@ -9,7 +9,18 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
   const emailForget = ref('')
   const otpForget = ref('')
+  const passwordForget = ref('')
+  const confirmPasswordForget = ref('')
   const userResult = ref('')
+  const registrationForm = ref({
+    full_name: '',
+    email: '',
+    phone: '',
+    password: '',
+    password_confirmation: '',
+    user_type_ids: null,
+    position_ids: null
+  })
 
   const isAuthenticated = computed(() => !!token.value && !!user.value)
 
@@ -181,9 +192,12 @@ export const useAuthStore = defineStore('auth', () => {
     emailForget,
     resetPassword,
     otpForget,
+    passwordForget,
+    confirmPasswordForget,
     register,
     userResult,
     userType,
-    userPosition
+    userPosition,
+    registrationForm
   }
 })

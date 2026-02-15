@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRequiredValidator } from '@/composables/useRequiredValidator';
 import { usePasswordValidator } from '@/composables/usePasswordValidator';
 import { useAuthStore } from '@/stores/auth';
@@ -60,13 +60,30 @@ import BaseInput from '@/components/ui/base/BaseInput.vue';
 const { errors, validateField } = useRequiredValidator()
 const { validatePassword: checkPassword } = usePasswordValidator()
 
-const email = ref('')
-const password = ref('')
-const comfirmpassword = ref('')
-const fullname = ref('')
-const phone = ref('')
 const authStore = useAuthStore()
 const isLoading = ref(false)
+
+// Use binding to store for persistence
+const fullname = computed({
+  get: () => authStore.registrationForm.full_name,
+  set: (val) => authStore.registrationForm.full_name = val
+})
+const email = computed({
+  get: () => authStore.registrationForm.email,
+  set: (val) => authStore.registrationForm.email = val
+})
+const phone = computed({
+  get: () => authStore.registrationForm.phone,
+  set: (val) => authStore.registrationForm.phone = val
+})
+const password = computed({
+  get: () => authStore.registrationForm.password,
+  set: (val) => authStore.registrationForm.password = val
+})
+const comfirmpassword = computed({
+  get: () => authStore.registrationForm.password_confirmation,
+  set: (val) => authStore.registrationForm.password_confirmation = val
+})
 
 const validateEmail = () => validateField('email', email.value, 'Email is required')
 const validateFullName = () => validateField('fullname', fullname.value, 'Full Name is required')

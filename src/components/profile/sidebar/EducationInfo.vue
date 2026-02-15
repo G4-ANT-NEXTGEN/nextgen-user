@@ -74,7 +74,7 @@
 
       <div v-else class="empty-state-card guest">
         <div class="empty-icon-circle">
-          <i class="bi bi-mortarboard text-muted light-drak"></i>
+          <i class="bi bi-mortarboard light-dark"></i>
         </div>
         <p>No education history available for this user.</p>
       </div>

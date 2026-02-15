@@ -4,13 +4,13 @@
     <div class="form-section" id="step3">
         <div class="step-indicator">STEP 3 OF 4</div>
         <h1>Create New Password</h1>
-        <p class="description">Enter and confirm your new password</p>
+        <p class="description light-dark">Enter and confirm your new password</p>
 
         <form>
             <div class="col-md-10 mb-3">
                 <BaseInput @input="validatePassword()" v-model="password" type="password" :error="errors.password"
                     id="password-input" placeholder="Enter your password" label="New Password *" />
-                <div class="helper-text">Must be at least 8 characters with letters and numbers
+                <div class="helper-text light-dark">Must be at least 8 characters with letters and numbers
                 </div>
             </div>
 
@@ -22,7 +22,7 @@
 
             <div class="d-flex justify-content-end mt-5">
                 <div class="button-group">
-                    <button type="button" class="btn btn-back" @click="router.go(-1)">Back</button>
+                    <button type="button" class="btn btn-back light-dark" @click="router.go(-1)">Back</button>
                     <BaseButton type="button" variant="primary" @click="submitPassword" :isLoading="isLoading">
                         Continue
                     </BaseButton>
@@ -38,16 +38,23 @@ import { useRequiredValidator } from "@/composables/useRequiredValidator";
 import { usePasswordValidator } from "@/composables/usePasswordValidator";
 import { useAuthStore } from "@/stores/auth"
 import { showError } from "@/utils/toast"
-import { ref } from "vue"
+import { ref, computed } from "vue"
 import router from "@/router";
 
-
-const password = ref("")
-const comfirmPassword = ref("")
 const authStore = useAuthStore()
 const isLoading = ref(false)
 
-const { errors, validateField } = useRequiredValidator()
+const password = computed({
+    get: () => authStore.passwordForget,
+    set: (val) => authStore.passwordForget = val
+})
+
+const comfirmPassword = computed({
+    get: () => authStore.confirmPasswordForget,
+    set: (val) => authStore.confirmPasswordForget = val
+})
+
+const { errors } = useRequiredValidator()
 const { validatePassword: checkPassword, validatePasswordMatch } = usePasswordValidator()
 
 const validatePassword = () => {

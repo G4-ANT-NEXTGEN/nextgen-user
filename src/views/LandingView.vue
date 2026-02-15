@@ -291,17 +291,17 @@
           <div class="col-6 col-md-3 col-lg-2 offset-lg-2">
             <h6>Platform</h6>
             <ul class="list-unstyled">
-              <li><router-link to="/home">Feed</router-link></li>
-              <li><router-link to="/chat">Chat</router-link></li>
-              <li><router-link to="/profile">Profile</router-link></li>
+              <li><router-link to="/login">Feed</router-link></li>
+              <li><router-link to="/login">Chat</router-link></li>
+              <li><router-link to="/login">Profile</router-link></li>
             </ul>
           </div>
           <div class="col-6 col-md-3 col-lg-2">
             <h6>About</h6>
             <ul class="list-unstyled">
-              <li><router-link to="/about">Our Story</router-link></li>
-              <li><router-link to="/contact">Contact</router-link></li>
-              <li><router-link to="/help">Help Center</router-link></li>
+              <li><router-link to="/login">Our Story</router-link></li>
+              <li><router-link to="/login">Contact</router-link></li>
+              <li><router-link to="/login">Help Center</router-link></li>
             </ul>
           </div>
           <div class="col-6 col-md-3 col-lg-2">

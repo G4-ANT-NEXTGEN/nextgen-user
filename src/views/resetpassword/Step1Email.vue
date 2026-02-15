@@ -9,7 +9,7 @@
         </button>
         <div class="step-indicator">STEP 1 OF 4</div>
         <h1>Reset Password</h1>
-        <p class="description">Enter your email or phone number to reset your password</p>
+        <p class="description light-dark">Enter your email or phone number to reset your password</p>
 
         <form @submit.prevent="nextStep()">
             <div class="row mb-3">
@@ -19,7 +19,7 @@
                 </div>
             </div>
 
-            <div class="helper-text">We'll send a verification code to your email or phone
+            <div class="helper-text light-dark">We'll send a verification code to your email or phone
                 number
             </div>
 
@@ -37,17 +37,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRequiredValidator } from '@/composables/useRequiredValidator';
 import { useAuthStore } from '@/stores/auth';
 import { showError } from '@/utils/toast';
 import router from '@/router';
 
 const { errors, validateField } = useRequiredValidator()
-const email = ref('')
 const authStore = useAuthStore()
 const isLoading = ref(false)
 
+const email = computed({
+    get: () => authStore.emailForget,
+    set: (val) => authStore.emailForget = val
+})
 
 const validateEmail = () => validateField('email', email.value, 'Email is required')
 
@@ -60,10 +63,10 @@ const validateForm = () => {
 }
 
 const nextStep = async () => {
-    isLoading.value = true
     if (!validateForm()) {
         return
     }
+    isLoading.value = true
 
     authStore.emailForget = email.value
 

@@ -1061,6 +1061,7 @@ onMounted(async () => {
   width: 40px;
   height: 40px;
   background: var(--color-hover);
+  color: var(--color-text);
   border: none;
   border-radius: 10px;
   display: flex;

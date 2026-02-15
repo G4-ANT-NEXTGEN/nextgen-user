@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { showError } from "@/utils/toast";
 import BaseButton from "@/components/ui/base/BaseButton.vue"
@@ -48,15 +48,19 @@ import { useAuthStore } from '@/stores/auth';
 const isLoading = ref(false)
 const router = useRouter()
 const authStore = useAuthStore()
-const selectedUserPositionId = ref(null)
+
+const selectedUserPositionId = computed({
+    get: () => authStore.registrationForm.position_ids,
+    set: (val) => authStore.registrationForm.position_ids = val
+})
 
 const usersTypes = ref([
     { id: 1, name: 'Front End', icon: 'bi bi-window-sidebar' },
     { id: 2, name: 'Back End', icon: 'bi bi-database' },
     { id: 3, name: 'Mobile App', icon: 'bi bi-phone' },
     { id: 4, name: 'UX/UI Design', icon: 'bi bi-bezier2' },
-    { id: 5, name: 'Data Science', icon: 'bi bi-cpu' },
-    { id: 6, name: 'DevOps', icon: 'bi bi-infinity' },
+    { id: 5, name: 'Programming', icon: 'bi bi-cpu' },
+    { id: 6, name: 'Web Development', icon: 'bi bi-laptop' },
 ])
 
 const nextStep = async () => {

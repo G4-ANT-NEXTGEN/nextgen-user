@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { showError } from "@/utils/toast";
 import BaseButton from "@/components/ui/base/BaseButton.vue"
@@ -49,7 +49,11 @@ import { useAuthStore } from '@/stores/auth';
 const router = useRouter()
 const isLoading = ref(false)
 const authStore = useAuthStore()
-const selectedUserTypeId = ref(null)
+
+const selectedUserTypeId = computed({
+  get: () => authStore.registrationForm.user_type_ids,
+  set: (val) => authStore.registrationForm.user_type_ids = val
+})
 
 const usersTypes = ref([
   { id: 1, name: 'Freelancer', description: 'Work independently on projects', icon: 'bi bi-laptop' },
@@ -69,7 +73,7 @@ const nextStep = async () => {
     }
     await authStore.userType(payload)
     router.push({ name: 'positionuser' })
-  } catch (error) {
+  } catch {
     showError('Failed to select user type')
   } finally {
     isLoading.value = false

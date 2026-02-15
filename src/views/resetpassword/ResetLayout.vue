@@ -17,7 +17,7 @@
                 <div class="brand-section">
                   <div class="logo">
                     <div class="logo-icon">
-                      <img class="img-fluid rounded-2" src="/logo.jpg" alt="Vetika Logo">
+                      <img class="img-fluid rounded-2" src="../../../public/logo_favicon.png" alt="Vetika Logo">
                     </div>
                   </div>
                   <p class="subtitle">Complete password reset in 4 easy steps</p>
@@ -194,46 +194,31 @@ const isStepCompleted = (step) => activeStep.value > step
 
 .logo {
   display: flex;
-  align-items:
-    center;
+  align-items:center;
+  background: none;
   gap: 16px;
   margin-bottom: 20px;
 }
 
 .logo-icon {
-  width: 42px;
-  height: 42px;
-  background: rgba(255, 255, 255,
-      0.05);
-  backdrop-filter: blur(8px);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
+  width: 108px;
+  height: 48px;
 }
 
 .logo-icon img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255,
-        0.2));
 }
 
-.logo-text {
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: -1px;
-  background: linear-gradient(135deg,
-      #ffffff 0%, #a1a1aa 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color:
-    transparent;
+[data-theme="dark"] .logo-icon img {
+  filter: brightness(0) invert(1);
 }
+
+[data-theme="light"] .logo-icon img {
+  filter: brightness(0) invert(1);
+}
+
 
 .subtitle {
   color: #a1a1aa;

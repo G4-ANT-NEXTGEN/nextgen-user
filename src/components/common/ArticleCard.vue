@@ -41,12 +41,12 @@
               <span>Delete Post</span>
             </button>
           </li>
-          <li>
+          <!-- <li>
             <button @click="$emit('hide', post.id)" type="button" class="action-item action-item--danger">
               <i class="bi bi-eye-slash"></i>
               <span>Hide Post</span>
             </button>
-          </li>
+          </li> -->
         </ul>
       </div>
     </header>
