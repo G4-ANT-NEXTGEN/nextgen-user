@@ -193,7 +193,7 @@ const router = createRouter({
 
 router.beforeEach(async (to) => {
   const authStore = useAuthStore()
-  document.title = to.meta.title ? to.meta.title + ' - Next Gen' : 'Next Gen'
+  document.title = to.meta.title ? to.meta.title + ' - VETIKA' : 'VETIKA'
 
   // check user have token or not and have user profile data
   if (authStore.token && !authStore.user) {

@@ -59,7 +59,8 @@
             <button v-for="cat in categoryStore.categories" :key="cat.id" class="category-nav-item"
               :class="{ active: postStore.category === cat.id }" @click="filterByCategory(cat.id)">
               <div class="cat-icon-wrap">
-                <i class="bi bi-tag-fill"></i>
+                <img v-if="cat.image" class="cat-icon-image" :src="cat.image" :alt="cat.name">
+                <i v-else class="bi bi-tag-fill"></i>
               </div>
               <span class="cat-name">{{ cat.name }}</span>
               <div v-if="postStore.category === cat.id" class="active-indicator"></div>
@@ -370,9 +371,10 @@ defineOptions({
 }
 
 .category-nav-item:hover {
-  background: var(--color-secondary);
-  transform: translateX(4px);
+  background: rgba(var(--color-primary-rgb), 0.06);
+  box-shadow: inset 0 0 0 1px rgba(var(--color-primary-rgb), 0.15);
 }
+
 
 .category-nav-item.active {
   background: rgba(var(--color-primary-rgb), 0.08);
@@ -391,6 +393,18 @@ defineOptions({
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.category-nav-item:hover .cat-icon-wrap {
+  background: var(--color-accent);
+  color: var(--color-text);
+}
+
+.cat-icon-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
 .all-posts {
   background: var(--color-primary);
   color: var(--color-background);
@@ -402,11 +416,6 @@ defineOptions({
   color: #64748b;
 }
 
-.category-nav-item:hover .cat-icon-wrap {
-  background: var(--color-primary);
-  color: var(--color-background);
-  transform: rotate(10deg);
-}
 
 .category-nav-item.active .cat-icon-wrap {
   background: var(--color-primary);
