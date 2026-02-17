@@ -1,35 +1,35 @@
 <template>
-    <!-- <router-view /> -->
-    <!-- Step 3: New Password -->
-    <div class="form-section" id="step3">
-        <div class="step-indicator">STEP 3 OF 4</div>
-        <h1>Create New Password</h1>
-        <p class="description light-dark">Enter and confirm your new password</p>
+  <!-- <router-view /> -->
+  <!-- Step 3: New Password -->
+  <div class="form-section" id="step3">
+    <div class="step-indicator">STEP 3 OF 4</div>
+    <h1>Create New Password</h1>
+    <p class="description light-dark">Enter and confirm your new password</p>
 
-        <form>
-            <div class="col-md-10 mb-3">
-                <BaseInput @input="validatePassword()" v-model="password" type="password" :error="errors.password"
-                    id="password-input" placeholder="Enter your password" label="New Password *" />
-                <div class="helper-text light-dark">Must be at least 8 characters with letters and numbers
-                </div>
-            </div>
+    <form>
+      <div class="col-md-10 mb-3">
+        <BaseInput @input="validatePassword()" v-model="password" type="password" :error="errors.password"
+          id="password-input" placeholder="Enter your password" label="New Password *" />
+        <div class="helper-text light-dark">Must be at least 8 characters with letters and numbers
+        </div>
+      </div>
 
-            <div class="col-md-10 mb-3 mb-md-0">
-                <BaseInput @input="validateComfirmPassword()" v-model="comfirmPassword" type="password"
-                    :error="errors.comfirmPassword" id="comfirmpassword-input" placeholder="Enter your comfirmpassword"
-                    label="Comfirm Password *" />
-            </div>
+      <div class="col-md-10 mb-3 mb-md-0">
+        <BaseInput @input="validateComfirmPassword()" v-model="comfirmPassword" type="password"
+          :error="errors.comfirmPassword" id="comfirmpassword-input" placeholder="Enter your comfirmpassword"
+          label="Comfirm Password *" />
+      </div>
 
-            <div class="d-flex justify-content-end mt-5">
-                <div class="button-group">
-                    <button type="button" class="btn btn-back light-dark" @click="router.go(-1)">Back</button>
-                    <BaseButton type="button" variant="primary" @click="submitPassword" :isLoading="isLoading">
-                        Continue
-                    </BaseButton>
-                </div>
-            </div>
-        </form>
-    </div>
+      <div class="d-flex justify-content-end mt-5">
+        <div class="button-group">
+          <button type="button" class="btn btn-back light-dark" @click="router.go(-1)">Back</button>
+          <BaseButton type="button" variant="primary" @click="submitPassword" :isLoading="isLoading">
+            Continue
+          </BaseButton>
+        </div>
+      </div>
+    </form>
+  </div>
 
 </template>
 
@@ -45,73 +45,74 @@ const authStore = useAuthStore()
 const isLoading = ref(false)
 
 const password = computed({
-    get: () => authStore.passwordForget,
-    set: (val) => authStore.passwordForget = val
+  get: () => authStore.passwordForget,
+  set: (val) => authStore.passwordForget = val
 })
 
 const comfirmPassword = computed({
-    get: () => authStore.confirmPasswordForget,
-    set: (val) => authStore.confirmPasswordForget = val
+  get: () => authStore.confirmPasswordForget,
+  set: (val) => authStore.confirmPasswordForget = val
 })
 
 const { errors } = useRequiredValidator()
 const { validatePassword: checkPassword, validatePasswordMatch } = usePasswordValidator()
 
 const validatePassword = () => {
-    const result = checkPassword(password.value)
-    errors.password = result.message
-    return result.isValid
+  const result = checkPassword(password.value)
+  errors.password = result.message
+  return result.isValid
 }
 
 const validateComfirmPassword = () => {
-    if (!comfirmPassword.value) {
-        errors.comfirmPassword = 'Confirm Password is required'
-        return false
-    }
-    errors.comfirmPassword = ''
-    return true
+  if (!comfirmPassword.value) {
+    errors.comfirmPassword = 'Confirm Password is required'
+    return false
+  }
+  errors.comfirmPassword = ''
+  return true
 }
 
 const validateForm = () => {
-    let isValid = true
-    if (!validatePassword()) {
-        isValid = false
-    }
-    if (!validateComfirmPassword()) {
-        isValid = false
-    }
-    const matchResult = validatePasswordMatch(password.value, comfirmPassword.value)
-    if (!matchResult.isValid) {
-        errors.comfirmPassword = matchResult.message
-        isValid = false
-    }
-    return isValid
+  let isValid = true
+  if (!validatePassword()) {
+    isValid = false
+  }
+  if (!validateComfirmPassword()) {
+    isValid = false
+  }
+  const matchResult = validatePasswordMatch(password.value, comfirmPassword.value)
+  if (!matchResult.isValid) {
+    errors.comfirmPassword = matchResult.message
+    isValid = false
+  }
+  return isValid
 }
 
 const submitPassword = async () => {
-    isLoading.value = true
-    if (!validateForm()) {
-        isLoading.value = false
-        return
-    }
+  isLoading.value = true
+  if (!validateForm()) {
+    isLoading.value = false
+    return
+  }
 
-    try {
-        await authStore.resetPassword({
-            email: authStore.emailForget,
-            otp: authStore.otpForget,
-            new_pass: password.value,
-            new_pass_confirmation: comfirmPassword.value
-        })
-        if (authStore.user?.result) {
-            router.push({ name: 'login' })
-        } else {
-            showError(authStore.user?.data?.new_pass[0] || 'Failed to reset password')
-        }
-    } catch (error) {
-        console.log(error)
-    } finally {
-        isLoading.value = false
+  try {
+    await authStore.resetPassword({
+      email: authStore.emailForget,
+      otp: authStore.otpForget,
+      new_pass: password.value,
+      new_pass_confirmation: comfirmPassword.value
+    })
+    if (authStore.user?.result) {
+      authStore.resetForgetPasswordForm()
+      router.push({ name: 'login' })
+    } else {
+      showError(authStore.user?.data?.new_pass[0] || 'Failed to reset password')
     }
+  } catch (error) {
+    console.log(error)
+  } finally {
+    isLoading.value = false
+  }
 
 }
 
@@ -121,197 +122,197 @@ const submitPassword = async () => {
 
 <style scoped>
 .step-indicator {
-    color: #006aff;
-    font-size: 12px;
-    margin-bottom: 12px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+  color: #006aff;
+  font-size: 12px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 h1 {
-    font-size: 32px;
-    color: var(--color-text);
-    margin-bottom: 10px;
-    font-weight: 700;
-    line-height: 1.2;
+  font-size: 32px;
+  color: var(--color-text);
+  margin-bottom: 10px;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .description {
-    color: var(--color-gray);
-    font-size: 14px;
-    margin-bottom: 40px;
-    line-height: 1.5;
+  color: var(--color-gray);
+  font-size: 14px;
+  margin-bottom: 40px;
+  line-height: 1.5;
 }
 
 .form-section {
-    display: block;
-    animation: fadeIn 500ms ease;
+  display: block;
+  animation: fadeIn 500ms ease;
 }
 
 .form-section.active {
-    display: block;
+  display: block;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .form-label {
-    margin-bottom: 10px;
-    color: var(--color-text);
-    font-size: 13px;
-    font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .form-label span {
-    color: #ef4444;
+  color: #ef4444;
 }
 
 .form-control,
 .form-select {
-    padding: 15px 18px;
-    border: 1.5px solid #e5e7eb;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: all 500ms ease;
-    line-height: 1.5;
+  padding: 15px 18px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 500ms ease;
+  line-height: 1.5;
 }
 
 .form-control:focus,
 .form-select:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.1);
-    transform: translateY(-1px);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.1);
+  transform: translateY(-1px);
 }
 
 .form-control::placeholder {
-    color: #9ca3af;
+  color: #9ca3af;
 }
 
 .helper-text {
-    font-size: 12px;
-    color: var(--color-gray);
-    margin-top: 8px;
-    line-height: 1.5;
+  font-size: 12px;
+  color: var(--color-gray);
+  margin-top: 8px;
+  line-height: 1.5;
 }
 
 .checkbox-group {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin: 32px 0;
-    padding: 18px;
-    background: var(--color-secondary);
-    border-radius: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 32px 0;
+  padding: 18px;
+  background: var(--color-secondary);
+  border-radius: 8px;
 }
 
 .form-check-input {
-    width: 18px;
-    height: 18px;
-    margin-top: 2px;
-    cursor: pointer;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  cursor: pointer;
 }
 
 .checkbox-label {
-    font-size: 13px;
-    color: var(--color-gray);
-    line-height: 1.6;
+  font-size: 13px;
+  color: var(--color-gray);
+  line-height: 1.6;
 }
 
 .checkbox-label a {
-    color: var(--color-primary);
-    text-decoration: none;
-    font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
 }
 
 .checkbox-label a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .button-group {
-    width: 280px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 16px;
-    margin-top: 40px;
+  width: 280px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 40px;
 }
 
 .btn {
-    padding: 15px 32px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 500ms ease;
-    letter-spacing: 0.3px;
+  padding: 15px 32px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 500ms ease;
+  letter-spacing: 0.3px;
 }
 
 .btn-back {
-    background: transparent;
-    color: var(--color-gray);
-    border: 1.5px solid #e5e7eb;
+  background: transparent;
+  color: var(--color-gray);
+  border: 1.5px solid #e5e7eb;
 }
 
 .btn-back:hover {
-    background: var(--color-secondary);
-    color: var(--color-gray);
-    transform: translateY(-1px);
+  background: var(--color-secondary);
+  color: var(--color-gray);
+  transform: translateY(-1px);
 }
 
 .btn-continue {
-    background: #1a1a1a;
-    color: white;
-    padding: 15px 48px;
-    border: none;
+  background: #1a1a1a;
+  color: white;
+  padding: 15px 48px;
+  border: none;
 }
 
 .btn-continue:hover {
-    background: #1a1a1a;
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(10, 10, 10, 0.25);
+  background: #1a1a1a;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(10, 10, 10, 0.25);
 }
 
 .btn-continue:active {
-    transform: translateY(0);
+  transform: translateY(0);
 }
 
 .otp-inputs {
-    display: flex;
-    gap: 16px;
-    justify-content: start;
-    margin: 40px 0;
+  display: flex;
+  gap: 16px;
+  justify-content: start;
+  margin: 40px 0;
 }
 
 
 .otp-inputs {
-    display: flex;
-    gap: 16px;
-    justify-content: start;
-    margin: 40px 0;
+  display: flex;
+  gap: 16px;
+  justify-content: start;
+  margin: 40px 0;
 }
 
 .otp-input {
-    width: 64px;
-    height: 64px;
-    text-align: center;
-    font-size: 24px;
-    font-weight: 600;
-    border: 2px solid #e5e7eb;
-    border-radius: 10px;
-    transition: all 500ms ease;
+  width: 64px;
+  height: 64px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  transition: all 500ms ease;
 }
 
 .otp-input:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.1);
-    transform: scale(1.05);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.1);
+  transform: scale(1.05);
 }
 </style>

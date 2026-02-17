@@ -3,7 +3,7 @@
     <div class="list-header">
       <div class="header-top px-3 py-3">
         <h2 class="ms-3">Messages</h2>
-        <div class="badge-count">{{ chatStore.chatList.length }}</div>
+        <div v-if="chatStore.chatList.length > 0" class="badge-count">{{ chatStore.chatList.length }}</div>
       </div>
     </div>
 
@@ -18,34 +18,43 @@
         </div>
       </div>
 
-      <div v-else class="chats-stack">
-        <router-link v-for="chat in chatStore.chatList" :key="chat.id" class="chat-entry"
-          :to="{ name: 'chat-room', params: { id: chat.id } }" active-class="active"
-          @click="chatStore.isSelectChat = true">
-          <div class="avatar-cell">
-            <img :src="chat.otherUser.avatar" class="user-avatar" />
-            <span class="status-dot online"></span>
-            <div v-if="chat.unreadCount > 0" class="unread-pill">{{ chat.unreadCount }}</div>
-          </div>
-          <div class="info-cell">
-            <div class="name-row">
-              <span class="full-name">{{ chat.otherUser.full_name }}</span>
-              <span class="time-stamp" v-if="chat.messages.length > 0">{{ formatLocalTime(chat.messages[0].created_at)
+      <div v-else class="chats-stack h-100">
+        <template v-if="chatStore.chatList.length > 0">
+          <router-link v-for="chat in chatStore.chatList" :key="chat.id" class="chat-entry"
+            :to="{ name: 'chat-room', params: { id: chat.id } }" active-class="active"
+            @click="chatStore.isSelectChat = true">
+            <div class="avatar-cell">
+              <img :src="chat.otherUser.avatar" class="user-avatar" />
+              <span class="status-dot online"></span>
+              <div v-if="chat.unreadCount > 0" class="unread-pill">{{ chat.unreadCount }}</div>
+            </div>
+            <div class="info-cell">
+              <div class="name-row">
+                <span class="full-name">{{ chat.otherUser.full_name }}</span>
+                <span class="time-stamp" v-if="chat.messages.length > 0">{{ formatLocalTime(chat.messages[0].created_at)
                 }}</span>
+              </div>
+              <div class="message-row">
+                <p class="last-msg-text text-truncate">
+                  <template v-if="chat.messages.length > 0">
+                    <span v-if="chat.messages[0].isMine">You: </span>
+                    {{ chat.messages[0].message }}
+                  </template>
+                  <template v-else>
+                    <span class="fst-italic opacity-50">New conversation...</span>
+                  </template>
+                </p>
+              </div>
             </div>
-            <div class="message-row">
-              <p class="last-msg-text text-truncate">
-                <template v-if="chat.messages.length > 0">
-                  <span v-if="chat.messages[0].isMine">You: </span>
-                  {{ chat.messages[0].message }}
-                </template>
-                <template v-else>
-                  <span class="fst-italic opacity-50">New conversation...</span>
-                </template>
-              </p>
-            </div>
+          </router-link>
+        </template>
+        <div v-else class="empty-state">
+          <div class="empty-icon-wrap">
+            <i class="bi bi-chat-dots"></i>
           </div>
-        </router-link>
+          <h3>No messages yet</h3>
+          <p>Start a conversation with someone to see it here.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -273,6 +282,50 @@ onMounted(async () => {
   100% {
     opacity: 0.6;
   }
+}
+
+/* Empty State Styles */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 40px;
+  text-align: center;
+  color: var(--color-muted);
+}
+
+.empty-icon-wrap {
+  width: 80px;
+  height: 80px;
+  background: var(--color-background);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  border: 1px solid var(--color-border);
+}
+
+.empty-icon-wrap i {
+  font-size: 2.5rem;
+  color: var(--color-primary);
+  opacity: 0.8;
+}
+
+.empty-state h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--color-text);
+}
+
+.empty-state p {
+  font-size: 0.9rem;
+  max-width: 240px;
+  margin: 0;
+  line-height: 1.5;
 }
 
 /* Custom Scrollbar */

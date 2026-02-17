@@ -1,27 +1,28 @@
 <template>
   <div class="professional-info-wrapper">
     <!-- Card When view own profile -->
-    <InfoCard v-if="isOwnProfile" title="Professional Experience" icon="bi bi-briefcase-fill" :showCreate="false"
-      :showUpdate="true" :showDelete="false" @update="UpdateProfessional">
+    <InfoCard v-if="isOwnProfile" title="Professional Experience" icon="bi bi-briefcase-fill"
+      :showCreate="!professionalData" :showUpdate="!!professionalData" :showDelete="false" @create="UpdateProfessional"
+      @update="UpdateProfessional">
 
-      <div v-if="profileStore.user?.professional" class="professional-content">
+      <div v-if="professionalData" class="professional-content">
         <div class="professional-item">
           <div class="item-icon">
             <i class="bi bi-person-workspace"></i>
           </div>
           <div class="item-body">
-            <h4 class="item-title">{{ profileStore.user.professional.job_title }}</h4>
+            <h4 class="item-title">{{ professionalData.job_title }}</h4>
             <div class="item-company">
               <i class="bi bi-building me-1"></i>
-              {{ profileStore.user.professional.company_name }}
+              {{ professionalData.company_name }}
             </div>
           </div>
         </div>
 
-        <div v-if="profileStore.user.professional.responsibility" class="responsibility-section">
+        <div v-if="professionalData.responsibility" class="responsibility-section">
           <h5 class="section-label">Main Responsibilities</h5>
           <p class="responsibility-text">
-            {{ profileStore.user.professional.responsibility }}
+            {{ professionalData.responsibility }}
           </p>
         </div>
       </div>
@@ -31,30 +32,33 @@
           <i class="bi bi-briefcase"></i>
         </div>
         <p>No professional history has been recorded yet.</p>
+        <BaseButton variant="primary" size="sm" class="mt-3" @click="UpdateProfessional">
+          <i class="bi bi-plus-lg me-2"></i>Add Experience
+        </BaseButton>
       </div>
     </InfoCard>
 
     <!-- Card When view other user's profile -->
     <InfoCard v-else title="Professional Experience" icon="bi bi-briefcase-fill" :showCreate="false" :showUpdate="false"
       :showDelete="false">
-      <div v-if="userData?.professional" class="professional-content">
+      <div v-if="professionalData" class="professional-content">
         <div class="professional-item">
           <div class="item-icon">
             <i class="bi bi-person-workspace"></i>
           </div>
           <div class="item-body">
-            <h4 class="item-title">{{ userData.professional.job_title }}</h4>
+            <h4 class="item-title">{{ professionalData.job_title }}</h4>
             <div class="item-company">
               <i class="bi bi-building me-1"></i>
-              {{ userData.professional.company_name }}
+              {{ professionalData.company_name }}
             </div>
           </div>
         </div>
 
-        <div v-if="userData.professional.responsibility" class="responsibility-section">
+        <div v-if="professionalData.responsibility" class="responsibility-section">
           <h5 class="section-label">Main Responsibilities</h5>
           <p class="responsibility-text">
-            {{ userData.professional.responsibility }}
+            {{ professionalData.responsibility }}
           </p>
         </div>
       </div>
@@ -68,7 +72,8 @@
     </InfoCard>
 
     <!-- Update Professional Info Modal -->
-    <BaseModal size="lg" v-if="showUpdateModal" title="Update Professional Info" @close="closeUpdateModal">
+    <BaseModal size="lg" v-if="showUpdateModal" :title="isOwnProfile ? 'Update Professional Info' : 'Professional Info'"
+      @close="closeUpdateModal">
       <div class="professional-form">
         <div class="row g-3 mb-3">
           <div class="col-md-6">
@@ -81,7 +86,7 @@
           </div>
         </div>
         <div class="mb-0">
-          <label class="form-label fw-bold small text-uppercase">Responsibilities</label>
+          <label class="form-label fw-bold small text-uppercase light-dark">Responsibilities</label>
           <textarea class="form-control" rows="5" placeholder="Describe your key responsibilities and achievements..."
             v-model="form.responsibility"></textarea>
         </div>
@@ -169,17 +174,40 @@ const HandleSaveProfessional = async () => {
 }
 
 onMounted(async () => {
-  if (isOwnProfile.value && !profileStore.user) {
+  if (isOwnProfile.value) {
+    if (!profileStore.user) {
+      try {
+        await profileStore.fetchProfile()
+      } catch (error) {
+        console.error('Error fetching own profile:', error)
+      }
+    }
+  } else if (props.userData?.id) {
     try {
-      await profileStore.fetchProfile()
+      await profileStore.fetchProfileById(props.userData.id)
     } catch (error) {
-      console.error('Error fetching profile:', error)
+      console.error('Error fetching viewed profile:', error)
     }
   }
 })
+
+const professionalData = computed(() => {
+  const source = isOwnProfile.value ? profileStore.user : (profileStore.viewUser || props.userData)
+  const p = source?.professional
+  return (p?.job_title && p?.company_name) ? p : null
+})
+
+
+
+
+
 </script>
 
 <style scoped>
+textarea::placeholder {
+  color: var(--input-placeholder);
+}
+
 .professional-content {
   display: flex;
   flex-direction: column;

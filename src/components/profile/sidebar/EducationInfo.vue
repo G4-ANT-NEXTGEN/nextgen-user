@@ -329,7 +329,7 @@ onMounted(async () => {
 <style scoped>
 
 textarea::placeholder {
-  color: var(--color-primary);
+  color: var(--input-placeholder);
 }
 .education-list {
   display: flex;
