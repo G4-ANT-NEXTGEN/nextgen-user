@@ -17,7 +17,7 @@
                 <div class="brand-section">
                   <div class="logo">
                     <div class="logo-icon">
-                      <img class="img-fluid rounded-2" src="../../../public/logo_favicon.png" alt="Vetika Logo">
+                      <img class="img-fluid rounded-2" src="../../../public/logo.png" alt="Vetika Logo">
                     </div>
                   </div>
                   <p class="subtitle">Complete password reset in 4 easy steps</p>

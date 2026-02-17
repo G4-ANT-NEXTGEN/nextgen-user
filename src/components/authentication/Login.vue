@@ -14,7 +14,7 @@
                 <div>
                   <div class="logo">
                     <div class="logo-icon">
-                      <img src="../../../public/logo_favicon.png" alt="Vetika Logo" class="img-fluid rounded-2">
+                      <img src="../../../public/logo.png" alt="Vetika Logo" class="img-fluid rounded-2">
                     </div>
                   </div>
                 </div>

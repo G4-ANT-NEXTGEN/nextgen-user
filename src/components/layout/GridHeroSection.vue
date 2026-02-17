@@ -34,7 +34,7 @@
 
       <div class="float-item item-logo" style="left: 10%; top: 68%;">
         <div class="logo-hexagon reveal-scale">
-          <img src="../../../public/logo_favicon.png" alt="Logo" />
+          <img src="../../../public/logo.png" alt="Logo" />
         </div>
       </div>
 

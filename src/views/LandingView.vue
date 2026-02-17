@@ -5,7 +5,7 @@
       <div class="container container-custom">
         <RouterLink to="/" class="brand">
           <div class="logo-circle">
-            <img src="../../public/logo_favicon.png" alt="Logo" />
+            <img src="../../public/logo.png" alt="Logo" />
           </div>
         </RouterLink>
 
@@ -282,7 +282,7 @@
           <div class="col-lg-4">
             <RouterLink to="/" class="brand mb-4 d-inline-flex">
               <div class="logo-circle">
-                <img src="../../public/logo_favicon.png" alt="Logo" />
+                <img src="../../public/logo.png" alt="Logo" />
               </div>
             </RouterLink>
             <p class="footer-desc">Building the future of community collaboration. Connect, share, and grow with the

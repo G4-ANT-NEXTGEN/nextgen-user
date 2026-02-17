@@ -17,7 +17,7 @@
                 <div class="brand-section">
                   <div class="logo">
                     <div class="logo-icon">
-                      <img src="../../../public/logo_favicon.png" alt="Vetika Logo" class="img-fluid rounded-2">
+                      <img src="../../../public/logo.png" alt="Vetika Logo" class="img-fluid rounded-2">
                     </div>
                   </div>
                   <p class="subtitle">Join our community and start your journey in 4 simple steps.</p>
@@ -55,7 +55,7 @@
               <!-- Mobile Logo (Shown only on small screens) -->
               <div class="mobile-header d-lg-none">
                 <div class="logo">
-                  <img src="/logo.jpg" alt="Logo" class="mobile-logo">
+                  <img src="../../../public/logo.png" alt="Logo" class="mobile-logo">
                   <span class="logo-text">Vetika</span>
                 </div>
               </div>

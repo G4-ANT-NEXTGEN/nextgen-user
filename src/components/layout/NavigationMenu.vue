@@ -8,7 +8,7 @@
       <div class="d-flex align-items-center gap-2">
         <div class="logo-box">
           <div class="logo-inner">
-            <img class="img-fluid" src="../../../public/logo_favicon.png" alt="Vetika Logo" />
+            <img class="img-fluid" src="../../../public/logo.png" alt="Vetika Logo" />
           </div>
         </div>
       </div>

@@ -10,7 +10,7 @@
 
           <div @click="$router.push('/home')" class="logo-box d-none d-xl-flex">
             <div class="logo-inner">
-              <img class="img-fluid" src="../../../public/logo_favicon.png" alt="" />
+              <img class="img-fluid" src="../../../public/logo.png" alt="" />
             </div>
           </div>
         </div>
