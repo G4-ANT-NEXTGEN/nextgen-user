@@ -42,7 +42,7 @@
         <p v-if="isOwnProfile">Post your first collaboration opportunity to connect with partners.</p>
         <p v-else>This user hasn't shared any collaboration opportunities yet.</p>
 
-        <BaseButton v-if="isOwnProfile" variant="primary" class="mt-4">
+        <BaseButton v-if="isOwnProfile" variant="primary" class="mt-4" @click.stop="onAddCollaboration">
           <i class="bi bi-plus-lg me-2"></i>
           Add Collaboration
         </BaseButton>
@@ -52,26 +52,40 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useProfileStore } from '@/stores/profile'
 import BaseButton from '@/components/ui/base/BaseButton.vue'
 
-const profileStore = useProfileStore()
+const props = defineProps({
+  userData: {
+    type: Object,
+    default: null
+  }
+})
 
+const profileStore = useProfileStore()
 const emit = defineEmits(['open-collab'])
 
+onMounted(async () => {
+  if (isOwnProfile.value) {
+    if (!profileStore.user) {
+      await profileStore.fetchProfile()
+    }
+  } else if (props.userData?.id) {
+    await profileStore.fetchProfileById(props.userData.id)
+  }
+})
+
 const isOwnProfile = computed(() => {
-  return profileStore.viewUser === null
+  return !props.userData
 })
 
 const collaborationData = computed(() => {
-  return profileStore.user?.collaboration.company_logo && profileStore.user?.collaboration.company_link
-    ? profileStore.user?.collaboration
+  const source = isOwnProfile.value ? profileStore.user : (profileStore.viewUser || props.userData)
+  return source?.collaboration?.company_logo && source?.collaboration?.company_link
+    ? source.collaboration
     : null
 })
-
-
-
 
 const onAddCollaboration = () => {
   emit('open-collab')

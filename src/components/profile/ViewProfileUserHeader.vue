@@ -76,6 +76,7 @@ const tabs = [
   { key: 'professional', label: 'Professional' },
   { key: 'education', label: 'Education' },
   { key: 'project', label: 'Project' },
+  { key: 'collaboration', label: 'Collaboration' },
   { key: 'cv', label: 'CV' },
 ]
 </script>
