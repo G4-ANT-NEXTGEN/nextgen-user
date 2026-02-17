@@ -246,13 +246,15 @@ const tabs = [
 
 .nav-links {
   display: flex;
+  flex-wrap: wrap;
   gap: 2rem;
   margin-left: 220px;
+  margin-bottom: 0px;
   /* Offset for avatar */
 }
 
 .nav-link-btn {
-  padding: 1.5rem 0.5rem;
+  padding: 1rem 0.5rem;
   background: none;
   border: none;
   font-weight: 700;
