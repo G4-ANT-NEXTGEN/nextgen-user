@@ -17,7 +17,7 @@ const fetchUserProfile = async () => {
   try {
     isLoading.value = true
     const userId = route.params.id
-    await profileStore.userProfile(userId)
+    await profileStore.fetchProfileById(userId)
     userProfile.value = profileStore.viewUser
   } catch (error) {
     console.error('Failed to fetch user profile:', error)
