@@ -31,7 +31,8 @@
         <div class="contact-actions">
           <BaseButton variant="primary" class="action-btn" @click="openEditCollaboration">
             <i class="bi bi-people-fill"></i>
-            <span>Collaboration</span>
+            <span>{{ (profileStore.user?.collaboration?.company_logo && profileStore.user?.collaboration?.company_link)
+              ? 'Update Collaboration' : 'Collaboration' }}</span>
           </BaseButton>
           <BaseButton variant="secondary" class="action-btn" @click="openEditCV">
             <i class="bi bi-file-earmark-arrow-up-fill"></i>

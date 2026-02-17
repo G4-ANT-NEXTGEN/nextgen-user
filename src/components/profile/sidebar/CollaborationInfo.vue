@@ -192,7 +192,7 @@ const onAddCollaboration = () => {
 
 .website-btn:hover {
   background: var(--color-primary);
-  color: white;
+  color: var(--color-surface);
   transform: translateY(-2px);
 }
 

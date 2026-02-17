@@ -94,7 +94,9 @@
     </BaseModal>
 
     <!-- Collaboration Modal -->
-    <BaseModal v-if="editCollaboration" title="Add Collaboration" @close="closeEditCollaboration">
+    <BaseModal v-if="editCollaboration"
+      :title="(profileStore.user?.collaboration?.company_logo && profileStore.user?.collaboration?.company_link) ? 'Update Collaboration' : 'Collaboration'"
+      @close="closeEditCollaboration">
 
       <div class="collaboration-form">
         <div class="form-group">
@@ -103,7 +105,7 @@
             <label class="form-label">Company Logo</label>
             <p v-if="companyLogoPreview" v-tippy="'click to cancel image'"
               @click="companyLogo = null; companyLogoPreview = null" style="cursor: pointer;">
-              <i class="fs-4 bi bi-x-circle"></i>
+              <i class="fs-4 bi bi-x-circle light-dark"></i>
             </p>
           </div>
           <div class="file-upload-area small" v-if="!companyLogoPreview">
@@ -129,7 +131,8 @@
         <BaseButton @click="closeEditCollaboration" variant="secondary">Cancel
         </BaseButton>
         <base-button type="button" @click="addCollaboration" variant="primary" :isLoading="profileStore.isProcessing">
-          <span>{{ profileStore.isProcessing ? 'Saving...' : 'Save' }}</span>
+          <span>{{ profileStore.isProcessing ? 'Saving...' : ((profileStore.user?.collaboration?.company_logo &&
+            profileStore.user?.collaboration?.company_link) ? 'Update' : 'Save') }}</span>
         </base-button>
       </template>
 
@@ -432,7 +435,9 @@ const addCollaboration = async () => {
   }
 
   const formData = new FormData()
-  formData.append('company_logo', companyLogo.value)
+  if (companyLogo.value) {
+    formData.append('company_logo', companyLogo.value)
+  }
   formData.append('company_link', link)
   await profileStore.addCollaboration(formData)
 
@@ -466,7 +471,7 @@ const validateCompanyLink = () => {
 }
 
 const validateCompanyLogo = () => {
-  if (!companyLogo.value) {
+  if (!companyLogo.value && !companyLogoPreview.value) {
     errors.companyLogo = 'Company logo is required'
     return false
   }
@@ -653,6 +658,11 @@ function closeEditCV() {
 }
 
 function openEditCollaboration() {
+  const collab = profileStore.user?.collaboration
+  if (collab) {
+    companyLink.value = collab.company_link || ''
+    companyLogoPreview.value = collab.company_logo || null
+  }
   editCollaboration.value = true
 }
 
@@ -1601,6 +1611,52 @@ defineExpose({
 .upload-limit {
   font-size: 12px;
   color: #999;
+}
+
+.file-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--color-accent);
+  border-radius: 12px;
+  margin-top: 24px;
+}
+
+.file-info {
+  flex: 1;
+}
+
+.file-name {
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.file-size {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.remove-file {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: none;
+  background: var(--color-hover);
+  color: var(--color-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.remove-file:hover {
+  background: #fee2e2;
+  color: #ef4444;
+  transform: rotate(90deg) scale(1.1);
 }
 
 .danger-content h3 {

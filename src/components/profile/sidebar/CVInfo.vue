@@ -197,11 +197,11 @@
         </div>
 
         <div v-if="cvFile" class="file-preview">
-          <div class="file-icon">
+          <div class="file-icon light-dark">
             <i class="bi bi-file-earmark-pdf"></i>
           </div>
           <div class="file-info">
-            <span class="file-name">{{ cvFile.name }}</span>
+            <span class="file-name light-dark">{{ cvFile.name }}</span>
             <span class="file-size">{{ formatFileSize(cvFile.size) }}</span>
           </div>
           <button @click="cvFile = null" class="remove-file">
@@ -288,7 +288,8 @@
                     <span>Email</span>
                   </button>
                 </div>
-                <p class="share-help muted label primary light-dark">NOTE: If a popup is blocked, allow popups for this site.</p>
+                <p class="share-help muted label primary light-dark">NOTE: If a popup is blocked, allow popups for this
+                  site.</p>
               </div>
             </div>
           </div>
@@ -965,23 +966,27 @@ onMounted(async () => {
 .upload-btn-premium {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 28px;
-  background: var(--color-text);
-  color: var(--color-background);
+  gap: 12px;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #3b82f6 100%);
+  color: white;
   border: none;
-  border-radius: 14px;
+  border-radius: 16px;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 15px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
 }
 
 .upload-btn-premium:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-  background: var(--color-primary);
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.4);
+  filter: brightness(1.1);
+}
+
+.upload-btn-premium i {
+  font-size: 1.2rem;
 }
 
 /* ====================================
@@ -1147,6 +1152,50 @@ onMounted(async () => {
   color: var(--color-muted);
 }
 
+.remove-file {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
+}
+
+.remove-file:hover {
+  background: #ff4757;
+  color: white;
+  border-color: #ff4757;
+  transform: rotate(90deg) scale(1.1);
+  box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+}
+
+.remove-file i {
+  font-size: 14px;
+}
+
+.copy-btn {
+  padding: 0 24px;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 12px;
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.2);
+}
+
+.copy-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(var(--color-primary-rgb), 0.3);
+}
+
 /* Share Modal Improved */
 .share-modal.improved {
   width: 90%;
@@ -1253,14 +1302,6 @@ onMounted(async () => {
   border: 1px solid var(--color-border);
   background: var(--color-accent);
   font-size: 13px;
-}
-
-.copy-btn {
-  padding: 0 20px;
-  background: var(--color-text);
-  color: var(--color-background);
-  border-radius: 10px;
-  font-weight: 700;
 }
 
 .share-help {
