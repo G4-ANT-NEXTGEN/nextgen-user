@@ -105,9 +105,9 @@ const sendMessage = async () => {
   formData.append('message', message.value);
   formData.append('receiver_id', route.params.id);
   await chatStore.sendMessage(formData);
+  message.value = '';
   await chatStore.fetchChats()
   await chatStore.fetchReceivedChats()
-  message.value = '';
 
 }
 onMounted(async () => {

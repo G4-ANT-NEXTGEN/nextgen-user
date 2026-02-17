@@ -12,6 +12,7 @@ export const useProfileStore = defineStore('profile', () => {
   const viewUser = ref(null)
   const isLoading = ref(false)
   const isProcessing = ref(false)
+  const isDeletingAccount = ref(false)
   const collaboration = ref(null)
 
   const fetchProfile = async () => {
@@ -19,6 +20,20 @@ export const useProfileStore = defineStore('profile', () => {
     try {
       const res = await api.get('/api/profile')
       user.value = res.data.data
+      return res.data.data
+    } catch (error) {
+      console.error('Failed to fetch profile:', error)
+      throw error
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  const fetchProfileById = async (id) => {
+    isLoading.value = true
+    try {
+      const res = await api.get(`/api/profile/users/${id}`)
+      viewUser.value = res.data.data
       return res.data.data
     } catch (error) {
       console.error('Failed to fetch profile:', error)
@@ -259,6 +274,7 @@ export const useProfileStore = defineStore('profile', () => {
 
   const deleteAccount = async () => {
     try {
+      isDeletingAccount.value = true
       isLoading.value = true
       await api.delete(`/api/profile/delete-acc`)
       showSuccess('Delete Account Successful')
@@ -267,6 +283,7 @@ export const useProfileStore = defineStore('profile', () => {
     } catch (e) {
       showError(e.response?.data?.message || 'Fail to delete account!')
     } finally {
+      isDeletingAccount.value = false
       isLoading.value = false
     }
   }
@@ -347,7 +364,9 @@ export const useProfileStore = defineStore('profile', () => {
     viewUser,
     isLoading,
     isProcessing,
+    isDeletingAccount,
     fetchProfile,
+    fetchProfileById,
     uploadAvatar,
     removeAvatar,
     updatePersonalInfo,

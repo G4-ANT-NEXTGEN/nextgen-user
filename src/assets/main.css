@@ -215,6 +215,7 @@ body {
 
 /* Centering the close button */
 .Toastify__close-button {
+  color: var(--color-text) !important;
   align-self: center !important;
   margin-top: 0 !important;
   opacity: 0.6 !important;

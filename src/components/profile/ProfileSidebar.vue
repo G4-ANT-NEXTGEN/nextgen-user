@@ -99,8 +99,8 @@
             :error="errors.email" />
         </div>
         <div class="col-md-6">
-          <BaseInput label="Phone" placeholder="Enter Your Phone Number" v-model="phone" @input="validatePhone"
-            :error="errors.phone" />
+          <BaseInput type="number" label="Phone" placeholder="Enter Your Phone Number" v-model="phone"
+            @input="validatePhone" :error="errors.phone" />
         </div>
         <div class="col-md-6">
           <BaseInput label="Date of Birth" type="date" placeholder="Enter Your Date of Birth" v-model="DOB" />

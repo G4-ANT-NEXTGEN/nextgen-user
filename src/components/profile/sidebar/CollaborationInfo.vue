@@ -65,10 +65,13 @@ const isOwnProfile = computed(() => {
 })
 
 const collaborationData = computed(() => {
-  return isOwnProfile.value
+  return profileStore.user?.collaboration.company_logo && profileStore.user?.collaboration.company_link
     ? profileStore.user?.collaboration
-    : profileStore.viewUser?.collaboration
+    : null
 })
+
+
+
 
 const onAddCollaboration = () => {
   emit('open-collab')

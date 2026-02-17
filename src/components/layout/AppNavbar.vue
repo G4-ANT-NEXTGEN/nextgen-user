@@ -236,10 +236,20 @@ authStore.fetchProfile()
   background: rgba(0, 0, 0, 0.05);
 }
 
+@media (max-width: 1000px) {
+  .filter-btn {
+    transform: translateY(-20%);
+  }
+}
+
 @media (max-width: 991px) {
   .search-container {
     max-width: 300px;
     margin: 0 1rem;
+  }
+
+  .filter-btn{
+    transform: translateY(-50%);
   }
 
 }
@@ -253,6 +263,10 @@ authStore.fetchProfile()
 
   .search-icon {
     display: none;
+  }
+
+  .filter-btn {
+    transform: translateY(-20%);
   }
 
   .search-container {

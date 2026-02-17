@@ -23,7 +23,7 @@
         </div>
 
         <div class="col-md-6">
-          <BaseInput v-model="phone" type="tel" label="Phone Number" placeholder="081 777 888" :error="errors.phone"
+          <BaseInput v-model="phone" type="number" label="Phone Number" placeholder="081 777 888" :error="errors.phone"
             @input="validatePhone" />
         </div>
 
