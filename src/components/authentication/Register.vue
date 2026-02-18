@@ -56,7 +56,6 @@
               <div class="mobile-header d-lg-none">
                 <div class="logo">
                   <img src="../../../public/logo.png" alt="Logo" class="mobile-logo">
-                  <span class="logo-text">Vetika</span>
                 </div>
               </div>
 
@@ -387,11 +386,12 @@ defineOptions({
 
 .mobile-header {
   padding: 24px 32px 0;
+
 }
 
 .mobile-logo {
-  width: 32px;
-  height: 32px;
+  width: 108px;
+  height: 38px;
   border-radius: 8px;
   margin-right: 12px;
 }

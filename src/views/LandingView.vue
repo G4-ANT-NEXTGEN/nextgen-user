@@ -502,6 +502,14 @@ onUnmounted(() => {
   object-fit: cover;
 }
 
+@media (max-width: 786px) {
+  .logo-circle {
+    width: 100%;
+    height: 36px;
+    flex-shrink: 0;
+  }
+}
+
 .brand-text {
   font-size: 1.4rem;
   font-weight: 800;
