@@ -150,7 +150,6 @@ export const useAuthStore = defineStore('auth', () => {
       const responseData = error.response?.data
 
       if (responseData?.data && typeof responseData.data === 'object') {
-        // Handle case where validation errors are in response.data.data
         const keys = Object.keys(responseData.data)
         if (keys.length > 0) {
           const firstKey = keys[0]
@@ -164,7 +163,6 @@ export const useAuthStore = defineStore('auth', () => {
           errorMsg = responseData.message
         }
       } else if (responseData?.errors) {
-        // Extract the first validation error if available
         const firstErrorKey = Object.keys(responseData.errors)[0]
         errorMsg = responseData.errors[firstErrorKey][0]
       } else if (responseData?.message) {

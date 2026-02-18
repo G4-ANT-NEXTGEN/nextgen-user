@@ -193,15 +193,12 @@ onMounted(async () => {
   ]);
   isLoading.value = false;
 
-  // Handle deep linking to specific post
   if (route.hash) {
     await nextTick();
-    // Use a small timeout to ensure the DOM is fully updated and layout is stable
     setTimeout(() => {
       const element = document.querySelector(route.hash);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        // Optional: add a highlight class if you want
         element.classList.add('highlight-post');
         setTimeout(() => {
           element.classList.remove('highlight-post');
@@ -248,10 +245,8 @@ const OpenModeledit = async (id) => {
     imgPost.value = isDefaultPath ? null : (post.image || null);
     attachment.value = null;
 
-    // Handle category selection
     const categoryIds = post.category_ids || post.categories || [];
     if (categoryIds.length > 0) {
-      // Handle both array of IDs and array of objects
       const categoryId = typeof categoryIds[0] === 'object' ? categoryIds[0].id : categoryIds[0];
       selected.value = categoryStore.categories.find(cat => cat.id == categoryId) || null;
     } else {
@@ -277,7 +272,7 @@ const handleFileChange = (event) => {
   const selectedFile = event.target.files[0];
   if (!selectedFile) return;
 
-  const maxSize = 3072 * 1024; // 3072 KB in bytes
+  const maxSize = 3072 * 1024;
   if (selectedFile.size > maxSize) {
     showError('File size exceeds 3072 KB. Please upload a smaller image.');
     event.target.value = '';
@@ -292,7 +287,7 @@ const handleAttachmentChange = (event) => {
   const selectedFile = event.target.files[0];
   if (!selectedFile) return;
 
-  const maxSize = 3072 * 1024; // 3072 KB in bytes
+  const maxSize = 3072 * 1024;
   if (selectedFile.size > maxSize) {
     showError('Attachment size exceeds 3072 KB. Please upload a smaller file.');
     event.target.value = '';
@@ -303,7 +298,7 @@ const handleAttachmentChange = (event) => {
 };
 
 const openCreatePostModal = () => {
-  PostId.value = null; // Reset PostId when creating new post
+  PostId.value = null;
   titlePost.value = '';
   file.value = null;
   imgPost.value = null;
@@ -315,7 +310,7 @@ const openCreatePostModal = () => {
 
 const closeModal = () => {
   showModal.value = false;
-  PostId.value = null; // Reset PostId when closing modal
+  PostId.value = null;
   titlePost.value = '';
   file.value = null;
   imgPost.value = null;
@@ -370,7 +365,6 @@ const prepareFormData = () => {
 
 function reactLike(postId) {
   if (postLikeCounts.value[postId] === undefined) {
-    // Initialize from post data if available, otherwise default to 0
     const post = postStore.posts.find(p => p.id === postId);
     postLikeCounts.value[postId] = post?.likes_count || 0;
   }

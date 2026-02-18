@@ -339,7 +339,6 @@ const getCleanName = (url) => {
   return filename && filename.length < 30 ? filename : 'Professional_CV.pdf'
 }
 
-// Single computed property that returns current CV data (own or viewing)
 const currentCvData = computed(() => {
   const cv = isOwnProfile.value ? profileStore.user?.cv : profileStore.viewUser?.cv
   if (!cv) return null
@@ -378,7 +377,7 @@ const cvOnChangeFile = (e) => {
     e.target.value = ''
     return
   }
-  const maxSize = 3072 * 1024; // 3072 KB
+  const maxSize = 3072 * 1024; 
   if (file.size > maxSize) {
     showError('File size exceeds 3072 KB. Please upload a smaller file.')
     e.target.value = ''

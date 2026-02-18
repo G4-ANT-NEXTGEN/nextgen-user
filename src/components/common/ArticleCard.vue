@@ -250,8 +250,8 @@ const shareNative = async () => {
       url: shareUrl.value,
     })
     closeShareMenu()
-  } catch {
-    // user cancelled or share failed
+  } catch(e) {
+    console.log(e)
   }
 }
 

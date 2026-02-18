@@ -278,7 +278,6 @@ const validateEmail = () => {
 }
 
 const validatePhone = () => {
-  // Regex: 9-15 chars, allowed: 0-9, +, -, space.
   if (!/^[+]?[0-9\s-]{9,15}$/.test(phone.value)) {
     errors.phone = 'Phone number must be 9-15 digits'
     return false
@@ -318,14 +317,13 @@ const validatePortfolioLink = () => {
     return true
   }
 
-  // Strictly require http:// or https:// at the start
   const pattern = new RegExp(
-    '^(https?:\\/\\/)' + // protocol (required)
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-    '(\\#[-a-z\\d_]*)?$', // fragment locator
+    '^(https?:\\/\\/)' +
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' +
+    '((\\d{1,3}\\.){3}\\d{1,3}))' +
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' +
+    '(\\?[;&a-z\\d%_.~+=-]*)?' +
+    '(\\#[-a-z\\d_]*)?$',
     'i'
   )
 
@@ -408,7 +406,6 @@ const closeAddNewEducation = () => addNewEducation.value = false
 const HandleAddNewEducation = async () => {
   if (!validateForm()) return
 
-  // Format dates to YYYY-MM if they exist
   const formattedStart = start_date.value ? start_date.value.slice(0, 7) : ''
   const formattedEnd = end_date.value ? end_date.value.slice(0, 7) : ''
 
@@ -421,7 +418,6 @@ const HandleAddNewEducation = async () => {
     description: description.value,
   })
 
-  // Reset fields
   school.value = ''
   degree.value = ''
   subject.value = ''

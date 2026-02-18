@@ -20,7 +20,7 @@ export const useChatStore = defineStore('chat', () => {
     }
 
   }
-  //received messages
+  
   const fetchReceivedChats = async () => {
     try {
 
@@ -32,7 +32,6 @@ export const useChatStore = defineStore('chat', () => {
     }
 
   }
-  // get messages for a specific conversation by sender/receiver id
   const getConversationMessages = (chatId) => {
     const sent = chats.value
       .filter(chat => chat.receiver && chat.receiver.id == chatId)
@@ -49,7 +48,7 @@ export const useChatStore = defineStore('chat', () => {
       }))
 
     return [...sent, ...received].sort(
-      (a, b) => new Date(a.created_at) - new Date(b.created_at) // older first
+      (a, b) => new Date(a.created_at) - new Date(b.created_at)
     )
   }
   const getAllConversationMessages = () => {

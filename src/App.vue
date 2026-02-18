@@ -1,6 +1,5 @@
 <template>
   <router-view></router-view>
-  <!-- Full Screen Loader for critical operations -->
   <FullScreenLoader v-if="profileStore.isDeletingAccount" text="Deleting your account..." />
 </template>
 

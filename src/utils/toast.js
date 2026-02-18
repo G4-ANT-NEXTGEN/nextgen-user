@@ -1,4 +1,3 @@
-// utils / toast.js
 import { toast } from "vue3-toastify";
 
 const baseOptions = {

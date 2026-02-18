@@ -233,10 +233,9 @@ const confirmDeleteEducation = async () => {
     isDeleting.value = true
     await educationStore.DeleteEducation(selectedEducationForDelete.value.id)
     await profileStore.fetchProfile()
-    // showSuccess('Education entry removed successfully')
     closeDeleteModal()
-  } catch {
-    // showError('Could not remove education entry')
+  } catch (e) {
+    console.log(e)
   } finally {
     isDeleting.value = false
   }
@@ -274,7 +273,6 @@ const HandleAddNewEducation = async () => {
     closeAddNewEducation()
   } catch (error) {
     console.error(error)
-    // showError('Operation failed. Please check your data.')
   } finally {
     isLoading.value = false
   }
@@ -297,19 +295,14 @@ const resetForm = () => {
 }
 
 const formatDate = (date) => {
-  // Handle null, undefined, or empty string
   if (!date || date === '') return ''
 
-  // Convert to string if it's not already
   const dateStr = String(date)
 
-  // If it's already in YYYY-MM format, return as is
   if (dateStr.length === 7 && dateStr.includes('-')) return dateStr
 
-  // If it's in YYYY-MM-DD format or longer, extract YYYY-MM
   if (dateStr.length > 7) return dateStr.slice(0, 7)
 
-  // Return as is for other formats
   return dateStr
 }
 

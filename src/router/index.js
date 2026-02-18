@@ -195,7 +195,6 @@ router.beforeEach(async (to) => {
   const authStore = useAuthStore()
   document.title = to.meta.title ? to.meta.title + ' - VETIKA' : 'VETIKA'
 
-  // check user have token or not and have user profile data
   if (authStore.token && !authStore.user) {
     try {
       await authStore.fetchProfile()
@@ -205,16 +204,13 @@ router.beforeEach(async (to) => {
     }
   }
 
-  // If user is authenticated (has token), redirect from login only
   if (authStore.isAuthenticated) {
     if (to.name === 'login' || to.name === 'landing') {
       return { name: 'home' }
     }
-    // Authenticated users can access all other routes including register
     return true
   }
 
-  // If not authenticated, redirect to login for protected routes
   if (to.meta.requiresAuth) {
     return { name: 'landing' }
   }

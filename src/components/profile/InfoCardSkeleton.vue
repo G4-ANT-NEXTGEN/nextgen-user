@@ -14,10 +14,6 @@
   </div>
 </template>
 
-<script setup>
-// No props or logic needed for skeleton
-</script>
-
 <style scoped>
 .info-card-skeleton {
   background: var(--color-surface);

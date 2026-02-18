@@ -326,18 +326,14 @@ onMounted(async () => {
   line-height: 1.5;
 }
 
-/* Message text color */
 .message-text {
   color: var(--color-text);
 }
 
-/* Own messages - keep background same, change text color */
 .is-mine .message-text {
   color: var(--color-background);
-  /* Light mode: white/light text */
 }
 
-/* Dark mode: own messages text should be black */
 [data-bs-theme="dark"] .is-mine .message-text {
   color: #000000 !important;
 }

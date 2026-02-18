@@ -148,9 +148,7 @@ const visiblePosts = computed(() => {
   const categoryId = postStore.category
   if (categoryId !== 0) {
     filtered = filtered.filter((p) => {
-      // Try category_ids array (IDs)
       if (Array.isArray(p.category_ids) && p.category_ids.includes(categoryId)) return true
-      // Try categories array (Objects or IDs)
       if (Array.isArray(p.categories) && p.categories.some(cat => (typeof cat === 'object' ? cat.id : cat) == categoryId)) return true
       return false
     })
@@ -214,8 +212,8 @@ const openEditModal = async (postId) => {
     }
     errorTitle.value = null
     showModal.value = true
-  } catch {
-    // Error loading post for edit, no specific action needed for UI, console.error removed for linting
+  } catch (e) {
+    console.error(e)
   }
 }
 
@@ -253,7 +251,7 @@ const handleFileChange = (event) => {
   const selectedFile = event.target.files[0]
   if (!selectedFile) return
 
-  const maxSize = 3072 * 1024; // 3072 KB
+  const maxSize = 3072 * 1024;
   if (selectedFile.size > maxSize) {
     showError('File size exceeds 3072 KB. Please upload a smaller image.')
     event.target.value = ''
@@ -268,7 +266,7 @@ const handleAttachmentChange = (event) => {
   const selectedFile = event.target.files[0]
   if (!selectedFile) return
 
-  const maxSize = 3072 * 1024; // 3072 KB
+  const maxSize = 3072 * 1024;
   if (selectedFile.size > maxSize) {
     showError('Attachment size exceeds 3072 KB. Please upload a smaller file.')
     event.target.value = ''

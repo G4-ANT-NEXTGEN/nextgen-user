@@ -172,7 +172,6 @@ export const useProfileStore = defineStore('profile', () => {
         },
       })
       await fetchProfile()
-      // Only show success if it's actually successful and has a message
       if (res.data.message) showSuccess(res.data.message)
       return res.data
     } catch (error) {
@@ -193,7 +192,6 @@ export const useProfileStore = defineStore('profile', () => {
     isProcessing.value = true
     try {
       const res = await api.put('/api/profile/professional', payload)
-      // Refresh to get nested professional data correctly
       await fetchProfile()
       showSuccess(res.data.message)
       return res.data
@@ -295,7 +293,6 @@ export const useProfileStore = defineStore('profile', () => {
         showError('No CV available to download')
         return
       }
-      // Create a temporary anchor element to trigger download
       const link = document.createElement('a')
       link.href = cvUrl
       link.download = user.value?.cv?.name || `${user.value?.full_name || 'CV'}.pdf`
@@ -333,7 +330,6 @@ export const useProfileStore = defineStore('profile', () => {
       }
 
       if (method === 'link') {
-        // Copy link to clipboard
         await navigator.clipboard.writeText(cvUrl)
         showSuccess('CV link copied to clipboard!')
       } else if (method === 'email') {

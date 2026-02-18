@@ -4,7 +4,7 @@
     <div class="skeleton-cover-section">
       <div class="skeleton-cover-image"></div>
       <div class="skeleton-edit-cover-btn"></div>
-      
+
       <!-- Avatar Skeleton -->
       <div class="skeleton-avatar-container">
         <div class="skeleton-avatar"></div>
@@ -31,10 +31,6 @@
     </div>
   </div>
 </template>
-
-<script setup>
-// No props or logic needed for skeleton
-</script>
 
 <style scoped>
 .profile-header-skeleton {

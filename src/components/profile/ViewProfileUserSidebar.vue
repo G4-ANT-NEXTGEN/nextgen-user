@@ -33,13 +33,6 @@
           </div>
         </div>
 
-        <!-- <div class="contact-actions mt-4"
-          v-if="userData?.collaboration?.company_logo && userData?.collaboration?.company_link">
-          <BaseButton variant="primary" class="action-btn w-100" @click="$emit('change-tab', 'collaboration')">
-            <i class="bi bi-people-fill"></i>
-            <span>Collaboration</span>
-          </BaseButton>
-        </div> -->
       </div>
 
       <!-- Card 2: Professional Skills -->

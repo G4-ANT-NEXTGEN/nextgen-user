@@ -99,7 +99,6 @@ const handleAction = (action) => {
   showActions.value = false
 }
 
-// Close menu when clicking outside
 const handleClickOutside = (e) => {
   if (!e.target.closest('.actions-wrapper')) {
     showActions.value = false

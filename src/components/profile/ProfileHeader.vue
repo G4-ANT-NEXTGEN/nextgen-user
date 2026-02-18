@@ -455,12 +455,12 @@ const validateCompanyLink = () => {
   }
 
   const pattern = new RegExp(
-    '^(https?:\\/\\/)?' + // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-    '(\\#[-a-z\\d_]*)?$', // fragment locator
+    '^(https?:\\/\\/)?' +
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' +
+    '((\\d{1,3}\\.){3}\\d{1,3}))' +
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' +
+    '(\\?[;&a-z\\d%_.~+=-]*)?' +
+    '(\\#[-a-z\\d_]*)?$',
     'i'
   )
 
@@ -550,7 +550,7 @@ const handleFileSelect = (e) => {
   const selectedFile = e.target.files[0]
   if (!selectedFile) return
 
-  const maxSize = 3072 * 1024; // 3072 KB
+  const maxSize = 3072 * 1024;
   if (selectedFile.size > maxSize) {
     showError('File size exceeds 3072 KB. Please upload a smaller image.')
     e.target.value = ''
@@ -566,7 +566,7 @@ const CompanyLogoSelect = (e) => {
   if (!logo)
     return false
 
-  const maxSize = 3072 * 1024; // 3072 KB
+  const maxSize = 3072 * 1024;
   if (logo.size > maxSize) {
     showError('Logo size exceeds 3072 KB. Please upload a smaller image.')
     e.target.value = ''
@@ -574,7 +574,7 @@ const CompanyLogoSelect = (e) => {
   }
 
   companyLogo.value = logo
-  errors.companyLogo = '' // Clear logo error when selected
+  errors.companyLogo = ''
   const reader = new FileReader()
   reader.onload = (ev) => (companyLogoPreview.value = ev.target.result)
   reader.readAsDataURL(logo)
@@ -630,7 +630,7 @@ const cvOnChangeFile = (e) => {
     e.target.value = ''
     return
   }
-  const maxSize = 3072 * 1024; // 3072 KB
+  const maxSize = 3072 * 1024;
   if (cv.size > maxSize) {
     showError('CV size exceeds 3072 KB. Please upload a smaller file.')
     e.target.value = ''
